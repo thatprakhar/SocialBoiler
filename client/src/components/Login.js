@@ -75,7 +75,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} Validate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -118,7 +118,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/createaccount" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
