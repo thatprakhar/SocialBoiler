@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -59,10 +59,24 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-
 export default function Login() {
   const classes = useStyles();
+  const API_URL = "http://localhost:8000";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email, password: password })
+    };
+    fetch(API_URL, requestOptions)
+      .then(res => res.text())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
+  }
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -75,7 +89,11 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} Validate>
+          <form
+            className={classes.form}
+            onSubmit={handleSubmit}
+            validate="true"
+          >
             <TextField
               variant="outlined"
               margin="normal"
@@ -85,6 +103,7 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={e => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -97,6 +116,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
