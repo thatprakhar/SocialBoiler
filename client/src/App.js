@@ -3,6 +3,7 @@ import CreateAccount from "./components/CreateAccount";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import ForgotPassword from "./components/ForgotPassword";
+import Profile from "./components/Profile";
 import NotFound from "./components/NotFound";
 import {
   BrowserRouter as Router,
@@ -11,6 +12,7 @@ import {
   Switch
 } from "react-router-dom";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import { ConfigProvider } from "./configContext";
 
@@ -24,6 +26,7 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/createaccount" component={CreateAccount}></Route>
             <Route path="/forgotpass" component={ForgotPassword}></Route>
+            <Route path="/profile" component={Profile}></Route>
             <Route exact path="/">
               {ConfigProvider.userLoggedIn ? (
                 <Redirect to="/home" />
