@@ -1,0 +1,6 @@
+socialboilerdb.cstivgt1bkds.us-east-2.rds.amazonaws.com
+port=5432
+user=root
+password=tR_49Purd
+database=SocialBoilerData
+schema:data
