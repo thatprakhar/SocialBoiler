@@ -12,6 +12,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import sha256 from "js-sha256";
+import Background from "../assets/bg.jpeg";
 
 function Copyright() {
   return (
@@ -31,8 +33,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh"
   },
   image: {
-    backgroundImage:
-      "url(https://www.stat.purdue.edu/images/Campus/Engineering%20Fountain%20Hovde%20View%20Horizontal.JPG)",
+    backgroundImage: "url(" + Background + ")",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -59,10 +60,13 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-export default function Login() {
+export default function Login(props) {
+  console.log(props.loggedIn);
   const classes = useStyles();
   const API_URL = "http://localhost:8000";
   const [email, setEmail] = useState("");
+  const [error, setError] = useState(false);
+  const [fail, setFail] = useState(false);
   const [password, setPassword] = useState("");
 
   function handleSubmit(e) {
@@ -70,13 +74,23 @@ export default function Login() {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: password })
+      body: JSON.stringify({ email: email, password: sha256(password) })
     };
     fetch(API_URL, requestOptions)
       .then(res => res.text())
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
+      .then(data => {
+        setError(false);
+        console.log(data);
+        if (data === "fail") {
+          setFail(true);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setError(true);
+      });
   }
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -122,6 +136,20 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            {error && !fail ? (
+              <Typography component="h6" variant="h6" color="error">
+                Can't connect to the server. Try again later.
+              </Typography>
+            ) : (
+              <div></div>
+            )}
+            {fail && !error ? (
+              <Typography component="h6" variant="h6" color="error">
+                Incorrect Password/Email combination.
+              </Typography>
+            ) : (
+              <div></div>
+            )}
             <Button
               type="submit"
               fullWidth
