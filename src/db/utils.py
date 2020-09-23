@@ -40,9 +40,25 @@ def insert_user_credentials(name, surname, email, password):
     return True
 
 
-#def check_login_credentials(email, password):
+def check_login_credentials(email, password):
+    df = fetch_rows(User_Credentials)
+    dfemail = df["email"] #load the email values into dfemail
+
+    hashed_password = hash_password(password) #hash the password that is inputted
+
+    dfpass = df["password"] #load the password values into dfpass
+
+    #check if the email and the password exist in the database
+    if email in dfemail.values and hashed_password in dfpass.values:
+        #check if the corresponding email has the corresponding password
+        if ((df['email'] == email) & (df['password'] == hashed_password)).any():
+            return True
+    
+    return False
 
 
-insert_user_credentials("Onur","onen", "onur.onen20@gmail.com","hahahahhahaah")
-
+#insert_user_credentials("Onur","onen", "onur.onen20@gmail.com","hahahahhahaah")
+#insert_user_credentials("uras","yazici", "hurasyazici@gmail.com","blablablabla")
+#result = check_login_credentials("hurasyazici@gmail.com", "blablablabla")
+#print(result)
 
