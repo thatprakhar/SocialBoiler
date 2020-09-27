@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Tab, Tabs, Badge } from "react-bootstrap";
 import TopicItem from "./TopicItem";
 import { v4 as uuidv4 } from "uuid";
 
-function ProfileInfo() {
+function ProfileInfo({ isOwnProfile }) {
   const [email, setEmail] = useState("pete124@purdue.edu");
   const [tel, setTel] = useState("123-456-7890");
   const [age, setAge] = useState("18");
@@ -46,10 +46,9 @@ function ProfileInfo() {
   };
   return (
     <div className="profile__info">
-      <h1 className="profile__welcome">Welcome back, Purdue Pete</h1>
-      <h3>
-        <Badge variant="secondary">Your Profile:</Badge>
-      </h3>
+      <h2>
+        <Badge variant="secondary">Profile:</Badge>
+      </h2>
 
       <Form onSubmit={handleSubmit}>
         <Form.Group as={Row} controlId="formPlaintextIntro">
@@ -63,38 +62,53 @@ function ProfileInfo() {
             Tel
           </Form.Label>
           <Col sm="10">
-            <Form.Control
-              plaintext
-              value={tel}
-              onChange={(e) => setTel(e.target.value)}
-            />
+            {isOwnProfile ? (
+              <Form.Control
+                plaintext
+                value={tel}
+                onChange={(e) => setTel(e.target.value)}
+              />
+            ) : (
+              <Form.Control plaintext value={tel} readOnly />
+            )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
             Age
           </Form.Label>
+
           <Col sm="10">
-            <Form.Control
-              plaintext
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
+            {isOwnProfile ? (
+              <Form.Control
+                plaintext
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+            ) : (
+              <Form.Control plaintext value={age} readOnly />
+            )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
             About Me
           </Form.Label>
           <Col sm="10">
-            <Form.Control
-              as="textarea"
-              value={about}
-              onChange={(e) => setAbout(e.target.value)}
-            />
+            {isOwnProfile ? (
+              <Form.Control
+                as="textarea"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+              />
+            ) : (
+              <Form.Control as="textarea" value={about} readOnly />
+            )}
           </Col>
         </Form.Group>
-        <div className="text-right">
-          <Button type="submit" variant="info">
-            Update Profile
-          </Button>
-        </div>
+        {isOwnProfile ? (
+          <div className="text-right">
+            <Button type="submit" variant="info">
+              Update Profile
+            </Button>
+          </div>
+        ) : null}
       </Form>
       <Tabs
         defaultActiveKey="topics"
@@ -103,12 +117,22 @@ function ProfileInfo() {
       >
         <Tab eventKey="topics" title="Following topics">
           {topics.map((topic) => (
-            <TopicItem name={topic} unfollow={unfollowTopic} key={uuidv4()} />
+            <TopicItem
+              name={topic}
+              unfollow={unfollowTopic}
+              key={uuidv4()}
+              isOwnProfile={isOwnProfile}
+            />
           ))}
         </Tab>
         <Tab eventKey="users" title="Following users">
           {following.map((user) => (
-            <TopicItem name={user} unfollow={unfollowUser} key={uuidv4()} />
+            <TopicItem
+              name={user}
+              unfollow={unfollowUser}
+              key={uuidv4()}
+              isOwnProfile={isOwnProfile}
+            />
           ))}
         </Tab>
         <Tab eventKey="followers" title="Followers">

@@ -3,16 +3,17 @@
 }
 
 .profile__info {
-  padding: 20px;
-  height: 100vh;
+  margin-top: 10px;
+  padding: 50px;
+  max-height: 100vh;
 }
 
 .profile__card {
-  height: 80vh;
+  max-height: 100vh;
   display: flex;
   justify-content: center;
   margin-top: 50px;
-  margin-bottom: 0ß;
+  margin-bottom: 0;
 }
 
 .profile__delete {
@@ -20,7 +21,7 @@
 }
 
 .profile__welcome {
-  margin-top: 20px;
+  padding-top: 20px;
 }
 
 .profile__tabs {

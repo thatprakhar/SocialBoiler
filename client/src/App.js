@@ -9,7 +9,7 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  Switch
+  Switch,
 } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,13 +27,14 @@ function App() {
             <Route path="/createaccount" component={CreateAccount}></Route>
             <Route path="/forgotpass" component={ForgotPassword}></Route>
             <Route path="/profile" component={Profile}></Route>
-            <Route exact path="/">
+            {/* <Route exact path="/">
               {ConfigProvider.userLoggedIn ? (
                 <Redirect to="/home" />
               ) : (
                 <Redirect to="/login" />
               )}
-            </Route>
+            </Route> */}
+            <Route path="/" component={Home}></Route>
             <Route exact path="*" component={NotFound}></Route>
           </Switch>
         </Router>

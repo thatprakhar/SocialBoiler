@@ -28,9 +28,9 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh"
+    height: "100vh",
   },
   image: {
     backgroundImage: "url(" + Background + ")",
@@ -40,25 +40,25 @@ const useStyles = makeStyles(theme => ({
         ? theme.palette.grey[50]
         : theme.palette.grey[900],
     backgroundSize: "cover",
-    backgroundPosition: "center"
+    backgroundPosition: "center",
   },
   paper: {
     margin: theme.spacing(8, 4),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 export default function Login(props) {
   console.log(props.loggedIn);
@@ -74,18 +74,18 @@ export default function Login(props) {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: sha256(password) })
+      body: JSON.stringify({ email: email, password: sha256(password) }),
     };
     fetch(API_URL, requestOptions)
-      .then(res => res.text())
-      .then(data => {
+      .then((res) => res.text())
+      .then((data) => {
         setError(false);
         console.log(data);
         if (data === "fail") {
           setFail(true);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         setError(true);
       });
@@ -117,7 +117,7 @@ export default function Login(props) {
               label="Email Address"
               name="email"
               autoComplete="email"
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -130,7 +130,7 @@ export default function Login(props) {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

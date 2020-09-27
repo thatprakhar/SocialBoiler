@@ -12,12 +12,15 @@ class ConfigProvider extends Component {
       username: "",
       image: "",
       bio: "I'm Mogran—so... yeah.",
-      authKey: ""
+      authKey: "",
     },
     toggleLogin: () => {
-      const setTo = !this.state.userLoggedIn;
+      //const setTo = !this.state.userLoggedIn;
+      const setTo =
+        localStorage.getItem("userLoggedIn") == "true" ? false : true;
       this.setState({ userLoggedIn: setTo });
-    }
+      localStorage.setItem("userLoggedIn", setTo);
+    },
   };
 
   render() {
@@ -26,7 +29,7 @@ class ConfigProvider extends Component {
         value={{
           userLoggedIn: this.state.userLoggedIn,
           profile: this.state.profile,
-          toggleLogin: this.state.toggleLogin
+          toggleLogin: this.state.toggleLogin,
         }}
       >
         {this.props.children}
