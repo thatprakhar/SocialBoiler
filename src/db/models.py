@@ -21,6 +21,7 @@ class User_Credentials(Base):
     surname = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
+    token = Column(String, nullable=True)
 
 
 if __name__ == "__main__":
