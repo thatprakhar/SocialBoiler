@@ -55,6 +55,19 @@ def update_table(new_df, BaseClass):
     session.commit()
     session.close()
 
+def update_authentication_token(BaseClass, email, token):
+    """
+    :param BaseClass: Base child-class (sqlalchemy model)
+    :param email: Email whose authentication token will be updated
+    :param token: token assigned to user in each login
+    """
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.email == email).update({BaseClass.auth_token: token})
+    session.commit()
+    session.close()
+
+#update_authentication_token(User_Credentials, "hahah@gmail.com", "hello")
+
 if __name__ == '__main__':
     pass
 

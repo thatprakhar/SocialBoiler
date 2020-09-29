@@ -1,10 +1,10 @@
 import hashlib
 import pandas as pd
-
+import datetime as dt
 import os 
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.crud import update_table, fetch_rows
+from src.db.crud import update_table, fetch_rows,update_authentication_token
 from src.db.models import User_Credentials
 
 def hash_password(password):
@@ -57,8 +57,19 @@ def check_login_credentials(email, password):
     return False
 
 
-#insert_user_credentials("Onur","onen", "onur.onen20@gmail.com","hahahahhahaah")
-#insert_user_credentials("uras","yazici", "hurasyazici@gmail.com","blablablabla")
-#result = check_login_credentials("hurasyazici@gmail.com", "blablablabla")
-#print(result)
+def create_auth_token(email):
+    #append email with datetime
+    time = dt.datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S")
+    auth_string = email + time
+    #hash the resulting string
+    encrypted_auth_string = hash_password(auth_string)
 
+    #update the authentication token of user
+    update_authentication_token(User_Credentials, email, encrypted_auth_string)
+
+    #return the encrypted string
+    return encrypted_auth_string
+
+
+def reset_auth_token(email):
+    update_authentication_token(User_Credentials, email, "")
