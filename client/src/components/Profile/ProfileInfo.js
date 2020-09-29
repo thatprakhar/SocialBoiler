@@ -11,12 +11,12 @@ function ProfileInfo() {
   const [topics, setTopics] = useState([
     "#purdue",
     "#computer science",
-    "#React",
+    "#React"
   ]);
   const [following, setFollowing] = useState([
     "Roopsha Samanta",
     "Jeffrey A. Turkstra",
-    "Gustavo Rodriguez-Rivera",
+    "Gustavo Rodriguez-Rivera"
   ]);
 
   const [followers, setFollowers] = useState([
@@ -24,24 +24,24 @@ function ProfileInfo() {
     "Onur",
     "Uras",
     "Sayed",
-    "Prakhar",
+    "Prakhar"
   ]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     console.log("submitting form...");
     console.log(email, tel, age, about);
   };
 
-  const unfollowTopic = (topicName) => {
-    setTopics((prevTopics) => {
-      return prevTopics.filter((topic) => topic !== topicName);
+  const unfollowTopic = topicName => {
+    setTopics(prevTopics => {
+      return prevTopics.filter(topic => topic !== topicName);
     });
   };
 
-  const unfollowUser = (userName) => {
-    setFollowing((prevFollowing) => {
-      return prevFollowing.filter((user) => user !== userName);
+  const unfollowUser = userName => {
+    setFollowing(prevFollowing => {
+      return prevFollowing.filter(user => user !== userName);
     });
   };
   return (
@@ -66,7 +66,7 @@ function ProfileInfo() {
             <Form.Control
               plaintext
               value={tel}
-              onChange={(e) => setTel(e.target.value)}
+              onChange={e => setTel(e.target.value)}
             />
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
@@ -76,7 +76,7 @@ function ProfileInfo() {
             <Form.Control
               plaintext
               value={age}
-              onChange={(e) => setAge(e.target.value)}
+              onChange={e => setAge(e.target.value)}
             />
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
@@ -86,7 +86,7 @@ function ProfileInfo() {
             <Form.Control
               as="textarea"
               value={about}
-              onChange={(e) => setAbout(e.target.value)}
+              onChange={e => setAbout(e.target.value)}
             />
           </Col>
         </Form.Group>
@@ -102,17 +102,17 @@ function ProfileInfo() {
         className="profile__tabs"
       >
         <Tab eventKey="topics" title="Following topics">
-          {topics.map((topic) => (
+          {topics.map(topic => (
             <TopicItem name={topic} unfollow={unfollowTopic} key={uuidv4()} />
           ))}
         </Tab>
         <Tab eventKey="users" title="Following users">
-          {following.map((user) => (
+          {following.map(user => (
             <TopicItem name={user} unfollow={unfollowUser} key={uuidv4()} />
           ))}
         </Tab>
         <Tab eventKey="followers" title="Followers">
-          {followers.map((follower) => (
+          {followers.map(follower => (
             <TopicItem name={follower} key={uuidv4()} />
           ))}
         </Tab>
