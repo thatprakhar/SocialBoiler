@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -47,16 +48,35 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+  const history = useHistory();
   const classes = useStyles();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const API_URL = "http://127.0.0.1:5000";
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(firstName + " " + lastName);
-    console.log(email + " " + password);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        name: firstName,
+        surname: lastName,
+        email: email,
+        password: password
+      }
+    };
+    fetch(API_URL + "/sign_up", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        localStorage.setItem("user", JSON.stringify(data));
+        history.push("/home");
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   return (

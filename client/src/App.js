@@ -16,6 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   let user = localStorage.getItem("user");
+  console.log(user);
   return (
     <div className="App">
       <Router>

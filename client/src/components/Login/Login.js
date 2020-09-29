@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Login() {
   const classes = useStyles();
-  const API_URL = "http://localhost:8000";
+  const API_URL = "http://127.0.0.1:5000";
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [fail, setFail] = useState(false);
@@ -75,12 +75,16 @@ export default function Login() {
     e.preventDefault();
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      headers: {
+        "Content-Type": "application/json",
+        email: email,
+        password: password
+      }
     };
     fetch(API_URL + "/login", requestOptions)
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         localStorage.setItem("user", JSON.stringify(data));
         history.push("/home");
       })
