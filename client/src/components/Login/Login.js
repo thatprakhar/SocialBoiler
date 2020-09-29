@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,8 +12,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import sha256 from "js-sha256";
-import Background from "../assets/bg.jpeg";
+import Background from "../../assets/bg.jpeg";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -60,35 +60,39 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-export default function Login(props) {
-  console.log(props.loggedIn);
+
+export default function Login() {
   const classes = useStyles();
   const API_URL = "http://localhost:8000";
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [fail, setFail] = useState(false);
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const history = useHistory();
 
   function handleSubmit(e) {
     e.preventDefault();
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, password: sha256(password) }),
+
+      body: JSON.stringify({ email, password }),
     };
-    fetch(API_URL, requestOptions)
-      .then((res) => res.text())
+    fetch(API_URL + "/login", requestOptions)
+      .then((res) => res.json())
       .then((data) => {
-        setError(false);
-        console.log(data);
-        if (data === "fail") {
-          setFail(true);
-        }
+        localStorage.setItem("user", JSON.stringify(data));
+        history.push("/home");
       })
       .catch((err) => {
-        console.log(err);
         setError(true);
+        setErrorMessage("Could not connect to server");
+        setFail(false);
       });
+  }
+  if (localStorage.getItem("user")) {
+    history.push("/home");
   }
 
   return (
@@ -103,11 +107,7 @@ export default function Login(props) {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form
-            className={classes.form}
-            onSubmit={handleSubmit}
-            validate="true"
-          >
+          <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -117,8 +117,10 @@ export default function Login(props) {
               label="Email Address"
               name="email"
               autoComplete="email"
+              helperText={email === "" ? "Enter a valid email address" : ""}
               onChange={(e) => setEmail(e.target.value)}
               autoFocus
+              validate="true"
             />
             <TextField
               variant="outlined"
@@ -138,14 +140,14 @@ export default function Login(props) {
             />
             {error && !fail ? (
               <Typography component="h6" variant="h6" color="error">
-                Can't connect to the server. Try again later.
+                {errorMessage}
               </Typography>
             ) : (
               <div></div>
             )}
             {fail && !error ? (
               <Typography component="h6" variant="h6" color="error">
-                Incorrect Password/Email combination.
+                {errorMessage}
               </Typography>
             ) : (
               <div></div>
