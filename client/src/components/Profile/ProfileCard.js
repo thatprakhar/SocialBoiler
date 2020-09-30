@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 
-function ProfileCard({ handleShow, isOwnProfile }) {
+function ProfileCard({ handleShow, isOwnProfile, name }) {
   return (
     <div className="profile__card">
       <Card style={{ width: "30rem", height: "40rem" }}>
@@ -11,7 +11,7 @@ function ProfileCard({ handleShow, isOwnProfile }) {
         />
         <Card.Body>
           <h1>
-            <Badge variant="light">Purdue Pete</Badge>
+            <Badge variant="light">{name}</Badge>
           </h1>
 
           <h5>

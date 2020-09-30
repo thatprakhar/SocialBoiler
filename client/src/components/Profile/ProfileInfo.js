@@ -1,36 +1,63 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Row, Col, Button, Tab, Tabs, Badge } from "react-bootstrap";
 import TopicItem from "./TopicItem";
 import { v4 as uuidv4 } from "uuid";
 
-function ProfileInfo({ isOwnProfile }) {
-  const [email, setEmail] = useState("pete124@purdue.edu");
-  const [tel, setTel] = useState("123-456-7890");
-  const [age, setAge] = useState("18");
-  const [about, setAbout] = useState("Hi there 👋 , my name is Purdue Pete");
-  const [topics, setTopics] = useState([
-    "#purdue",
-    "#computer science",
-    "#React",
-  ]);
-  const [following, setFollowing] = useState([
-    "Roopsha Samanta",
-    "Jeffrey A. Turkstra",
-    "Gustavo Rodriguez-Rivera",
-  ]);
+const API_URL = "https://jsonplaceholder.typicode.com/users/1";
 
-  const [followers, setFollowers] = useState([
-    "Cindy",
-    "Onur",
-    "Uras",
-    "Sayed",
-    "Prakhar",
-  ]);
-
+function ProfileInfo({
+  isOwnProfile,
+  topics,
+  following,
+  followers,
+  profile,
+  setProfile,
+  setTopics,
+  setFollowing,
+}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("submitting form...");
-    console.log(email, tel, age, about);
+    console.log(profile.email, profile.tel, profile.age, profile.about);
+
+    //check if fields are correct
+    if (!profile.age.toString().match(/^\d*$/g)) {
+      alert("age must be a number");
+      return;
+    }
+
+    if (
+      !profile.tel
+        .toString()
+        .trim()
+        .match(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/g)
+    ) {
+      alert("Phone number must be in the format: xxx-xxx-xxxx");
+      return;
+    }
+
+    const requestOptions = {
+      method: "PUT",
+      body: JSON.stringify({
+        email: profile.email,
+        tel: profile.tel,
+        age: profile.age,
+        about: profile.about,
+      }),
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+
+    fetch(API_URL, requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("put request back is: ", data);
+      })
+      .catch((err) => {
+        console.log("can not update profile: " + err);
+      });
   };
 
   const unfollowTopic = (topicName) => {
@@ -56,7 +83,7 @@ function ProfileInfo({ isOwnProfile }) {
             Email:
           </Form.Label>
           <Col sm="10">
-            <Form.Control plaintext readOnly value={email} />
+            <Form.Control plaintext readOnly value={profile.email} />
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
             Tel
@@ -65,11 +92,14 @@ function ProfileInfo({ isOwnProfile }) {
             {isOwnProfile ? (
               <Form.Control
                 plaintext
-                value={tel}
-                onChange={(e) => setTel(e.target.value)}
+                value={profile.tel}
+                onChange={(e) =>
+                  setProfile({ ...profile, tel: e.target.value })
+                }
+                placeholder={"phone number: xxx-xxx-xxxx"}
               />
             ) : (
-              <Form.Control plaintext value={tel} readOnly />
+              <Form.Control plaintext value={profile.tel} readOnly />
             )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
@@ -80,11 +110,14 @@ function ProfileInfo({ isOwnProfile }) {
             {isOwnProfile ? (
               <Form.Control
                 plaintext
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
+                value={profile.age}
+                onChange={(e) =>
+                  setProfile({ ...profile, age: e.target.value })
+                }
+                placeholder={"age: must be a number"}
               />
             ) : (
-              <Form.Control plaintext value={age} readOnly />
+              <Form.Control plaintext value={profile.age} readOnly />
             )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
@@ -94,11 +127,14 @@ function ProfileInfo({ isOwnProfile }) {
             {isOwnProfile ? (
               <Form.Control
                 as="textarea"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
+                value={profile.about}
+                onChange={(e) =>
+                  setProfile({ ...profile, about: e.target.value })
+                }
+                placeholder={"Tell us about yourself"}
               />
             ) : (
-              <Form.Control as="textarea" value={about} readOnly />
+              <Form.Control as="textarea" value={profile.about} readOnly />
             )}
           </Col>
         </Form.Group>
