@@ -17,7 +17,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
         email: SON.parse(localStorage.getItem("user")).email,
-        token: JSON.parse(localStorage.getItem("user")).token
+        token: JSON.parse(localStorage.getItem("user")).auth_token
       }
     };
     fetch(API_URL + "/logout", requestOptions)
