@@ -1,8 +1,9 @@
 import hashlib
 import pandas as pd
 import datetime as dt
-import os 
+import os
 import sys
+import re
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from src.db.crud import update_table, fetch_rows,update_authentication_token
 from src.db.models import User_Credentials
@@ -14,12 +15,19 @@ def hash_password(password):
     """
     #convert string to byte equivalent
     password = password.encode()
-    #feed the byte format to hash function 
+    #feed the byte format to hash function
     result = hashlib.sha256(password)
     #hexadecimal equivalent of encoded string
     result = result.hexdigest()
 
     return result
+
+def emailIsValid(email):
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
+    if(re.search(regex,email)):
+        return True
+    else:
+        return False
 
 def insert_user_credentials(name, surname, email, password):
     #check if email is already present in the database
@@ -28,6 +36,10 @@ def insert_user_credentials(name, surname, email, password):
 
     #if email is already present, don't upload the info to table
     if email in df.values:
+        return False
+
+    # if email format is invalid, don't upload info
+    if not emailIsValid(email):
         return False
 
     # else, hash the password, and append the credentials to the related table
@@ -53,7 +65,7 @@ def check_login_credentials(email, password):
         #check if the corresponding email has the corresponding password
         if ((df['email'] == email) & (df['password'] == hashed_password)).any():
             return True
-    
+
     return False
 
 
