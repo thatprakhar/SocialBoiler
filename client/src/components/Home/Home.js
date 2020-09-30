@@ -9,10 +9,24 @@ import {
 } from "react-router-dom";
 
 export default function Home() {
+  const API_URL = "http://127.0.0.1:5000";
   const history = useHistory();
   function logout() {
-    localStorage.removeItem("user");
-    history.push("/login");
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        email: email,
+        token: JSON.parse(localStorage.getItem("user")).token
+      }
+    };
+    fetch(API_URL + "/logout", requestOptions)
+      .then(res => {
+        localStorage.removeItem("user");
+        history.push("/login");
+      })
+      .catch(err =< console.log(err));
+
   }
 
   function goToProfile() {
