@@ -16,7 +16,7 @@ export default function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        email: email,
+        email: SON.parse(localStorage.getItem("user")).email,
         token: JSON.parse(localStorage.getItem("user")).token
       }
     };
