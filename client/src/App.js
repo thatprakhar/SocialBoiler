@@ -15,8 +15,6 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  let user = localStorage.getItem("user");
-  console.log(user);
   return (
     <div className="App">
       <Router>
@@ -27,7 +25,11 @@ function App() {
           <Route path="/forgotpass" component={ForgotPassword}></Route>
           <Route path="/profile" component={Profile}></Route>
           <Route exact path="/">
-            {user !== "" ? <Redirect to="/home" /> : <Redirect to="/login" />}
+            {localStorage.getItem("auth_token") ? (
+              <Redirect to="/home" />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
           <Route exact path="*" component={NotFound}></Route>
         </Switch>

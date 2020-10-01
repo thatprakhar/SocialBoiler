@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -66,7 +66,6 @@ export default function Login() {
   const API_URL = "http://127.0.0.1:5000";
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
-  const [fail, setFail] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
@@ -84,14 +83,18 @@ export default function Login() {
     fetch(API_URL + "/login", requestOptions)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-        localStorage.setItem("user", JSON.stringify(data));
-        history.push("/home");
+        if (data === "Incorrect Password or Email!") {
+          setError(true);
+          setErrorMessage("Incorrect Password and Email Combination!");
+        } else {
+          localStorage.setItem("email", email);
+          localStorage.setItem("auth_token", JSON.stringify(data));
+          history.push("/home");
+        }
       })
       .catch(err => {
         setError(true);
         setErrorMessage("Could not connect to server");
-        setFail(false);
       });
   }
   if (localStorage.getItem("user")) {
@@ -141,14 +144,7 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            {error && !fail ? (
-              <Typography component="h6" variant="h6" color="error">
-                {errorMessage}
-              </Typography>
-            ) : (
-              <div></div>
-            )}
-            {fail && !error ? (
+            {error ? (
               <Typography component="h6" variant="h6" color="error">
                 {errorMessage}
               </Typography>

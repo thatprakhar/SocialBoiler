@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -54,6 +52,8 @@ export default function SignUp() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const API_URL = "http://127.0.0.1:5000";
   function handleSubmit(e) {
     e.preventDefault();
@@ -70,12 +70,19 @@ export default function SignUp() {
     fetch(API_URL + "/sign_up", requestOptions)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-        localStorage.setItem("user", JSON.stringify(data));
-        history.push("/home");
+        if (data === "Incorrect Password or Email!") {
+          setError(true);
+          setErrorMessage("Incorrect Password or Email!");
+        } else {
+          console.log(data);
+          localStorage.setItem("email", email);
+          localStorage.setItem("auth_token", JSON.stringify(data));
+          history.push("/home");
+        }
       })
       .catch(err => {
-        console.log(err);
+        setError(true);
+        setErrorMessage("Could not connect to server");
       });
   }
 
@@ -141,13 +148,14 @@ export default function SignUp() {
                 onChange={e => setPassword(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
           </Grid>
+          {error ? (
+            <Typography component="h6" variant="h6" color="error">
+              {errorMessage}
+            </Typography>
+          ) : (
+            <div></div>
+          )}
           <Button
             type="submit"
             fullWidth

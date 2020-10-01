@@ -16,16 +16,15 @@ export default function Home() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        email: SON.parse(localStorage.getItem("user")).email,
+        email: JSON.parse(localStorage.getItem("user")).email,
         auth_token: JSON.parse(localStorage.getItem("user")).auth_token
       }
     };
     fetch(API_URL + "/logout", requestOptions)
-      .then(res => {
-        localStorage.removeItem("user");
-        history.push("/login");
-      })
+      .then(res => {})
       .catch(err => console.log(err));
+    localStorage.removeItem("auth_token");
+    history.push("/login");
   }
 
   function goToProfile() {
@@ -37,7 +36,7 @@ export default function Home() {
       <Router>
         <Route path="/login" component={Login}></Route>
         <Route exact path="/home">
-          {localStorage.getItem("user") ? (
+          {localStorage.getItem("auth_token") ? (
             <Redirect to="/home" />
           ) : (
             <Redirect to="/login" />
