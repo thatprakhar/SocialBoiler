@@ -83,5 +83,14 @@ def create_auth_token(email):
     return encrypted_auth_string
 
 
-def reset_auth_token(email):
+def reset_auth_token(email, auth_token):
+    df = fetch_rows(User_Credentials)
+    df = df.loc[df['email'] == email]
+
+    auth_db = df.iloc[0]['auth_token']
+    
+    if auth_db != auth_token:
+        return False
+    
     update_authentication_token(User_Credentials, email, "")
+    return True

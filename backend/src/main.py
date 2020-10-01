@@ -22,7 +22,7 @@ def make_app():
 
         status = insert_user_credentials(name,surname, email,password)
         if status is False:
-            return jsonify("Email already exists!")
+            return jsonify("The email is not in correct format or it already exists!")
 
         auth_token = create_auth_token(email)
         #print(auth_token)
@@ -44,8 +44,14 @@ def make_app():
     @app.route("/logout", methods=["POST"])
     def log_out():
         email = request.headers.get("email")
+        auth_token = request.headers.get("auth_token")
+        
+        #check if authentication token correpsonds to the one in database
         #reset authentication token associated with the email once user logs out
-        reset_auth_token(email)
+        if reset_auth_token(email,auth_token):
+            return jsonify("Logout succesful")
+        else:
+            return jsonify("Logout failed")
 
 
     return app
