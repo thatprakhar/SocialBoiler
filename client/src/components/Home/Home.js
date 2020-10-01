@@ -25,8 +25,7 @@ export default function Home() {
         localStorage.removeItem("user");
         history.push("/login");
       })
-      .catch(err =< console.log(err));
-
+      .catch(err => console.log(err));
   }
 
   function goToProfile() {
