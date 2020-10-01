@@ -44,8 +44,13 @@ def make_app():
     @app.route("/logout", methods=["POST"])
     def log_out():
         email = request.headers.get("email")
-        #reset authentication token associated with the email once user logs out
-        reset_auth_token(email)
+        auth_token = request.headers.get("auth_token")
 
+
+        #reset authentication token associated with the email once user logs out
+        if reset_auth_token(email, auth_token):
+            return jsonify("success")
+        else:
+            return jsonify("failed")
 
     return app
