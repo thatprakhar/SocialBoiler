@@ -6,8 +6,7 @@ from flask import render_template
 import os
 import sys
 sys.path.append(os.getcwd())
-print(os.getcwd())
-from db.utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token
+from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token
 
 def make_app():
     app = Flask(__name__)
@@ -45,8 +44,6 @@ def make_app():
     def log_out():
         email = request.headers.get("email")
         auth_token = request.headers.get("auth_token")
-
-
         #reset authentication token associated with the email once user logs out
         if reset_auth_token(email, auth_token):
             return jsonify("success")
