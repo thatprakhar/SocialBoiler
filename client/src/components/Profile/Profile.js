@@ -68,32 +68,31 @@ function Profile() {
 
   useEffect(() => {
     //check if user is logged in before fetching data from the server
-    if (localStorage.getItem("user")) {
-      const requestOptions = {
-        method: "GET",
-      };
 
-      fetch(API_URL, requestOptions)
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("request is ", data);
-          setProfile({
-            email: data.email,
-            tel: data.phone,
-            age: data.id,
-            about: data.website,
-          });
-          setName(data.name);
-        })
-        .catch((err) => {
-          alert("Could not connect to server" + err);
+    const requestOptions = {
+      method: "GET",
+    };
+
+    fetch(API_URL, requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("request is ", data);
+        setProfile({
+          email: data.email,
+          tel: data.phone,
+          age: data.id,
+          about: data.website,
         });
-    }
+        setName(data.name);
+      })
+      .catch((err) => {
+        alert("Could not connect to server" + err);
+      });
   }, []);
 
   //check if user is logged in
 
-  return localStorage.getItem("user") ? (
+  return (
     <div className="profile">
       <ProfileHeader />
       <Container fluid>
@@ -136,8 +135,6 @@ function Profile() {
         </Modal.Footer>
       </Modal>
     </div>
-  ) : (
-    <Redirect to="/login" />
   );
 }
 
