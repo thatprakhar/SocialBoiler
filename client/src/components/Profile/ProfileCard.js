@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 
-function ProfileCard({ handleShow }) {
+function ProfileCard({ handleShow, isOwnProfile, name }) {
   return (
     <div className="profile__card">
       <Card style={{ width: "30rem", height: "40rem" }}>
@@ -11,7 +11,7 @@ function ProfileCard({ handleShow }) {
         />
         <Card.Body>
           <h1>
-            <Badge variant="light">Purdue Pete</Badge>
+            <Badge variant="light">{name}</Badge>
           </h1>
 
           <h5>
@@ -27,9 +27,13 @@ function ProfileCard({ handleShow }) {
             <Badge variant="primary">Posts:</Badge> 10
           </h5>
           <div className="text-center profile__delete">
-            <Button variant="danger" onClick={handleShow}>
-              Delete Account
-            </Button>
+            {isOwnProfile ? (
+              <Button variant="danger" onClick={handleShow}>
+                Delete Account
+              </Button>
+            ) : (
+              <Button variant="info">Follow</Button>
+            )}
           </div>
         </Card.Body>
       </Card>
