@@ -68,6 +68,16 @@ def check_login_credentials(email, password):
 
     return False
 
+def token_validation(email, auth_token):
+    df = fetch_rows(User_Credentials)
+    df = df.loc[df['email'] == email]
+    auth_db = df.iloc[0]['auth_token'] 
+
+    if (auth_token == auth_db):
+        return True
+    else:
+        return False
+
 
 def create_auth_token(email):
     #append email with datetime
@@ -94,3 +104,4 @@ def reset_auth_token(email, auth_token):
         return True
     else:
         return False
+

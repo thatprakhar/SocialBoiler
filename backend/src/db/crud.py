@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 import os 
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.models import User_Credentials, Base
+from src.db.models import User_Credentials, Base, Profile_Page
 from src.config import postgres_config
 
 logger = logging.getLogger(__name__)
@@ -66,7 +66,26 @@ def update_authentication_token(BaseClass, email, token):
     session.commit()
     session.close()
 
-#update_authentication_token(User_Credentials, "hahah@gmail.com", "hello")
+
+def update_user_profile(BaseClass, email, phone_number, age, about):
+    """
+    :param BaseClass: Base child-class (sqlalchemy model)
+    :param email: Email whose authentication token will be updated
+    :param token: token assigned to user in each login
+    """
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.email == email).update(
+        {
+            BaseClass.phone_number: phone_number, 
+            BaseClass.age: age, 
+            BaseClass.about: about 
+        }
+        )
+    session.commit()
+    session.close()
+
+
+#create_tables()
 
 if __name__ == '__main__':
     pass

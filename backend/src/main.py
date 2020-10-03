@@ -6,7 +6,8 @@ from flask import render_template
 import os
 import sys
 sys.path.append(os.getcwd())
-from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token
+from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token,token_validation
+from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details
 
 def make_app():
     app = Flask(__name__)
@@ -24,7 +25,9 @@ def make_app():
             return jsonify("Email already exists!")
 
         auth_token = create_auth_token(email)
-        #print(auth_token)
+        #insert email and names to profile_table
+        insert_profile_details(email, name, surname)
+
         return jsonify(auth_token)
 
     @app.route("/login", methods=["POST"])
@@ -49,5 +52,35 @@ def make_app():
             return jsonify("success")
         else:
             return jsonify("failed")
+
+
+    @app.route("/get_profile_page", methods=["POST"])
+    def get_user_profile():
+        email = request.headers.get("email")
+        #fetch email, tel, age, about, name  and send it to frontend
+        profile_details = get_profile_details()
+
+        return jsonify(profile_details)
+
+
+    @app.route("/update_profile_page", methods=["POST"])
+    def update_profile():
+        email = request.headers.get("email")
+        auth_token = request.headers.get("auth_token")
+        phone_number = request.headers.get("tel")
+        age = request.headers.get("age")
+        about = request.headers.get("about")
+
+        #check if the authentication token is valid
+        status = token_validation(email, auth_token)
+        if status:
+            #update database with the related fields. 
+            update_profile_details(email, phone_number, age, about)
+            return jsonify("success")
+
+        else:
+            return jsonify("failed")
+
+
 
     return app
