@@ -29,23 +29,30 @@ def emailIsValid(email):
     else:
         return False
 
-def insert_user_credentials(name, surname, email, password):
-    #check if email is already present in the database
+
+def insert_user_credentials(username, email, password):
+    #check if email or usename is already present in the database
     df = fetch_rows(User_Credentials)
-    df = df["email"]
+    email_df = df["email"]
+    username_df=df["username"]
+
+    # Check If username already exists
+    if username in username_df.values:
+        return False
 
     #if email is already present, don't upload the info to table
-    if email in df.values:
+    if email in email_df.values:
         return False
 
     # if email format is invalid, don't upload info
     if not emailIsValid(email):
-        return False
+        return "Invalid Email"
 
     # else, hash the password, and append the credentials to the related table
     hashed_password = hash_password(password)
 
-    data = {"name": [name], 'surname': [surname], "email": [email], "password":[hashed_password]}
+    # data = {"name": [name], 'surname': [surname], "email": [email], "password":[hashed_password]}
+    data = {"username": [username], "email": [email], "password":[hashed_password]}
     new_df = pd.DataFrame(data)
 
     update_table(new_df, User_Credentials)
@@ -68,15 +75,16 @@ def check_login_credentials(email, password):
 
     return False
 
-def token_validation(email, auth_token):
+def token_validation(username, auth_token):
     try:
         df = fetch_rows(User_Credentials)
-        df = df.loc[df['email'] == email]
-        # auth_db = df.iloc[0]['auth_token']
-        auth_db = "\"" + df.iloc[0]['auth_token'] + "\"" 
+        df = df.loc[df['username'] == username]
+        auth_db = df.iloc[0]['auth_token']
+        # auth_db = "\"" + df.iloc[0]['auth_token'] + "\"" 
     except Exception as inst:
         return False
 
+    # print("token is--------")
     # print(auth_db, auth_token)
 
     if (auth_token == auth_db):
@@ -85,29 +93,41 @@ def token_validation(email, auth_token):
         return False
 
 
-def create_auth_token(email):
-    #append email with datetime
+def create_auth_token(username):
+    #append username with datetime
     time = dt.datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S")
-    auth_string = email + time
+    
+    auth_string = username + time
     #hash the resulting string
     encrypted_auth_string = hash_password(auth_string)
 
     #update the authentication token of user
-    update_authentication_token(User_Credentials, email, encrypted_auth_string)
+    update_authentication_token(User_Credentials, username, encrypted_auth_string)
 
     #return the encrypted string
     return encrypted_auth_string
 
 
-def reset_auth_token(email, auth_token):
+def reset_auth_token(username, auth_token):
     df = fetch_rows(User_Credentials)
 
-    df = df.loc[df['email'] == email]
-    auth_db = "\"" + df.iloc[0]['auth_token'] + "\""
+    df = df.loc[df['username'] == username]
+    # auth_db = "\"" + df.iloc[0]['auth_token'] + "\""
+    auth_db=df.iloc[0]['auth_token']
+
+    # print("reset:", auth_db, auth_token)
 
     if (auth_token == auth_db):
-        update_authentication_token(User_Credentials, email, "")
+        update_authentication_token(User_Credentials, username, "")
         return True
     else:
         return False
+
+# Get username by email, this is used for login
+def get_username(email):
+    df= fetch_rows(User_Credentials)
+    df=df.loc[df['email']== email]
+    username=df.iloc[0]['username']
+
+    return username
 

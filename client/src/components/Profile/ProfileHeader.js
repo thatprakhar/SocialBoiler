@@ -14,6 +14,7 @@ function ProfileHeader() {
         "Content-Type": "application/json",
         email: localStorage.getItem("email"),
         auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
       },
     };
 
@@ -27,6 +28,8 @@ function ProfileHeader() {
       });
     //redirect to login page
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
     history.push("/login");
   };
   return (
@@ -36,6 +39,7 @@ function ProfileHeader() {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
+          <Nav.Link href="/profile">My Profile</Nav.Link>
           <Nav.Link href="#link">Posts</Nav.Link>
           <Button variant="info" onClick={handleLogOut}>
             Logout

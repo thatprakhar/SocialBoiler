@@ -20,6 +20,13 @@ function ProfileInfo({
     console.log("submitting form...");
     console.log(profile.email, profile.tel, profile.age, profile.about);
 
+    //check if email field is correct
+    if (
+      !profile.email.toString().match(/^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$/g)
+    ) {
+      alert("email format incorrect!");
+      return;
+    }
     //check if fields are correct
     if (!profile.age.toString().match(/^\d*$/g)) {
       alert("age must be a number");
@@ -38,16 +45,11 @@ function ProfileInfo({
 
     const requestOptions = {
       method: "POST",
-      body: JSON.stringify({
-        email: profile.email,
-        tel: profile.tel,
-        age: profile.age,
-        about: profile.about,
-      }),
 
       headers: {
         "Content-type": "application/json; charset=UTF-8",
         email: profile.email,
+        username: localStorage.getItem("username"),
         auth_token: localStorage.getItem("auth_token"),
         tel: profile.tel,
         age: profile.age,
@@ -59,7 +61,7 @@ function ProfileInfo({
       .then((res) => res.json())
       .then((data) => {
         console.log("put request back is: ", data);
-        alert("update profile success!");
+        alert(data);
       })
       .catch((err) => {
         console.log("can not update profile: " + err);
@@ -89,7 +91,18 @@ function ProfileInfo({
             Email:
           </Form.Label>
           <Col sm="10">
-            <Form.Control plaintext readOnly value={profile.email} />
+            {isOwnProfile ? (
+              <Form.Control
+                plaintext
+                value={profile.email}
+                onChange={(e) =>
+                  setProfile({ ...profile, email: e.target.value })
+                }
+                placeholder={"Email Address"}
+              />
+            ) : (
+              <Form.Control plaintext value={profile.email} readOnly />
+            )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
             Tel
@@ -179,11 +192,7 @@ function ProfileInfo({
         </Tab>
         <Tab eventKey="followers" title="Followers">
           {followers.map((follower) => (
-            <TopicItem
-              name={follower.name}
-              email={follower.email}
-              key={uuidv4()}
-            />
+            <TopicItem name={follower} key={uuidv4()} />
           ))}
         </Tab>
       </Tabs>

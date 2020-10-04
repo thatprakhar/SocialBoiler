@@ -87,8 +87,10 @@ export default function Login() {
           setError(true);
           setErrorMessage("Incorrect Password and Email Combination!");
         } else {
-          localStorage.setItem("email", email);
-          localStorage.setItem("auth_token", JSON.stringify(data));
+          console.log("data is" + JSON.stringify(data));
+          console.log(data);
+          localStorage.setItem("auth_token", data.auth_token);
+          localStorage.setItem("username", data.username);
           history.push("/home");
         }
       })

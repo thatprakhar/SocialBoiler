@@ -50,6 +50,7 @@ export default function SignUp() {
   const classes = useStyles();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -61,8 +62,7 @@ export default function SignUp() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        name: firstName,
-        surname: lastName,
+        username: username,
         email: email,
         password: password,
       },
@@ -70,13 +70,16 @@ export default function SignUp() {
     fetch(API_URL + "/sign_up", requestOptions)
       .then((res) => res.json())
       .then((data) => {
-        if (data === "Email already exists!") {
+        if (
+          data === "Email or Username already exists!" ||
+          data === "Invalid Email!"
+        ) {
           setError(true);
-          setErrorMessage("Email already exists!");
+          setErrorMessage(data);
         } else {
           console.log(data);
-          localStorage.setItem("email", email);
-          localStorage.setItem("auth_token", JSON.stringify(data));
+          localStorage.setItem("username", username);
+          localStorage.setItem("auth_token", data.auth_token);
           history.push("/home");
         }
       })
@@ -98,20 +101,20 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} validate="true" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="username"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="username"
+                label="User Name"
                 autoFocus
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
@@ -122,7 +125,7 @@ export default function SignUp() {
                 autoComplete="lname"
                 onChange={(e) => setLastName(e.target.value)}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

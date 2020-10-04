@@ -55,44 +55,70 @@ def update_table(new_df, BaseClass):
     session.commit()
     session.close()
 
-def update_authentication_token(BaseClass, email, token):
+def update_authentication_token(BaseClass, username, token):
     """
     :param BaseClass: Base child-class (sqlalchemy model)
     :param email: Email whose authentication token will be updated
     :param token: token assigned to user in each login
     """
     session = Session()
-    session.query(BaseClass).filter(BaseClass.email == email).update({BaseClass.auth_token: token})
+    session.query(BaseClass).filter(BaseClass.username == username).update({BaseClass.auth_token: token})
     session.commit()
     session.close()
 
 
-def update_user_profile(BaseClass, email, phone_number, age, about):
+# def update_user_profile(BaseClass, email, phone_number, age, about):
+def update_user_profile(BaseClass, username, email, phone_number, age, about):
     """
     :param BaseClass: Base child-class (sqlalchemy model)
     :param email: Email whose authentication token will be updated
     :param token: token assigned to user in each login
     """
     session = Session()
-    session.query(BaseClass).filter(BaseClass.email == email).update(
+    session.query(BaseClass).filter(BaseClass.username == username).update(
         {
+            BaseClass.email: email,
             BaseClass.phone_number: phone_number, 
             BaseClass.age: age, 
-            BaseClass.about: about 
+            BaseClass.about: about
         }
-        )
+    )
     session.commit()
     session.close()
 
-
-def delete_rows(BaseClass, email):
+def update_profile_avatar(BaseClass, username, image):
+    # print("here: ", image)
     session = Session()
-    session.query(BaseClass).filter(BaseClass.email == email).delete()
+    session.query(BaseClass).filter(BaseClass.username == username).update(
+        {
+           BaseClass.image: image
+        }
+    )
+    session.commit()
+    session.close()
+
+# Update user email in credentials
+def update_user_credentials(BaseClass, username, email):
+    session = Session()
+    
+    session.query(BaseClass).filter(BaseClass.username == username).update(
+        {
+            BaseClass.email: email,
+            
+        }
+    )
     session.commit()
     session.close()
 
 
-#create_tables()
+def delete_rows(BaseClass, username):
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.username == username).delete()
+    session.commit()
+    session.close()
+
+
+create_tables()
 
 if __name__ == '__main__':
     pass
