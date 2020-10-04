@@ -18,27 +18,29 @@ def get_profile_details(email):
         param email: the email associated with the user
         returns: name, surname, email, phone number, age, and about info of the user
     """
+    try:
+        # fetch data in user credentials
+        user_credentials_df = fetch_rows(User_Credentials)
 
-    # fetch data in user credentials
-    user_credentials_df = fetch_rows(User_Credentials)
+        # get the row associated with the email parameter
+        user_credentials_df = user_credentials_df.loc[user_credentials_df['email'] == email]
 
-    # get the row associated with the email parameter
-    user_credentials_df = user_credentials_df.loc[user_credentials_df['email'] == email]
+        # get the required parameters from the row.
+        name = user_credentials_df.iloc[0]['name'] 
+        surname = user_credentials_df.iloc[0]['surname'] 
 
-    # get the required parameters from the row.
-    name = user_credentials_df.iloc[0]['name'] 
-    surname = user_credentials_df.iloc[0]['surname'] 
+        # fetch data in the profile page table
+        profile_page_df = fetch_rows(Profile_Page)
 
-    # fetch data in the profile page table
-    profile_page_df = fetch_rows(Profile_Page)
+        # get the row associated with the email parameter
+        profile_page_df = profile_page_df.loc[profile_page_df['email'] == email]
 
-    # get the row associated with the email parameter
-    profile_page_df = profile_page_df.loc[profile_page_df['email'] == email]
-
-    #get the required parameters
-    phone_number = profile_page_df.iloc[0]['phone_number']
-    age = profile_page_df.iloc[0]['age']
-    about = profile_page_df.iloc[0]['about']
+        #get the required parameters
+        phone_number = profile_page_df.iloc[0]['phone_number']
+        age = profile_page_df.iloc[0]['age']
+        about = profile_page_df.iloc[0]['about']
+    except Exception as inst:
+        return {"error": "can not get profile"}
 
     return {"email": email, "name": name, "surname": surname, "phone_number": phone_number, "age": age, "about": about}
 

@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Tab, Tabs, Badge } from "react-bootstrap";
 import TopicItem from "./TopicItem";
 import { v4 as uuidv4 } from "uuid";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users/1";
+const API_URL = "http://127.0.0.1:5000";
 
 function ProfileInfo({
   isOwnProfile,
@@ -37,7 +37,7 @@ function ProfileInfo({
     }
 
     const requestOptions = {
-      method: "PUT",
+      method: "POST",
       body: JSON.stringify({
         email: profile.email,
         tel: profile.tel,
@@ -47,13 +47,19 @@ function ProfileInfo({
 
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        email: profile.email,
+        auth_token: localStorage.getItem("auth_token"),
+        tel: profile.tel,
+        age: profile.age,
+        about: profile.about,
       },
     };
 
-    fetch(API_URL, requestOptions)
+    fetch(API_URL + "/update_profile_page", requestOptions)
       .then((res) => res.json())
       .then((data) => {
         console.log("put request back is: ", data);
+        alert("update profile success!");
       })
       .catch((err) => {
         console.log("can not update profile: " + err);
@@ -173,7 +179,11 @@ function ProfileInfo({
         </Tab>
         <Tab eventKey="followers" title="Followers">
           {followers.map((follower) => (
-            <TopicItem name={follower} key={uuidv4()} />
+            <TopicItem
+              name={follower.name}
+              email={follower.email}
+              key={uuidv4()}
+            />
           ))}
         </Tab>
       </Tabs>

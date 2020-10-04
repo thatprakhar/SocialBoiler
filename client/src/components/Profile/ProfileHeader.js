@@ -4,18 +4,20 @@ import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users/1";
+const API_URL = "http://127.0.0.1:5000";
 function ProfileHeader() {
   const history = useHistory();
   const handleLogOut = () => {
-    //remove user from localstorage
-    localStorage.removeItem("user");
-    //remove token from server
     const requestOptions = {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        email: localStorage.getItem("email"),
+        auth_token: localStorage.getItem("auth_token"),
+      },
     };
 
-    fetch(API_URL, requestOptions)
+    fetch(API_URL + "/logout", requestOptions)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -24,6 +26,7 @@ function ProfileHeader() {
         alert("can not logout: " + err);
       });
     //redirect to login page
+    localStorage.removeItem("auth_token");
     history.push("/login");
   };
   return (

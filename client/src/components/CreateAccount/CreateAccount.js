@@ -25,24 +25,24 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignUp() {
@@ -64,15 +64,15 @@ export default function SignUp() {
         name: firstName,
         surname: lastName,
         email: email,
-        password: password
-      }
+        password: password,
+      },
     };
     fetch(API_URL + "/sign_up", requestOptions)
-      .then(res => res.json())
-      .then(data => {
-        if (data === "Incorrect Password or Email!") {
+      .then((res) => res.json())
+      .then((data) => {
+        if (data === "Email already exists!") {
           setError(true);
-          setErrorMessage("Incorrect Password or Email!");
+          setErrorMessage("Email already exists!");
         } else {
           console.log(data);
           localStorage.setItem("email", email);
@@ -80,7 +80,7 @@ export default function SignUp() {
           history.push("/home");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         setError(true);
         setErrorMessage("Could not connect to server");
       });
@@ -108,7 +108,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                onChange={e => setFirstName(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -120,7 +120,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-                onChange={e => setLastName(e.target.value)}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -132,7 +132,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -145,7 +145,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
           </Grid>

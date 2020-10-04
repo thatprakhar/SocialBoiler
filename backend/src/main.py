@@ -56,11 +56,23 @@ def make_app():
 
     @app.route("/get_profile_page", methods=["POST"])
     def get_user_profile():
+        # This is the user's email
         email = request.headers.get("email")
+        # This is the email of the profile we want to get
+        profile_email=request.headers.get("profile_email")
         #fetch email, tel, age, about, name  and send it to frontend
-        profile_details = get_profile_details()
+        auth_token=request.headers.get("auth_token")
 
-        return jsonify(profile_details)
+        if email=="null" or profile_email=="null" or auth_token=="null":
+            return jsonify("failed")
+
+
+        status=token_validation(email, auth_token)
+        if status:
+            profile_details = get_profile_details(profile_email)
+            return jsonify(profile_details)
+        else:
+            return jsonify("failed")
 
 
     @app.route("/update_profile_page", methods=["POST"])

@@ -71,7 +71,10 @@ def check_login_credentials(email, password):
 def token_validation(email, auth_token):
     df = fetch_rows(User_Credentials)
     df = df.loc[df['email'] == email]
-    auth_db = df.iloc[0]['auth_token'] 
+    # auth_db = df.iloc[0]['auth_token']
+    auth_db = "\"" + df.iloc[0]['auth_token'] + "\"" 
+
+    # print(auth_db, auth_token)
 
     if (auth_token == auth_db):
         return True

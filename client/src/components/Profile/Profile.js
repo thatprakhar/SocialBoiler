@@ -3,12 +3,12 @@ import { Col, Container, Row, Modal, Button } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
 import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
-import queryString from "query-string";
+import queryString, { parse } from "query-string";
 import { Redirect, useLocation, useHistory } from "react-router-dom";
 
 import "./Profile.css";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users/1";
+const API_URL = "http://127.0.0.1:5000";
 
 function Profile() {
   const history = useHistory();
@@ -16,12 +16,12 @@ function Profile() {
   const [show, setShow] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
 
-  const [name, setName] = useState("Purdue Pete");
+  const [name, setName] = useState("");
   const [profile, setProfile] = useState({
-    email: "pete124@purdue.edu",
-    tel: "123-456-7890",
-    age: "18",
-    about: "Hi there 👋 , my name is Purdue Pete",
+    email: "",
+    tel: "",
+    age: "",
+    about: "",
   });
 
   const [topics, setTopics] = useState([
@@ -36,11 +36,14 @@ function Profile() {
   ]);
 
   const [followers, setFollowers] = useState([
-    "Cindy",
-    "Onur",
-    "Uras",
-    "Sayed",
-    "Prakhar",
+    {
+      name: "Tom Smith",
+      email: "tom123@gmail.com",
+    },
+    {
+      name: "Cindy Shi",
+      email: "shi123@gmail.com",
+    },
   ]);
 
   const handleClose = () => setShow(false);
@@ -67,23 +70,51 @@ function Profile() {
   };
 
   useEffect(() => {
+    let parsed = queryString.parse(window.location.search);
+
+    let profile_email;
+    if (
+      Object.keys(parsed).length === 0 ||
+      localStorage.getItem("email") == parsed.email
+    ) {
+      setIsOwnProfile(true);
+      profile_email = localStorage.getItem("email");
+    } else {
+      setIsOwnProfile(false);
+      profile_email = parsed.email;
+    }
+
+    console.log(profile_email);
+
     //check if user is logged in before fetching data from the server
 
     const requestOptions = {
-      method: "GET",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        profile_email: profile_email,
+        email: localStorage.getItem("email"),
+        auth_token: localStorage.getItem("auth_token"),
+      },
     };
 
-    fetch(API_URL, requestOptions)
+    fetch(API_URL + "/get_profile_page", requestOptions)
       .then((res) => res.json())
       .then((data) => {
         console.log("request is ", data);
-        setProfile({
-          email: data.email,
-          tel: data.phone,
-          age: data.id,
-          about: data.website,
-        });
-        setName(data.name);
+        if (data != "failed" && !data.error) {
+          setProfile({
+            email: data.email,
+            tel: data.phone_number == null ? "" : data.phone_number,
+            age: data.age == null ? "" : data.age,
+            about: data.about == null ? "" : data.about,
+          });
+          setName(data.name + " " + data.surname);
+        } else if (data.error) {
+          alert("Can not get profile!");
+        } else {
+          history.push("/login");
+        }
       })
       .catch((err) => {
         alert("Could not connect to server" + err);

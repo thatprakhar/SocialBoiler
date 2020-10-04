@@ -3,10 +3,10 @@ import { Button } from "react-bootstrap";
 
 import "./Profile.css";
 
-function TopicItem({ name, unfollow, isOwnProfile }) {
+function TopicItem({ name, unfollow, isOwnProfile, email }) {
   return (
     <div className="profile__topic">
-      <a href="/">{name}</a>
+      <a href={"/profile?email=" + email}>{name}</a>
 
       {unfollow && isOwnProfile ? (
         <Button variant="info" onClick={() => unfollow(name)}>
