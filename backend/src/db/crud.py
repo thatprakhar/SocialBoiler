@@ -85,6 +85,13 @@ def update_user_profile(BaseClass, email, phone_number, age, about):
     session.close()
 
 
+def delete_rows(BaseClass, email):
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.email == email).delete()
+    session.commit()
+    session.close()
+
+
 #create_tables()
 
 if __name__ == '__main__':

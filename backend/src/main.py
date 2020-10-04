@@ -7,7 +7,7 @@ import os
 import sys
 sys.path.append(os.getcwd())
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token,token_validation
-from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details
+from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account
 
 def make_app():
     app = Flask(__name__)
@@ -93,6 +93,20 @@ def make_app():
         else:
             return jsonify("failed")
 
+
+    @app.route("/delete", methods=["POST"])
+    def delete_user():
+        email = request.headers.get("email")
+        auth_token = request.headers.get("auth_token")
+
+        #check if the authentication token is valid
+        status = token_validation(email, auth_token)
+        if status:
+            delete_user_account(email) 
+            return jsonify("success")
+
+        else:
+            return jsonify("failed")
 
 
     return app
