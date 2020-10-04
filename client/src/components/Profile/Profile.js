@@ -52,18 +52,28 @@ function Profile() {
   const handleDelete = () => {
     console.log("deleting user...");
     const requestOptions = {
-      method: "DELETE",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        email: localStorage.getItem("email"),
+        auth_token: localStorage.getItem("auth_token"),
+      },
     };
 
-    fetch(API_URL, requestOptions)
+    fetch(API_URL + "/delete", requestOptions)
       .then((res) => res.json())
-      .then((data) => {})
+      .then((data) => {
+        if (data !== "success") {
+          alert("delete account failed!");
+        }
+      })
       .catch((err) => {
         alert("server can not delete account " + err);
       });
 
     //remove data in local storage
-    localStorage.removeItem("user");
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("email");
 
     //redirect to login page
     history.push("/login");
@@ -75,7 +85,7 @@ function Profile() {
     let profile_email;
     if (
       Object.keys(parsed).length === 0 ||
-      localStorage.getItem("email") == parsed.email
+      localStorage.getItem("email") === parsed.email
     ) {
       setIsOwnProfile(true);
       profile_email = localStorage.getItem("email");
@@ -102,7 +112,7 @@ function Profile() {
       .then((res) => res.json())
       .then((data) => {
         console.log("request is ", data);
-        if (data != "failed" && !data.error) {
+        if (data !== "failed" && !data.error) {
           setProfile({
             email: data.email,
             tel: data.phone_number == null ? "" : data.phone_number,

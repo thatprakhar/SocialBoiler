@@ -101,6 +101,7 @@ def make_app():
 
         #check if the authentication token is valid
         status = token_validation(email, auth_token)
+        
         if status:
             delete_user_account(email) 
             return jsonify("success")

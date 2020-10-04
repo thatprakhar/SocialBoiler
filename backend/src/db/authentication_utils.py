@@ -69,10 +69,13 @@ def check_login_credentials(email, password):
     return False
 
 def token_validation(email, auth_token):
-    df = fetch_rows(User_Credentials)
-    df = df.loc[df['email'] == email]
-    # auth_db = df.iloc[0]['auth_token']
-    auth_db = "\"" + df.iloc[0]['auth_token'] + "\"" 
+    try:
+        df = fetch_rows(User_Credentials)
+        df = df.loc[df['email'] == email]
+        # auth_db = df.iloc[0]['auth_token']
+        auth_db = "\"" + df.iloc[0]['auth_token'] + "\"" 
+    except Exception as inst:
+        return False
 
     # print(auth_db, auth_token)
 
