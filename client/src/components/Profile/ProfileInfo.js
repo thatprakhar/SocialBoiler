@@ -14,6 +14,7 @@ function ProfileInfo({
   setProfile,
   setTopics,
   setFollowing,
+  setError,
 }) {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,12 +25,14 @@ function ProfileInfo({
     if (
       !profile.email.toString().match(/^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$/g)
     ) {
-      alert("email format incorrect!");
+      // alert("email format incorrect!");
+      setError("Invalid email format!");
       return;
     }
     //check if fields are correct
     if (!profile.age.toString().match(/^\d*$/g)) {
-      alert("age must be a number");
+      // alert("age must be a number");
+      setError("Age should be a number!");
       return;
     }
 
@@ -39,7 +42,8 @@ function ProfileInfo({
         .trim()
         .match(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/g)
     ) {
-      alert("Phone number must be in the format: xxx-xxx-xxxx");
+      // alert("Phone number must be in the format: xxx-xxx-xxxx");
+      setError("Phone number must be: xxx-xxx-xxxx!");
       return;
     }
 
@@ -61,10 +65,12 @@ function ProfileInfo({
       .then((res) => res.json())
       .then((data) => {
         console.log("put request back is: ", data);
-        alert(data);
+        // alert(data);
+        setError(null);
       })
       .catch((err) => {
-        console.log("can not update profile: " + err);
+        // console.log("can not update profile: " + err);
+        setError("Can not connect to server!");
       });
   };
 

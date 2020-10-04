@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Modal, Button } from "react-bootstrap";
+import { Col, Container, Row, Modal, Button, Alert } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
 import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
@@ -16,6 +16,7 @@ function Profile() {
   const [showDelete, setShowDelete] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [error, setError] = useState(null);
 
   const [file, setFile] = useState("");
   const [image, setImage] = useState("");
@@ -72,10 +73,11 @@ function Profile() {
         .then((res) => res.json())
         .then((data) => {
           console.log("put request back is: ", data);
-          alert(data);
+          // alert(data);
         })
         .catch((err) => {
           console.log("can not update image: " + err);
+          setError("Can not upload image!");
         });
       setImage(event.target.result);
     });
@@ -109,7 +111,8 @@ function Profile() {
       .then((res) => res.json())
       .then((data) => {
         if (data !== "success") {
-          alert("delete account failed!");
+          // alert("delete account failed!");
+          setError("delete account failed");
         }
       })
       .catch((err) => {
@@ -168,13 +171,15 @@ function Profile() {
           setName("@" + data.username);
           setImage(data.image);
         } else if (data.error) {
-          alert("Can not get profile!");
+          // alert("Can not get profile!");
+          setError("Can not get user profile! User doesn't exists!");
         } else {
           history.push("/login");
         }
       })
       .catch((err) => {
-        alert("Could not connect to server" + err);
+        // alert("Could not connect to server" + err);
+        setError("Can not connect to server!");
       });
   }, []);
 
@@ -196,6 +201,12 @@ function Profile() {
           </Col>
 
           <Col md={8}>
+            {error != null ? (
+              <Alert variant="danger" style={{ marginTop: "20px" }}>
+                {error}
+              </Alert>
+            ) : null}
+
             <ProfileInfo
               isOwnProfile={isOwnProfile}
               topics={topics}
@@ -205,6 +216,7 @@ function Profile() {
               setProfile={setProfile}
               setTopics={setTopics}
               setFollowing={setFollowing}
+              setError={setError}
             />
           </Col>
         </Row>
@@ -227,7 +239,7 @@ function Profile() {
 
       <Modal show={showUpload} onHide={handleUploadClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Upload a image</Modal.Title>
+          <Modal.Title>Upload avatar</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <input
