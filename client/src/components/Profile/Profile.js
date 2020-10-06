@@ -172,7 +172,8 @@ function Profile() {
           setImage(data.image);
         } else if (data.error) {
           // alert("Can not get profile!");
-          setError("Can not get user profile! User doesn't exists!");
+          //setError("Can not get user profile! User doesn't exists!");
+          history.push("/404");
         } else {
           history.push("/login");
         }

@@ -66,7 +66,11 @@ function ProfileInfo({
       .then((data) => {
         console.log("put request back is: ", data);
         // alert(data);
-        setError(null);
+        if (data === "This email already used!") {
+          setError(data);
+        } else {
+          setError(null);
+        }
       })
       .catch((err) => {
         // console.log("can not update profile: " + err);
