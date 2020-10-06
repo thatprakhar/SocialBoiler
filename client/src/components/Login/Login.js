@@ -28,9 +28,9 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh"
+    height: "100vh",
   },
   image: {
     backgroundImage: "url(" + Background + ")",
@@ -40,25 +40,25 @@ const useStyles = makeStyles(theme => ({
         ? theme.palette.grey[50]
         : theme.palette.grey[900],
     backgroundSize: "cover",
-    backgroundPosition: "center"
+    backgroundPosition: "center",
   },
   paper: {
     margin: theme.spacing(8, 4),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function Login() {
@@ -77,22 +77,24 @@ export default function Login() {
       headers: {
         "Content-Type": "application/json",
         email: email,
-        password: password
-      }
+        password: password,
+      },
     };
     fetch(API_URL + "/login", requestOptions)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data === "Incorrect Password or Email!") {
           setError(true);
           setErrorMessage("Incorrect Password and Email Combination!");
         } else {
-          localStorage.setItem("email", email);
-          localStorage.setItem("auth_token", JSON.stringify(data));
+          console.log("data is" + JSON.stringify(data));
+          console.log(data);
+          localStorage.setItem("auth_token", data.auth_token);
+          localStorage.setItem("username", data.username);
           history.push("/home");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         setError(true);
         setErrorMessage("Could not connect to server");
       });
@@ -124,7 +126,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               helperText={email === "" ? "Enter a valid email address" : ""}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
               validate="true"
             />
@@ -138,7 +140,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

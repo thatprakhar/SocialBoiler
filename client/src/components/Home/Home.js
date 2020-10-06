@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  useHistory
+  useHistory,
 } from "react-router-dom";
 
 export default function Home() {
@@ -17,13 +17,16 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
         email: localStorage.getItem("email"),
-        auth_token: localStorage.getItem("auth_token")
-      }
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+      },
     };
     fetch(API_URL + "/logout", requestOptions)
-      .then(res => {})
-      .catch(err => console.log(err));
+      .then((res) => {})
+      .catch((err) => console.log(err));
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
     history.push("/login");
   }
 

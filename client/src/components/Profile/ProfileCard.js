@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 
-function ProfileCard({ handleShow }) {
+function ProfileCard({
+  handleDeleteShow,
+  handleUploadShow,
+  isOwnProfile,
+  name,
+  image,
+}) {
+  // console.log("card: ", image);
   return (
     <div className="profile__card">
-      <Card style={{ width: "30rem", height: "40rem" }}>
+      <Card style={{ width: "30rem" }}>
         <Card.Img
           variant="top"
-          src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.fansided.com%2Fwp-content%2Fblogs.dir%2F229%2Ffiles%2F2013%2F11%2F6896948.jpg&f=1&nofb=1"
+          src={
+            image != null
+              ? image
+              : "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.fansided.com%2Fwp-content%2Fblogs.dir%2F229%2Ffiles%2F2013%2F11%2F6896948.jpg&f=1&nofb=1"
+          }
         />
         <Card.Body>
           <h1>
-            <Badge variant="light">Purdue Pete</Badge>
+            <Badge variant="light">{name}</Badge>
           </h1>
 
           <h5>
@@ -27,9 +38,19 @@ function ProfileCard({ handleShow }) {
             <Badge variant="primary">Posts:</Badge> 10
           </h5>
           <div className="text-center profile__delete">
-            <Button variant="danger" onClick={handleShow}>
-              Delete Account
-            </Button>
+            {isOwnProfile ? (
+              <div className="profile__card__button">
+                {" "}
+                <Button variant="danger" onClick={handleDeleteShow}>
+                  Delete Account
+                </Button>
+                <Button variant="success" onClick={handleUploadShow}>
+                  Upload Avatar
+                </Button>
+              </div>
+            ) : (
+              <Button variant="info">Follow</Button>
+            )}
           </div>
         </Card.Body>
       </Card>
