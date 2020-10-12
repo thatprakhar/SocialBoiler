@@ -25,31 +25,29 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    margin: theme.spacing(3, 0, 2)
+  }
 }));
 
 export default function SignUp() {
   const history = useHistory();
   const classes = useStyles();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,12 +62,12 @@ export default function SignUp() {
         "Content-Type": "application/json",
         username: username,
         email: email,
-        password: password,
-      },
+        password: password
+      }
     };
     fetch(API_URL + "/sign_up", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (
           data === "Email or Username already exists!" ||
           data === "Invalid Email!"
@@ -83,7 +81,7 @@ export default function SignUp() {
           history.push("/home");
         }
       })
-      .catch((err) => {
+      .catch(err => {
         setError(true);
         setErrorMessage("Could not connect to server");
       });
@@ -111,7 +109,7 @@ export default function SignUp() {
                 id="username"
                 label="User Name"
                 autoFocus
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={e => setUsername(e.target.value)}
               />
             </Grid>
             {/* <Grid item xs={12} sm={6}>
@@ -135,7 +133,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -148,7 +146,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </Grid>
           </Grid>

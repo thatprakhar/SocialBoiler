@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 
 function ProfileCard({
@@ -6,7 +6,7 @@ function ProfileCard({
   handleUploadShow,
   isOwnProfile,
   name,
-  image,
+  image
 }) {
   // console.log("card: ", image);
   return (

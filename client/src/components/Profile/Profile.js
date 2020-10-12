@@ -3,8 +3,8 @@ import { Col, Container, Row, Modal, Button, Alert } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
 import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
-import queryString, { parse } from "query-string";
-import { Redirect, useLocation, useHistory } from "react-router-dom";
+import queryString from "query-string";
+import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
 
@@ -26,18 +26,18 @@ function Profile() {
     email: "",
     tel: "",
     age: "",
-    about: "",
+    about: ""
   });
 
   const [topics, setTopics] = useState([
     "#purdue",
     "#computer science",
-    "#React",
+    "#React"
   ]);
   const [following, setFollowing] = useState([
     "Roopsha Samanta",
     "Jeffrey A. Turkstra",
-    "Gustavo Rodriguez-Rivera",
+    "Gustavo Rodriguez-Rivera"
   ]);
 
   const [followers, setFollowers] = useState(["cindy123", "jane", "tom"]);
@@ -56,7 +56,7 @@ function Profile() {
     }
 
     const reader = new FileReader();
-    reader.addEventListener("load", (event) => {
+    reader.addEventListener("load", event => {
       // console.log("readinf image:", event.target.result);
       const requestOptions = {
         method: "POST",
@@ -65,17 +65,17 @@ function Profile() {
           "Content-type": "application/json; charset=UTF-8",
           username: localStorage.getItem("username"),
           auth_token: localStorage.getItem("auth_token"),
-          image: event.target.result,
-        },
+          image: event.target.result
+        }
       };
 
       fetch(API_URL + "/update_profile_avatar", requestOptions)
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => res.json())
+        .then(data => {
           console.log("put request back is: ", data);
           // alert(data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log("can not update image: " + err);
           setError("Can not upload image!");
         });
@@ -103,19 +103,19 @@ function Profile() {
         "Content-Type": "application/json",
         email: localStorage.getItem("email"),
         username: localStorage.getItem("username"),
-        auth_token: localStorage.getItem("auth_token"),
-      },
+        auth_token: localStorage.getItem("auth_token")
+      }
     };
 
     fetch(API_URL + "/delete", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data !== "success") {
           // alert("delete account failed!");
           setError("delete account failed");
         }
       })
-      .catch((err) => {
+      .catch(err => {
         alert("server can not delete account " + err);
       });
 
@@ -153,20 +153,20 @@ function Profile() {
         "Content-Type": "application/json",
         auth_token: localStorage.getItem("auth_token"),
         username: localStorage.getItem("username"),
-        profile_user: profile_user,
-      },
+        profile_user: profile_user
+      }
     };
 
     fetch(API_URL + "/get_profile_page", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         console.log("request is ", data);
         if (data !== "failed" && !data.error) {
           setProfile({
             email: data.email,
             tel: data.phone_number == null ? "" : data.phone_number,
             age: data.age == null ? "" : data.age,
-            about: data.about == null ? "" : data.about,
+            about: data.about == null ? "" : data.about
           });
           setName("@" + data.username);
           setImage(data.image);
@@ -178,7 +178,7 @@ function Profile() {
           history.push("/login");
         }
       })
-      .catch((err) => {
+      .catch(err => {
         // alert("Could not connect to server" + err);
         setError("Can not connect to server!");
       });
@@ -248,7 +248,7 @@ function Profile() {
             id="avatar"
             name="avatar"
             accept="image/png, image/jpeg"
-            onChange={(e) => setFile(e.target.files)}
+            onChange={e => setFile(e.target.files)}
           />
         </Modal.Body>
         <Modal.Footer>

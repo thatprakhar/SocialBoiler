@@ -14,16 +14,16 @@ function ProfileHeader() {
         "Content-Type": "application/json",
         email: localStorage.getItem("email"),
         auth_token: localStorage.getItem("auth_token"),
-        username: localStorage.getItem("username"),
-      },
+        username: localStorage.getItem("username")
+      }
     };
 
     fetch(API_URL + "/logout", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         console.log(data);
       })
-      .catch((err) => {
+      .catch(err => {
         alert("can not logout: " + err);
       });
     //redirect to login page
@@ -40,7 +40,7 @@ function ProfileHeader() {
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/profile">My Profile</Nav.Link>
-          <Nav.Link href="#link">Posts</Nav.Link>
+          <Nav.Link href="#link">My Posts</Nav.Link>
           <Button variant="info" onClick={handleLogOut}>
             Logout
           </Button>

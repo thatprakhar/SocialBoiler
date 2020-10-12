@@ -1,38 +1,18 @@
 import React from "react";
 import Login from "../Login/Login";
-import { Button } from "@material-ui/core";
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  useHistory,
-} from "react-router-dom";
+import ProfileHeader from "../Profile/ProfileHeader";
+import Post from "../Post/Post";
+import { Container, makeStyles } from "@material-ui/core";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+
+const createStyles = makeStyles(() => ({
+  feed: {
+    marginTop: 20
+  }
+}));
 
 export default function Home() {
-  const API_URL = "http://127.0.0.1:5000";
-  const history = useHistory();
-  function logout() {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        email: localStorage.getItem("email"),
-        auth_token: localStorage.getItem("auth_token"),
-        username: localStorage.getItem("username"),
-      },
-    };
-    fetch(API_URL + "/logout", requestOptions)
-      .then((res) => {})
-      .catch((err) => console.log(err));
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("email");
-    history.push("/login");
-  }
-
-  function goToProfile() {
-    history.push("/profile");
-  }
+  const styling = createStyles();
 
   return (
     <div>
@@ -46,13 +26,37 @@ export default function Home() {
           )}
         </Route>
       </Router>
-      <h1>Home</h1>
-      <Button variant="contained" color="primary" onClick={goToProfile}>
-        Profile
-      </Button>
-      <Button variant="contained" color="secondary" onClick={logout}>
-        Logout
-      </Button>
+      <ProfileHeader />
+      <Container className={styling.feed}>
+        <Post
+          userName="thatprakhar"
+          title="A new post"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit."
+          topic="#general"
+        />
+        <Post
+          userName="thatprakhar"
+          title="A second post"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.
+
+
+"
+          topic="#topic1"
+        />
+        <Post
+          userName="thatprakhar"
+          title="Another post"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut."
+          topic="#topic2"
+        />
+
+        <Post
+          userName="thatprakhar"
+          title="Last post"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          topic="#general"
+        />
+      </Container>
     </div>
   );
 }
