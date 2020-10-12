@@ -38,11 +38,13 @@ class Profile_Page(Base):
 
 class Posts(Base):
     __tablename__ = "posts"
-    username = Column(String, primary_key=True, nullable=False)
-    post_id = Column(Integer, autoincrement=True)
+    post_id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, nullable=False)
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
     likes = Column(Integer, nullable=True)
     dislikes = Column(Integer, nullable=True)
-    date_created = Column(Integer, nullable=True)
+    date_created = Column(String, nullable=True)
     topics = Column(String, nullable=True)
 
 
