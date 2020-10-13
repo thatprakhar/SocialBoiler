@@ -3,12 +3,13 @@ import Login from "../Login/Login";
 import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
-import { Container, makeStyles, Grid } from "@material-ui/core";
+import { makeStyles, Grid, Hidden } from "@material-ui/core";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 const createStyles = makeStyles(() => ({
   feed: {
-    marginTop: 20
+    marginTop: 40,
+    maxHeight: window.innerHeight
   },
   main: {
     display: "flex",
@@ -115,9 +116,11 @@ export default function Home() {
           posts={posts}
           parentHandler={parentHandler}
         />
-        <Grid className={styling.feed} sm={0}>
-          <Post post_data={selectedPost}></Post>
-        </Grid>
+        <Hidden mdDown>
+          <Grid className={styling.feed}>
+            <Post post_data={selectedPost}></Post>
+          </Grid>
+        </Hidden>
       </div>
     </div>
   );

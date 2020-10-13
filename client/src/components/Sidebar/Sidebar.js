@@ -9,7 +9,6 @@ import {
   Avatar
 } from "@material-ui/core";
 import { Button, Badge } from "react-bootstrap";
-import ScrollArea from "react-scrollbar";
 
 const createStyles = makeStyles(theme => ({
   inline: {
@@ -22,9 +21,10 @@ const createStyles = makeStyles(theme => ({
   },
   root: {
     position: "relative",
+    overflow: "auto",
     width: "100%",
-    maxWidth: "40ch",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    maxHeight: window.innerHeight
   }
 }));
 

@@ -5,12 +5,14 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import CommentIcon from "@material-ui/icons/Comment";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
+
 const createStyles = makeStyles(theme => ({
   root: {
-    "box-shadow": "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-    marginTop: 100,
+    marignLeft: 10,
     background: "white",
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100vw",
+    maxHeight: window.innerHeight
   },
   small: {
     width: theme.spacing(3),
