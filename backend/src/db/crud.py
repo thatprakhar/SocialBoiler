@@ -117,6 +117,36 @@ def delete_rows(BaseClass, username):
     session.commit()
     session.close()
 
+def fetch_post(BaseClass, post_id):
+    session = Session()
+
+    try:
+        result = session.query(BaseClass).filter(BaseClass.post_id == post_id)
+    
+    finally:
+        session.close()
+
+    if result is not None:
+        df = pd.read_sql(result.statement, result.session.bind)
+        return df
+
+    else:
+        return None
+
+
+# Update post likes and dislikes
+def update_post_likes(post_id, like, dislike):
+    session = Session()
+    
+    session.query(Posts).filter(Posts.post_id == post_id).update(
+        {
+            Post.likes: like,
+            Post.dislikes: dislike
+            
+        }
+    )
+    session.commit()
+    session.close()
 
 create_tables()
 

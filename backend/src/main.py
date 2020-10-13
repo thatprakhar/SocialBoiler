@@ -168,13 +168,32 @@ def make_app():
         image = request.headers.get("image")
         topics = request.headers.get("topics")
 
+        #check if the authentication token is valid
+        status = token_validation(username, auth_token)
+
         if not status:
             return jsonify("failed")
         else:
             insert_post_details(username, title, description, image, topics)
 
         return jsonify("success")
+
+    
+     @app.route('/vote', methods=["POST"])
+     def vote_post():
+        auth_token = request.headers.get("auth_token")
+        #check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
         
+        post_id = request.headers.get("post_id")
+        username = request.headers.get("username")
+        liked = request.headers.get("liked")
+        disliked = request.headers.get("disliked")
+
+        if (liked and disliked) or (not liked and not disliked):
+            return jsonify("failed")
 
             
         
