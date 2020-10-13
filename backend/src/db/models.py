@@ -42,6 +42,7 @@ class Posts(Base):
     username = Column(String, nullable=False)
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
+    image = Column(String, nullable=True)
     likes = Column(Integer, nullable=True)
     dislikes = Column(Integer, nullable=True)
     date_created = Column(String, nullable=True)
