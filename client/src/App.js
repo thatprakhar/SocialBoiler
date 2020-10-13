@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Userline from "./components/Userline/Userline";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/createaccount" component={CreateAccount}></Route>
           <Route path="/forgotpass" component={ForgotPassword}></Route>
           <Route path="/profile" component={Profile}></Route>
+          <Route path="/userline" component={Userline}></Route>
           <Route exact path="/">
             {localStorage.getItem("auth_token") ? (
               <Redirect to="/home" />

@@ -7,14 +7,18 @@ import queryString, { parse } from "query-string";
 import { Redirect, useLocation, useHistory } from "react-router-dom";
 
 import "./Profile.css";
+import Userline from "../Userline/Userline";
 
 const API_URL = "http://127.0.0.1:5000";
+
+let profile_user;
 
 function Profile() {
   const history = useHistory();
 
   const [showDelete, setShowDelete] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] =useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
   const [error, setError] = useState(null);
 
@@ -129,9 +133,14 @@ function Profile() {
   };
 
   useEffect(() => {
+
+    //Check if the user is logged in
+    if(localStorage.getItem("username")!=null){
+      setIsLoggedIn(true);
+    }
     let parsed = queryString.parse(window.location.search);
 
-    let profile_user;
+    
     if (
       Object.keys(parsed).length === 0 ||
       localStorage.getItem("username") === parsed.username
@@ -144,6 +153,14 @@ function Profile() {
     }
 
     console.log(profile_user);
+
+    //If user is not logged in and want to access own profile, return to login page
+    if(localStorage.getItem("username")==null && parsed.username==null){
+      console.log('here');
+      history.push("/login");
+      return;
+    }
+
 
     //check if user is logged in before fetching data from the server
 
@@ -188,7 +205,7 @@ function Profile() {
 
   return (
     <div className="profile">
-      <ProfileHeader />
+      <ProfileHeader isLoggedIn={isLoggedIn}/>
       <Container fluid>
         <Row>
           <Col md={4}>
@@ -219,6 +236,15 @@ function Profile() {
               setFollowing={setFollowing}
               setError={setError}
             />
+            {isLoggedIn?(
+              <div className="userline__link">
+              <a href={"/userline?username="+profile_user}>Go to Userline</a>
+            </div>
+            ):(
+              null
+            )}
+            
+           
           </Col>
         </Row>
       </Container>
