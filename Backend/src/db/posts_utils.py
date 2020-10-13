@@ -31,6 +31,9 @@ def vote_post(post_id, username, liked, disliked):
 
     update_post_likes(post_id, likes, dislikes)
     
+
+def dummy():
+    print("HEELLLO")
     
 
 
