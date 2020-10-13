@@ -39,12 +39,11 @@ const createStyles = makeStyles(theme => ({
 
 export default function Post(props) {
   const styling = createStyles();
-
   return (
     <Container className={styling.root}>
       <Row>
         <Col lg={true}>
-          <Typography variant="h3">{props.title}</Typography>
+          <Typography variant="h3">{props.post_data.title}</Typography>
           <div
             style={{
               display: "flex",
@@ -53,14 +52,14 @@ export default function Post(props) {
             }}
           >
             <Typography variant="h5">
-              <Badge variant="dark">{props.topic}</Badge>
+              <Badge variant="dark">{props.post_data.topic}</Badge>
             </Typography>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar className={styling.small && styling.purple}>
-                {props.userName[0]}
+                {props.post_data.userName[0]}
               </Avatar>
               <Typography variant="h6" className={styling.userline}>
-                {props.userName}
+                {props.post_data.userName}
               </Typography>
             </div>
           </div>
@@ -69,7 +68,7 @@ export default function Post(props) {
 
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
-          <Typography variant="h6">{props.text}</Typography>
+          <Typography variant="h6">{props.post_data.text}</Typography>
         </Col>
       </Row>
 
