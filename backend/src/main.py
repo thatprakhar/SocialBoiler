@@ -8,6 +8,7 @@ import sys
 sys.path.append(os.getcwd())
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token,token_validation, get_username
 from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
+from db.posts_utils import insert_post_details
 
 def make_app():
     app = Flask(__name__)
@@ -150,4 +151,23 @@ def make_app():
             return jsonify("failed")
 
 
+    @app.route('/insert_post', methods=["POST"])
+    def insert_new_post():
+        username=request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        title = request.headers.get("title")
+        description = request.headers.get("description")
+        image = request.headers.get("image")
+        topics = request.headers.get("topics")
+
+        if not status:
+            return jsonify("failed")
+        else:
+            insert_post_details(username, title, description, image, topics)
+
+        return jsonify("success")
+        
+
+            
+        
     return app
