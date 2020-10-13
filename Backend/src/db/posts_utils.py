@@ -32,6 +32,11 @@ def vote_post_db(post_id, username, liked, disliked):
         dislikes += 1
 
     update_post_likes(post_id, likes, dislikes)
+    
+
+def dummy():
+    print("HEELLLO")
+    
 
 
 #insert_post_details("onur", "asdsa", "aasdsads", "asdsada", "asdasdasddas")
