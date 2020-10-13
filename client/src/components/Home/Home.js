@@ -3,8 +3,10 @@ import Login from "../Login/Login";
 import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
-import { makeStyles, Grid, Hidden } from "@material-ui/core";
+import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import CreatePost from "../CreatePost/CreatePost";
 
 const createStyles = makeStyles(() => ({
   feed: {
@@ -21,6 +23,15 @@ const createStyles = makeStyles(() => ({
     width: 400,
     marginLeft: 100,
     background: "red"
+  },
+  addButton: {
+    position: "fixed",
+    zIndex: 999,
+    bottom: "0px",
+    right: "0px"
+  },
+  addButtonIcon: {
+    fontSize: 50
   }
 }));
 
@@ -92,6 +103,7 @@ export default function Home() {
   ];
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
   const [selectedPost, setSelectedPost] = useState(posts[0]);
+  const [showCreateScreen, setShowCreateScreen] = useState(false);
 
   function parentHandler(selection) {
     setSelectedPost(selection);
@@ -116,11 +128,27 @@ export default function Home() {
           posts={posts}
           parentHandler={parentHandler}
         />
-        <Hidden mdDown>
-          <Grid className={styling.feed}>
-            <Post post_data={selectedPost}></Post>
-          </Grid>
-        </Hidden>
+
+        {showCreateScreen ? null : (
+          <IconButton
+            className={styling.addButton}
+            onClick={e => setShowCreateScreen(!showCreateScreen)}
+          >
+            <AddCircleIcon className={styling.addButtonIcon} color="primary" />
+          </IconButton>
+        )}
+
+        {showCreateScreen ? (
+          <CreatePost
+            toggleView={() => setShowCreateScreen(!showCreateScreen)}
+          />
+        ) : (
+          <Hidden mdDown>
+            <Grid className={styling.feed}>
+              <Post post_data={selectedPost}></Post>
+            </Grid>
+          </Hidden>
+        )}
       </div>
     </div>
   );
