@@ -50,6 +50,9 @@ export default function Post(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const API_URL = "http://127.0.0.1:5000";
+  function log(x) {
+    console.log(x);
+  }
 
   /*function timeout(ms, promise) {
     return new Promise(function(resolve, reject) {
