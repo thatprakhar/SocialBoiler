@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import "./Profile.css";
 
 const API_URL = "http://127.0.0.1:5000";
-function ProfileHeader() {
+function ProfileHeader({isLoggedIn}) {
   const history = useHistory();
   const handleLogOut = () => {
     const requestOptions = {
@@ -39,11 +39,15 @@ function ProfileHeader() {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/profile">My Profile</Nav.Link>
-          <Nav.Link href="#link">My Posts</Nav.Link>
-          <Button variant="info" onClick={handleLogOut}>
+
+          {isLoggedIn?(<Nav.Link href="/profile">My Profile</Nav.Link>):(null)}
+          {isLoggedIn?(<Button variant="info" onClick={handleLogOut}>
+
             Logout
-          </Button>
+          </Button>):(null)}
+          
+         
+          
         </Nav>
       </Navbar.Collapse>
     </Navbar>

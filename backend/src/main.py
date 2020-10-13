@@ -73,22 +73,30 @@ def make_app():
         username=request.headers.get("username")
         # This is the username of the profile we want to get
         profile_user=request.headers.get("profile_user")
-        # print("profile_user:"+profile_user)
+        print("profile_user:"+profile_user)
         # This is auth token front frontedn
         auth_token=request.headers.get("auth_token")
 
-        if username=="null" or profile_user=="null" or auth_token=="null":
-            return jsonify("failed")
+        # if username=="null" or profile_user=="null" or auth_token=="null":
+        #     return jsonify("failed")
 
-
-        # verify the token with username
-        status = token_validation(username, auth_token)
-        # print(status)
-        if status:
-            profile_details = get_profile_details(profile_user)
-            return jsonify(profile_details)
+        # Check if the user is logged in, check the auth token
+        if username!="null":
+             # verify the token with username
+            status = token_validation(username, auth_token)
+            # print(status)
+            if status:
+                profile_details = get_profile_details(profile_user)
+                return jsonify(profile_details)
+            else:
+                return jsonify("failed")
+        # If the user is not logged in and it requests other user's profile
         else:
-            return jsonify("failed")
+            profile_details=get_profile_details(profile_user)
+            return jsonify(profile_details)
+
+
+       
 
 
     @app.route("/update_profile_page", methods=["POST"])

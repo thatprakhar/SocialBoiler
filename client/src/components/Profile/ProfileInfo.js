@@ -89,6 +89,8 @@ function ProfileInfo({
       return prevFollowing.filter(user => user !== userName);
     });
   };
+
+ 
   return (
     <div className="profile__info">
       <h2>
@@ -111,7 +113,7 @@ function ProfileInfo({
                 placeholder={"Email Address"}
               />
             ) : (
-              <Form.Control plaintext value={profile.email} readOnly />
+              <Form.Control plaintext value={profile.email.replace(/./g, "*")} readOnly />
             )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
