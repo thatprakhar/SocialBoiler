@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 import os 
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.models import User_Credentials, Base, Profile_Page
+from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes
 from src.config import postgres_config
 
 logger = logging.getLogger(__name__)
@@ -140,8 +140,8 @@ def update_post_likes(post_id, like, dislike):
     
     session.query(Posts).filter(Posts.post_id == post_id).update(
         {
-            Post.likes: like,
-            Post.dislikes: dislike
+            Posts.likes: like,
+            Posts.dislikes: dislike
             
         }
     )
