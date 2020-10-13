@@ -21,9 +21,18 @@ def vote_post(post_id, username, liked, disliked):
     update_table(new_df, Likes)
     
     post_df = fetch_post(Posts, post_id)
-    if liked:
-        post_df["likes"] += 1
-    else:
-        post_df["dislikes"] += 1
+    likes = post_df.iloc[0]["likes"].item()
+    dislikes = post_df.iloc[0]["dislikes"].item()
 
-    update_post_likes(post_id, post_df["likes"], post_df["dislikes"])
+    if liked:
+        likes += 1
+    else:
+        dislikes += 1
+
+    update_post_likes(post_id, likes, dislikes)
+    
+    
+
+
+#insert_post_details("onur", "asdsa", "aasdsads", "asdsada", "asdasdasddas")
+#vote_post(6, "onur", True, False)

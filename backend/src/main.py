@@ -8,7 +8,7 @@ import sys
 sys.path.append(os.getcwd())
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token,token_validation, get_username
 from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
-from db.posts_utils import insert_post_details
+from db.posts_utils import insert_post_details, vote_post
 
 def make_app():
     app = Flask(__name__)
@@ -194,6 +194,11 @@ def make_app():
 
         if (liked and disliked) or (not liked and not disliked):
             return jsonify("failed")
+        
+        vote_post(post_id, username, liked, disliked)
+        return jsonify("success")
+
+       
 
             
         
