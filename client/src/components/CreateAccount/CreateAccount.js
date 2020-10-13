@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 function Copyright() {
   return (
@@ -42,6 +44,10 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff"
   }
 }));
 
@@ -53,6 +59,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const API_URL = "http://127.0.0.1:5000";
   function handleSubmit(e) {
     e.preventDefault();
@@ -65,9 +72,11 @@ export default function SignUp() {
         password: password
       }
     };
+    setLoading(true);
     fetch(API_URL + "/sign_up", requestOptions)
       .then(res => res.json())
       .then(data => {
+        setLoading(false);
         if (
           data === "Email or Username already exists!" ||
           data === "Invalid Email!"
@@ -82,6 +91,7 @@ export default function SignUp() {
         }
       })
       .catch(err => {
+        setLoading(false);
         setError(true);
         setErrorMessage("Could not connect to server");
       });
@@ -89,6 +99,9 @@ export default function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
