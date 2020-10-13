@@ -1,5 +1,11 @@
 import React from "react";
-import { makeStyles, Avatar, Typography, IconButton } from "@material-ui/core";
+import {
+  makeStyles,
+  Avatar,
+  Typography,
+  IconButton,
+  Link
+} from "@material-ui/core";
 import { Container, Row, Col, ButtonGroup, Badge } from "react-bootstrap";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
@@ -45,7 +51,7 @@ export default function Post(props) {
     <Container className={styling.root}>
       <Row>
         <Col lg={true}>
-          <Typography variant="h3">{props.post_data.title}</Typography>
+          <Typography variant="h4">{props.post_data.title}</Typography>
           <div
             style={{
               display: "flex",
@@ -53,16 +59,21 @@ export default function Post(props) {
               justifyContent: "space-between"
             }}
           >
-            <Typography variant="h5">
+            <Typography variant="h6">
               <Badge variant="dark">{props.post_data.topic}</Badge>
             </Typography>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar className={styling.small && styling.purple}>
                 {props.post_data.userName[0]}
               </Avatar>
-              <Typography variant="h6" className={styling.userline}>
-                {props.post_data.userName}
-              </Typography>
+              <Link
+                href={"profile?username=" + props.post_data.userName}
+                color="inherit"
+              >
+                <Typography variant="body1" className={styling.userline}>
+                  {props.post_data.userName}
+                </Typography>
+              </Link>
             </div>
           </div>
         </Col>
@@ -70,7 +81,7 @@ export default function Post(props) {
 
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
-          <Typography variant="h6">{props.post_data.text}</Typography>
+          <Typography variant="body1">{props.post_data.text}</Typography>
         </Col>
       </Row>
 

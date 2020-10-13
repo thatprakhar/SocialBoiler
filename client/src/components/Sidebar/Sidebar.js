@@ -24,7 +24,8 @@ const createStyles = makeStyles(theme => ({
     overflow: "auto",
     width: "100%",
     backgroundColor: theme.palette.background.paper,
-    maxHeight: window.innerHeight
+    maxHeight: window.innerHeight,
+    maxWidth: "50ch"
   }
 }));
 
