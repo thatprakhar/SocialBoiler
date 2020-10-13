@@ -43,10 +43,15 @@ class Posts(Base):
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
     image = Column(String, nullable=True)
-    likes = Column(Integer, nullable=True)
-    dislikes = Column(Integer, nullable=True)
     date_created = Column(String, nullable=True)
     topics = Column(String, nullable=True)
+
+class Likes(Base):
+    __tablename__ = "likes"
+    post_id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    liked = Column(Boolean, nullable=True)
+    disliked = Column(Boolean, nullable=True)
 
 
 class Comments(Base):
