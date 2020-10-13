@@ -205,7 +205,7 @@ function Profile() {
 
   return (
     <div className="profile">
-      <ProfileHeader isLoggedIn={isLoggedIn}/>
+      <ProfileHeader/>
       <Container fluid>
         <Row>
           <Col md={4}>
