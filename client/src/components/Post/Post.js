@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   makeStyles,
   Avatar,
@@ -8,7 +8,14 @@ import {
   Hidden,
   Button
 } from "@material-ui/core";
-import { Container, Row, Col, ButtonGroup, Badge } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  ButtonGroup,
+  Badge,
+  Alert
+} from "react-bootstrap";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import CommentIcon from "@material-ui/icons/Comment";
@@ -44,7 +51,7 @@ const createStyles = makeStyles(theme => ({
     flexDirection: "row"
   },
   purple: {
-    background: "purple"
+    background: "black"
   },
   closeButton: {
     position: "fixed",
@@ -53,9 +60,93 @@ const createStyles = makeStyles(theme => ({
 }));
 
 export default function Post(props) {
+  const [upVoted, setUpVoted] = useState(false);
+  const [downVoted, setDownVoted] = useState(false);
   const styling = createStyles();
+  const API_URL = "http://127.0.0.1:5000";
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (props.post_data !== null) {
+      setUpVoted(props.post_data.upVoted);
+      setDownVoted(props.post_data.downVoted);
+    }
+  }, [props.post_data]);
   if (props.post_data === null) {
     return <div></div>;
+  }
+
+  function upVotePost() {
+    let original_upvote = upVoted;
+    let original_downvote = downVoted;
+    if (original_upvote === true) {
+      original_downvote = false;
+      original_upvote = false;
+    } else {
+      original_upvote = true;
+      original_downvote = false;
+    }
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        post_id: props.post_data.post_id,
+        username: localStorage.getItem("username"),
+        liked: original_upvote,
+        disliked: original_downvote
+      }
+    };
+
+    fetch(API_URL + "/vote", requestOptions)
+      .then(res => res.json())
+      .then(res => {
+        if (res === "failed") {
+          setErrorMessage("Could not perform the action. Try again later");
+        } else {
+          setUpVoted(original_upvote);
+          setDownVoted(original_downvote);
+        }
+      })
+      .catch(err => {
+        setErrorMessage("Could not connect to the server. Try again later");
+      });
+  }
+
+  function downVotePost() {
+    let original_upvote = upVoted;
+    let original_downvote = downVoted;
+    if (original_downvote === true) {
+      original_downvote = false;
+      original_upvote = false;
+    } else {
+      original_upvote = false;
+      original_downvote = true;
+    }
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        post_id: props.post_data.post_id,
+        username: localStorage.getItem("username"),
+        liked: original_upvote,
+        disliked: original_downvote
+      }
+    };
+    fetch(API_URL + "/vote", requestOptions)
+      .then(res => res.json())
+      .then(res => {
+        if (res === "failed") {
+          setErrorMessage("Could not perform the action. Try again later");
+        } else {
+          setUpVoted(original_upvote);
+          setDownVoted(original_downvote);
+        }
+      })
+      .catch(err => {
+        setErrorMessage("Could not connect to the server. Try again later");
+      });
   }
 
   function removePost() {
@@ -115,11 +206,15 @@ export default function Post(props) {
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
           <ButtonGroup>
-            <IconButton>
-              <ThumbUpAltIcon></ThumbUpAltIcon>
+            <IconButton onClick={upVotePost}>
+              <ThumbUpAltIcon
+                color={upVoted ? "primary" : "inherit"}
+              ></ThumbUpAltIcon>
             </IconButton>
-            <IconButton>
-              <ThumbDownIcon></ThumbDownIcon>
+            <IconButton onClick={downVotePost}>
+              <ThumbDownIcon
+                color={downVoted ? "secondary" : "inherit"}
+              ></ThumbDownIcon>
             </IconButton>
             <IconButton>
               <CommentIcon></CommentIcon>
@@ -130,6 +225,18 @@ export default function Post(props) {
           </ButtonGroup>
         </Col>
       </Row>
+      <br />
+      {errorMessage !== "" && (
+        <Row>
+          <Alert
+            variant="danger"
+            onClose={() => setErrorMessage("")}
+            dismissible
+          >
+            {errorMessage}
+          </Alert>
+        </Row>
+      )}
     </Container>
   );
 }
