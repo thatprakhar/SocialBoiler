@@ -37,6 +37,7 @@ const createStyles = makeStyles(() => ({
 
 export default function Home() {
   const styling = createStyles();
+
   const posts = [
     {
       postID: 1,
@@ -44,7 +45,9 @@ export default function Home() {
       title: "A new post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: true,
+      downVoted: false
     },
     {
       postID: 2,
@@ -52,7 +55,9 @@ export default function Home() {
       title: "A second post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1"
+      topic: "#topic1",
+      upVoted: false,
+      downVoted: true
     },
     {
       postId: 3,
@@ -60,14 +65,18 @@ export default function Home() {
       title: "Another post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2"
+      topic: "#topic2",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 4,
       userName: "Sayed",
       title: "Last post",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 5,
@@ -75,7 +84,9 @@ export default function Home() {
       title: "A new post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 6,
@@ -83,7 +94,9 @@ export default function Home() {
       title: "A second post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1"
+      topic: "#topic1",
+      upVoted: false,
+      downVoted: false
     },
     {
       postId: 7,
@@ -91,22 +104,31 @@ export default function Home() {
       title: "Another post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2"
+      topic: "#topic2",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 8,
       userName: "Sayed",
       title: "Last post",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     }
   ];
+
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
-  const [selectedPost, setSelectedPost] = useState(posts[0]);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [showCreateScreen, setShowCreateScreen] = useState(false);
 
   function parentHandler(selection) {
     setSelectedPost(selection);
+  }
+  function removePost() {
+    console.log("changed\n");
+    setSelectedPost(null);
   }
 
   return (
@@ -123,12 +145,15 @@ export default function Home() {
       </Router>
       <ProfileHeader />
       <div className={styling.main}>
-        <Sidebar
-          className={styling.sidebar}
-          posts={posts}
-          parentHandler={parentHandler}
-        />
-
+        {(selectedPost !== null || showCreateScreen === true) &&
+        window.innerWidth <= 600 ? null : (
+          <Sidebar
+            className={styling.sidebar}
+            posts={posts}
+            parentHandler={parentHandler}
+          />
+        )}
+        {}
         {showCreateScreen ? null : (
           <IconButton
             className={styling.addButton}
@@ -137,16 +162,27 @@ export default function Home() {
             <AddCircleIcon className={styling.addButtonIcon} color="primary" />
           </IconButton>
         )}
-
-        {showCreateScreen ? (
-          <CreatePost
-            toggleView={() => setShowCreateScreen(!showCreateScreen)}
-          />
-        ) : (
-          <Hidden mdDown>
+        <Hidden mdDown>
+          {showCreateScreen ? (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+          ) : (
             <Grid className={styling.feed}>
               <Post post_data={selectedPost}></Post>
             </Grid>
+          )}
+        </Hidden>
+        <Hidden mdUp>
+          {showCreateScreen && (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+          )}
+        </Hidden>
+        {selectedPost !== null && (
+          <Hidden mdUp>
+            <Post post_data={selectedPost} removePost={removePost}></Post>
           </Hidden>
         )}
       </div>

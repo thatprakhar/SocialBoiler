@@ -15,6 +15,34 @@ def insert_post_details(username, title, description, image, topics):
     new_df = pd.DataFrame(data)
     update_table(new_df, Posts)
 
+def check_repeated_vote(post_id, username, liked, disliked):
+    #fetch likes in likes table with post id
+    post_id_likes_df = fetch_post(Likes, post_id)
+
+    #filter to specified username
+    post_id_likes_df = post_id_likes_df.loc[post_id_likes_df['username'] == username]
+
+    if liked and post_id_likes_df["liked"]:
+        return
+    elif disliked and post_id_likes_df["disliked"]:
+        return
+ 
+    #delete the row in likes
+    delete_row_likes()
+
+    post_df = fetch_post(Posts, post_id)
+    likes = post_df.iloc[0]["likes"].item()
+    dislikes = post_df.iloc[0]["dislikes"].item()
+
+    if liked:
+        likes += 1
+        dislikes -= 1
+        update_post_likes(post_id, likes, dislikes)
+    elif:
+        likes -= 1
+        dislikes += 1
+        update_post_likes(post_id, likes, dislikes)
+
 
 def check_repeated_vote(post_id, username, liked, disliked):
     #fetch likes in likes table with post id
@@ -65,6 +93,10 @@ def vote_post_db(post_id, username, liked, disliked):
 
     update_post_likes(post_id, likes, dislikes)
     
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 61bc2d1517c515a2c32e606262726d483ea4cc6c
 
 
 #insert_post_details("onur", "asdsa", "aasdsads", "asdsada", "asdasdasddas")
