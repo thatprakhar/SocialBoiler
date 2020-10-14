@@ -148,7 +148,13 @@ def update_post_likes(post_id, like, dislike):
     session.commit()
     session.close()
 
-create_tables()
+def delete_row_likes(BaseClass, post_id, username):
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.post_id == post_id).filter(BaseClass.username == username).delete()
+    session.commit()
+    session.close()
+
+#create_tables()
 
 if __name__ == '__main__':
     pass
