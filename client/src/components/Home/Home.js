@@ -45,7 +45,9 @@ export default function Home() {
       title: "A new post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: true,
+      downVoted: false
     },
     {
       postID: 2,
@@ -53,7 +55,9 @@ export default function Home() {
       title: "A second post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1"
+      topic: "#topic1",
+      upVoted: false,
+      downVoted: true
     },
     {
       postId: 3,
@@ -61,14 +65,18 @@ export default function Home() {
       title: "Another post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2"
+      topic: "#topic2",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 4,
       userName: "Sayed",
       title: "Last post",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 5,
@@ -76,7 +84,9 @@ export default function Home() {
       title: "A new post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 6,
@@ -84,7 +94,9 @@ export default function Home() {
       title: "A second post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1"
+      topic: "#topic1",
+      upVoted: false,
+      downVoted: false
     },
     {
       postId: 7,
@@ -92,20 +104,20 @@ export default function Home() {
       title: "Another post",
       text:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2"
+      topic: "#topic2",
+      upVoted: false,
+      downVoted: false
     },
     {
       postID: 8,
       userName: "Sayed",
       title: "Last post",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general"
+      topic: "#general",
+      upVoted: false,
+      downVoted: false
     }
   ];
-
-  for (let i = 0; i < 50; i++) {
-    posts.push(posts[i % posts.length]);
-  }
 
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -141,9 +153,7 @@ export default function Home() {
             parentHandler={parentHandler}
           />
         )}
-
         {}
-
         {showCreateScreen ? null : (
           <IconButton
             className={styling.addButton}
@@ -152,7 +162,6 @@ export default function Home() {
             <AddCircleIcon className={styling.addButtonIcon} color="primary" />
           </IconButton>
         )}
-
         <Hidden mdDown>
           {showCreateScreen ? (
             <CreatePost
@@ -164,7 +173,6 @@ export default function Home() {
             </Grid>
           )}
         </Hidden>
-
         <Hidden mdUp>
           {showCreateScreen && (
             <CreatePost
@@ -172,7 +180,6 @@ export default function Home() {
             />
           )}
         </Hidden>
-
         {selectedPost !== null && (
           <Hidden mdUp>
             <Post post_data={selectedPost} removePost={removePost}></Post>
