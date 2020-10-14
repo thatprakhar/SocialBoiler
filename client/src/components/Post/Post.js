@@ -4,12 +4,15 @@ import {
   Avatar,
   Typography,
   IconButton,
-  Link
+  Link,
+  Hidden,
+  Button
 } from "@material-ui/core";
 import { Container, Row, Col, ButtonGroup, Badge } from "react-bootstrap";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import CommentIcon from "@material-ui/icons/Comment";
+import CloseIcon from "@material-ui/icons/Close";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 
 const createStyles = makeStyles(theme => ({
@@ -42,13 +45,37 @@ const createStyles = makeStyles(theme => ({
   },
   purple: {
     background: "purple"
+  },
+  closeButton: {
+    position: "fixed",
+    right: -5
   }
 }));
 
 export default function Post(props) {
   const styling = createStyles();
+  if (props.post_data === null) {
+    return <div></div>;
+  }
+
+  function removePost() {
+    // console.log("removing");
+    props.removePost();
+  }
+
   return (
     <Container className={styling.root}>
+      <Hidden mdUp>
+        <Button
+          color="secondary"
+          onClick={removePost}
+          className={styling.closeButton}
+        >
+          <CloseIcon />
+        </Button>
+        <br />
+      </Hidden>
+
       <Row>
         <Col lg={true}>
           <Typography variant="h4">{props.post_data.title}</Typography>

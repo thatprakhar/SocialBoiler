@@ -22,15 +22,15 @@ function ProfileHeader() {
       .then(res => res.json())
       .then(data => {
         console.log(data);
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        history.push("/login");
       })
       .catch(err => {
         alert("can not logout: " + err);
       });
     //redirect to login page
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("email");
-    history.push("/login");
   };
   return (
     <Navbar bg="dark" expand="lg" variant="dark" sticky="top">
@@ -40,14 +40,14 @@ function ProfileHeader() {
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
 
-          {localStorage.getItem("username")?(<Nav.Link href="/profile">My Profile</Nav.Link>):(null)}
-          {localStorage.getItem("username")?(<Button variant="info" onClick={handleLogOut}>
-
-            Logout
-          </Button>):(null)}
-          
-         
-          
+          {localStorage.getItem("username") ? (
+            <Nav.Link href="/profile">My Profile</Nav.Link>
+          ) : null}
+          {localStorage.getItem("username") ? (
+            <Button variant="info" onClick={handleLogOut}>
+              Logout
+            </Button>
+          ) : null}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

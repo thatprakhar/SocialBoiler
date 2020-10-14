@@ -37,6 +37,7 @@ const createStyles = makeStyles(() => ({
 
 export default function Home() {
   const styling = createStyles();
+
   const posts = [
     {
       postID: 1,
@@ -101,12 +102,21 @@ export default function Home() {
       topic: "#general"
     }
   ];
+
+  for (let i = 0; i < 50; i++) {
+    posts.push(posts[i % posts.length]);
+  }
+
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
-  const [selectedPost, setSelectedPost] = useState(posts[0]);
+  const [selectedPost, setSelectedPost] = useState(null);
   const [showCreateScreen, setShowCreateScreen] = useState(false);
 
   function parentHandler(selection) {
     setSelectedPost(selection);
+  }
+  function removePost() {
+    console.log("changed\n");
+    setSelectedPost(null);
   }
 
   return (
@@ -123,11 +133,16 @@ export default function Home() {
       </Router>
       <ProfileHeader />
       <div className={styling.main}>
-        <Sidebar
-          className={styling.sidebar}
-          posts={posts}
-          parentHandler={parentHandler}
-        />
+        {(selectedPost !== null || showCreateScreen === true) &&
+        window.innerWidth <= 600 ? null : (
+          <Sidebar
+            className={styling.sidebar}
+            posts={posts}
+            parentHandler={parentHandler}
+          />
+        )}
+
+        {}
 
         {showCreateScreen ? null : (
           <IconButton
@@ -138,15 +153,29 @@ export default function Home() {
           </IconButton>
         )}
 
-        {showCreateScreen ? (
-          <CreatePost
-            toggleView={() => setShowCreateScreen(!showCreateScreen)}
-          />
-        ) : (
-          <Hidden mdDown>
+        <Hidden mdDown>
+          {showCreateScreen ? (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+          ) : (
             <Grid className={styling.feed}>
               <Post post_data={selectedPost}></Post>
             </Grid>
+          )}
+        </Hidden>
+
+        <Hidden mdUp>
+          {showCreateScreen && (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+          )}
+        </Hidden>
+
+        {selectedPost !== null && (
+          <Hidden mdUp>
+            <Post post_data={selectedPost} removePost={removePost}></Post>
           </Hidden>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles, IconButton } from "@material-ui/core";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Alert } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField, Button } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
@@ -50,18 +50,6 @@ export default function Post(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const API_URL = "http://127.0.0.1:5000";
-  function log(x) {
-    console.log(x);
-  }
-
-  /*function timeout(ms, promise) {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        reject(new Error("timeout"));
-      }, ms);
-      promise.then(resolve, reject);
-    });
-  }*/
 
   function sendPost(e) {
     e.preventDefault();
@@ -97,7 +85,7 @@ export default function Post(props) {
       })
       .catch(err => {
         setLoading(false);
-        setErrorMessage("Could not connecct to the server.");
+        setErrorMessage("Could not connect to the server.");
       });
   }
 
@@ -196,36 +184,22 @@ export default function Post(props) {
           <br />
           <Row>
             {errorMessage !== "" ? (
-              <div
-                className="alert alert-danger alert-dismissible fade show"
-                role="alert"
+              <Alert
+                variant="danger"
+                onClose={() => setErrorMessage("")}
+                dismissible
               >
                 {errorMessage}
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+              </Alert>
             ) : null}
             {successMessage !== "" ? (
-              <div
-                className="alert alert-success alert-dismissible fade show"
-                role="alert"
+              <Alert
+                variant="success"
+                onClose={() => setSuccessMessage("")}
+                dismissible
               >
                 {successMessage}
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+              </Alert>
             ) : null}
           </Row>
         </Container>
