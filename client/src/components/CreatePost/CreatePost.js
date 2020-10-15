@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { makeStyles, IconButton } from "@material-ui/core";
+import {
+  makeStyles,
+  IconButton,
+  FormControlLabel,
+  Switch
+} from "@material-ui/core";
 import { Container, Row, Alert } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField, Button } from "@material-ui/core";
@@ -49,6 +54,7 @@ export default function Post(props) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
   const API_URL = "http://127.0.0.1:5000";
 
   function sendPost(e) {
@@ -62,7 +68,8 @@ export default function Post(props) {
         title: postTitle,
         description: postText,
         image: postImage,
-        topics: postTopic
+        topics: postTopic,
+        anonymous: anonymous
       }
     };
     setLoading(true);
@@ -88,7 +95,7 @@ export default function Post(props) {
         setErrorMessage("Could not connect to the server.");
       });
   }
-
+  console.log(anonymous);
   return (
     <Container className={styling.root}>
       <Backdrop className={styling.backdrop} open={loading}>
@@ -168,6 +175,18 @@ export default function Post(props) {
               <br />
               {postImage}
             </label>
+          </Row>
+          <br />
+          <Row>
+            <FormControlLabel
+              value="end"
+              control={<Switch color="primary" />}
+              label="Anonymous"
+              labelPlacement="end"
+              onChange={() => {
+                setAnonymous(!anonymous);
+              }}
+            />
           </Row>
           <br />
           <Row>
