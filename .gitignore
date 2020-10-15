@@ -40,6 +40,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -126,3 +127,6 @@ venv/
 **/.DS_Store
 .DS_Store
 ./.DS_Store
+
+build/
+./build/
