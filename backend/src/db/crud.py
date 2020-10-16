@@ -4,7 +4,7 @@ from sqlalchemy import func, create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
 
-import os 
+import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes
@@ -29,7 +29,7 @@ def fetch_rows(BaseClass):
 
     try:
         result = session.query(BaseClass)
-    
+
     finally:
         session.close()
 
@@ -78,8 +78,8 @@ def update_user_profile(BaseClass, username, email, phone_number, age, about):
     session.query(BaseClass).filter(BaseClass.username == username).update(
         {
             BaseClass.email: email,
-            BaseClass.phone_number: phone_number, 
-            BaseClass.age: age, 
+            BaseClass.phone_number: phone_number,
+            BaseClass.age: age,
             BaseClass.about: about
         }
     )
@@ -100,11 +100,11 @@ def update_profile_avatar(BaseClass, username, image):
 # Update user email in credentials
 def update_user_credentials(BaseClass, username, email):
     session = Session()
-    
+
     session.query(BaseClass).filter(BaseClass.username == username).update(
         {
             BaseClass.email: email,
-            
+
         }
     )
     session.commit()
@@ -122,7 +122,7 @@ def fetch_post(BaseClass, post_id):
 
     try:
         result = session.query(BaseClass).filter(BaseClass.post_id == post_id)
-    
+
     finally:
         session.close()
 
@@ -137,12 +137,12 @@ def fetch_post(BaseClass, post_id):
 # Update post likes and dislikes
 def update_post_likes(post_id, like, dislike):
     session = Session()
-    
+
     session.query(Posts).filter(Posts.post_id == post_id).update(
         {
             Posts.likes: like,
             Posts.dislikes: dislike
-            
+
         }
     )
     session.commit()
@@ -152,6 +152,22 @@ def update_post_likes(post_id, like, dislike):
 def delete_row_likes(BaseClass, post_id, username):
     session = Session()
     session.query(BaseClass).filter(BaseClass.post_id == post_id).filter(BaseClass.username == username).delete()
+    session.commit()
+    session.close()
+
+def update_followers(BaseClass, username, followed_username, user_following, followed_followers):
+    session = Session()
+
+    session.query(BaseClass).filter(BaseClass.username == username).update(
+        {
+            BaseClass.following: user_following,
+        }
+    )
+    session.query(BaseClass).filter(BaseClass.username == followed_username).update(
+        {
+            BaseClass.followers: followed_followers,
+        }
+    )
     session.commit()
     session.close()
 

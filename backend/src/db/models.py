@@ -21,10 +21,10 @@ class User_Credentials(Base):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
     auth_token = Column(String, nullable=True)
-    followers = Column(String, nullable=True)
-    following = Column(String, nullable=True)
-    topics_following = Column(String, nullable=True)
-    
+    followers = Column(ARRAY(String), nullable=True)
+    following = Column(ARRAY(String), nullable=True)
+    topics_following = Column(ARRAY(Integer), nullable=True)
+
 
 class Profile_Page(Base):
     __tablename__ = "profile_page"

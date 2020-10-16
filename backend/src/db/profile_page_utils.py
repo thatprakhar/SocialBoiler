@@ -4,6 +4,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from src.db.crud import update_table, fetch_rows, update_authentication_token, update_user_profile, delete_rows, update_user_credentials, update_profile_avatar
+from src.db.following_utils import remove_deleted_followings
 from src.db.models import User_Credentials,Profile_Page
 
 # def insert_profile_details(email, name, surname):
@@ -28,7 +29,7 @@ def get_profile_details(username):
         user_credentials_df = user_credentials_df.loc[user_credentials_df['username'] == username]
 
         # get the required parameters from the row.
-        
+
         email=user_credentials_df.iloc[0]['email']
 
         # fetch data in the profile page table
@@ -73,14 +74,12 @@ def update_profile_details(username, email, phone_number, age, about):
 def update_profile_image(username, image):
 
     # print("in utils: ", image)
-     
+
     update_profile_avatar(Profile_Page, username, image)
     return True
 
-
-
-
 def delete_user_account(username):
+    remove_deleted_followings(username)
     delete_rows(User_Credentials, username)
     delete_rows(Profile_Page, username)
 

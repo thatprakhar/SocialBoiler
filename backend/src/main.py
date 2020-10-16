@@ -1,6 +1,7 @@
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token, token_validation, get_username
 from db.posts_utils import insert_post_details, vote_post_db
 from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
+from db.following_utils import add_follower, remove_follower, get_following, get_followers
 from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
@@ -143,7 +144,7 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
-
+        status = True
         if status:
             delete_user_account(username)
             return jsonify("success")
@@ -188,5 +189,64 @@ def make_app():
 
         vote_post_db(post_id, username, liked, disliked)
         return jsonify("success")
+
+    @app.route('/follow', methods=["POST"])
+    def follow_user():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        followed = request.headers.get("followed")
+
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+
+        if not status:
+            return jsonify("failed")
+        else:
+            status = add_follower(username, followed)
+
+        if not status:
+            return jsonify("Error following")
+
+        return jsonify("success")
+
+    @app.route('/unfollow', methods=["POST"])
+    def unfollow_user():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        followed = request.headers.get("followed")
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        else:
+            status = remove_follower(username, followed)
+
+        if not status:
+            return jsonify("Error: No such Account")
+
+        return jsonify("success")
+
+    @app.route('/followers', methods=["GET"])
+    def user_followers():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        else:
+            return jsonify(get_followers(username))
+
+
+    @app.route('/following', methods=["GET"])
+    def user_following():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        else:
+            return jsonify(get_following(username))
 
     return app
