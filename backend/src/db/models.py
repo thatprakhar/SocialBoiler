@@ -50,7 +50,8 @@ class Posts(Base):
 
 class Likes(Base):
     __tablename__ = "likes"
-    post_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    post_id = Column(Integer, nullable=False)
     username = Column(String, nullable=False)
     liked = Column(Boolean, nullable=True)
     disliked = Column(Boolean, nullable=True)

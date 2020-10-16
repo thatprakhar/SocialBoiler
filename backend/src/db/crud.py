@@ -155,7 +155,7 @@ def delete_row_likes(BaseClass, post_id, username):
     session.commit()
     session.close()
 
-#create_tables()
+create_tables()
 
 if __name__ == '__main__':
     pass
