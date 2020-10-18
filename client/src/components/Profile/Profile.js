@@ -33,18 +33,10 @@ function Profile() {
     about: ""
   });
 
-  const [topics, setTopics] = useState([
-    "#purdue",
-    "#computer science",
-    "#React"
-  ]);
-  const [following, setFollowing] = useState([
-    "Roopsha Samanta",
-    "Jeffrey A. Turkstra",
-    "Gustavo Rodriguez-Rivera"
-  ]);
+  const [topics, setTopics] = useState([]);
+  const [following, setFollowing] = useState([]);
 
-  const [followers, setFollowers] = useState(["cindy123", "jane", "tom"]);
+  const [followers, setFollowers] = useState([]);
 
   const handleDeleteClose = () => setShowDelete(false);
   const handleDeleteShow = () => setShowDelete(true);
@@ -196,7 +188,85 @@ function Profile() {
         // alert("Could not connect to server" + err);
         setError("Can not connect to server!");
       });
+
+      
+
   }, []);
+
+useEffect(()=>{
+  //Get the followers and following info
+  console.log("profile user is "+ profile_user)
+  const requestOptions={
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      auth_token: localStorage.getItem("auth_token"),
+      username: localStorage.getItem("username"),
+      profile_user: profile_user
+    }
+  }
+
+  fetch(API_URL + "/followers", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("follwers request back is: ", data);
+        if(data!=="failed"){
+          console.log(data)
+          if(data!=null){
+            setFollowers(data)
+          }
+          
+        }
+        else{
+          setError("Can not get followers!")
+        }
+        
+      })
+      .catch(err => {
+        console.log("can not update profile: " + err);
+        setError("Can not connect to server!");
+      });
+},[]);
+
+
+useEffect(()=>{
+  //Get the followers and following info
+  const requestOptions={
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      auth_token: localStorage.getItem("auth_token"),
+      username: localStorage.getItem("username"),
+      profile_user: profile_user
+    }
+  }
+
+  fetch(API_URL + "/following", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("following request back is: ", data);
+        if(data!=="failed"){
+          console.log(data)
+          if(data!=null){
+            setFollowing(data)
+            if(profile_user==localStorage.getItem("username")){
+              localStorage.setItem("following", JSON.stringify(data))
+            }
+            
+          }
+          
+        }
+        else {
+          setError("Can not get following users!")
+        }
+        
+      })
+      .catch(err => {
+        console.log("can not update profile: " + err);
+        setError("Can not connect to server!");
+      });
+},[]);
+  
 
   //check if user is logged in
 
@@ -212,6 +282,11 @@ function Profile() {
               isOwnProfile={isOwnProfile}
               name={name}
               image={image}
+              profileUser={queryString.parse(window.location.search).username}
+              followers={followers}
+              setFollowers={setFollowers}
+              following={following}
+              setFollowing={setFollowing}
             />
           </Col>
 

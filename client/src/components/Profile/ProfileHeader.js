@@ -25,6 +25,7 @@ function ProfileHeader() {
         localStorage.removeItem("auth_token");
         localStorage.removeItem("username");
         localStorage.removeItem("email");
+        localStorage.removeItem("following");
         history.push("/login");
       })
       .catch(err => {

@@ -230,23 +230,27 @@ def make_app():
     def user_followers():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
+        # This is the profile user name and we get followers of that user
+        profile_user=request.headers.get("profile_user")
         # check if the authentication token is valid
-        status = token_validation(username, auth_token)
-        if not status:
-            return jsonify("failed")
-        else:
-            return jsonify(get_followers(username))
+        # status = token_validation(username, auth_token)
+        # if not status:
+        #     return jsonify("failed")
+        # else:
+        return jsonify(get_followers(profile_user))
 
 
     @app.route('/following', methods=["GET"])
     def user_following():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
+        # This is the profile user name and we get followering of that user
+        profile_user=request.headers.get("profile_user")
         # check if the authentication token is valid
-        status = token_validation(username, auth_token)
-        if not status:
-            return jsonify("failed")
-        else:
-            return jsonify(get_following(username))
+        # status = token_validation(username, auth_token)
+        # if not status:
+        #     return jsonify("failed")
+        # else:
+        return jsonify(get_following(profile_user))
 
     return app

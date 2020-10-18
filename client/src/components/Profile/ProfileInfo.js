@@ -78,17 +78,7 @@ function ProfileInfo({
       });
   };
 
-  const unfollowTopic = topicName => {
-    setTopics(prevTopics => {
-      return prevTopics.filter(topic => topic !== topicName);
-    });
-  };
-
-  const unfollowUser = userName => {
-    setFollowing(prevFollowing => {
-      return prevFollowing.filter(user => user !== userName);
-    });
-  };
+  
 
   return (
     <div className="profile__info">
@@ -185,9 +175,9 @@ function ProfileInfo({
           {topics.map(topic => (
             <TopicItem
               name={topic}
-              unfollow={unfollowTopic}
-              key={uuidv4()}
+              unfollow
               isOwnProfile={isOwnProfile}
+              key={uuidv4()}
             />
           ))}
         </Tab>
@@ -195,9 +185,10 @@ function ProfileInfo({
           {following.map(user => (
             <TopicItem
               name={user}
-              unfollow={unfollowUser}
-              key={uuidv4()}
+              unfollow
               isOwnProfile={isOwnProfile}
+              setFollowing={setFollowing}
+              key={uuidv4()}
             />
           ))}
         </Tab>
