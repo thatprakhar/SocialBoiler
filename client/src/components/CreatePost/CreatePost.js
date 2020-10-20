@@ -59,43 +59,47 @@ export default function Post(props) {
 
   function sendPost(e) {
     e.preventDefault();
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        username: localStorage.getItem("username"),
-        auth_token: localStorage.getItem("auth_token"),
-        title: postTitle,
-        description: postText,
-        image: postImage,
-        topics: postTopic,
-        anonymous: anonymous
-      }
-    };
-    setLoading(true);
+    const reader = new FileReader();
+    reader.addEventListener("load", event => {
+      const requestOptions = {
+        method: "POST",
 
-    fetch(API_URL + "/insert_post", requestOptions)
-      .then(res => res.json())
-      .then(res => {
-        if (res === "success") {
-          setLoading(false);
-          setSuccessMessage("Posted Successfully!");
-          setErrorMessage("");
-          setPostImage(null);
-          setPostText("");
-          setPostTitle("");
-          setPostTopic("");
-        } else {
-          setLoading(false);
-          setErrorMessage("The action could not be performed.");
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          title: postTitle,
+          description: postText,
+          image: event.target.result,
+          topics: postTopic,
+          anonymous: anonymous
         }
-      })
-      .catch(err => {
-        setLoading(false);
-        setErrorMessage("Could not connect to the server.");
-      });
+      };
+
+      setLoading(true);
+      fetch(API_URL + "/insert_post", requestOptions)
+        .then(res => res.json())
+        .then(res => {
+          if (res === "success") {
+            setLoading(false);
+            setSuccessMessage("Posted Successfully!");
+            setErrorMessage("");
+            setPostImage(null);
+            setPostText("");
+            setPostTitle("");
+            setPostTopic("");
+          } else {
+            setLoading(false);
+            setErrorMessage("The action could not be performed.");
+          }
+        })
+        .catch(err => {
+          setLoading(false);
+          setErrorMessage("Could not connect to the server.");
+        });
+    });
+    reader.readAsDataURL(postImage[0]);
   }
-  console.log(anonymous);
   return (
     <Container className={styling.root}>
       <Backdrop className={styling.backdrop} open={loading}>
@@ -166,14 +170,15 @@ export default function Post(props) {
               id="contained-button-file"
               multiple
               type="file"
-              onChange={e => setPostImage(e.target.value)}
+              onChange={e => {
+                setPostImage(e.target.files);
+              }}
             />
             <label htmlFor="contained-button-file">
               <Button color="primary" variant="outlined" component="span">
                 Upload Image
               </Button>
               <br />
-              {postImage}
             </label>
           </Row>
           <br />
