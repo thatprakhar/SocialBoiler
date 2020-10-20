@@ -178,7 +178,11 @@ export default function Post(props) {
             }}
           >
             <Typography variant="h6">
-              <Badge variant="dark">{props.post_data.topic}</Badge>
+              <a href={"/get_posts_by_topic?topic=" + props.post_data.topic}>
+                <Badge variant="dark" type="link">
+                  {props.post_data.topic}
+                </Badge>
+              </a>
             </Typography>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar className={styling.small && styling.purple}>
