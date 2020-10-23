@@ -85,3 +85,7 @@ def get_posts_with_topic(topic):
     posts_df = fetch_posts_with_topic(topic).to_dict('records')
     return posts_df
 
+def get_voted_posts(username):
+    user_posts = fetch_user_post(username)
+    df = user_posts.loc[(user_posts['likes'] > 0) | (user_posts['dislikes'] > 0)]
+    return df

@@ -275,4 +275,6 @@ def make_app():
         #returns an empty list or list of dictionaries including posts by topic
         return jsonify(get_posts_with_topic(topic))
 
+    
+
     return app
