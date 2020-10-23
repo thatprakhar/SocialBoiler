@@ -85,4 +85,3 @@ def get_posts_with_topic(topic):
     posts_df = fetch_posts_with_topic(topic).to_dict('records')
     return posts_df
 
-print(get_posts_with_topic("asd"))
