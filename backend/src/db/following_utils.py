@@ -3,8 +3,8 @@ import pandas as pd
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.crud import fetch_rows, update_followers
-from src.db.models import User_Credentials
+from src.db.crud import fetch_rows, update_followers, update_topic, update_user_topics
+from src.db.models import User_Credentials, Topics
 
 def add_follower(username, user_followed):
     try:
@@ -158,7 +158,6 @@ def remove_deleted_followings(username):
     # get the user's following list
     user_following = user_df['following'].values[0]
 
-
     # get the followed user followers list
     user_followers = user_df['followers'].values[0]
 
@@ -176,3 +175,80 @@ def remove_deleted_followings(username):
         for user in user_followers_copy:
             print(user)
             mass_remove_followings(user_credentials_df, user, username)
+
+def follow_topic(username, topic):
+    user_credentials_df = fetch_rows(User_Credentials)
+    topics_df = fetch_rows(Topics)
+
+    # get the row associated with the user parameter
+    user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
+    # get the user's topics list
+    user_topics = user_df['topics_following'].values[0]
+
+    topic_df = topics_df.loc[topics_df['topic_title'] == topic]
+    if len(topic_df.index) == 0:
+        return False
+
+    if user_topics is None:
+            user_topics = [topic]
+    else:
+        if topic not in user_topics:
+            user_topics.append(topic)
+        else:
+            return False
+    update_user_topics(User_Credentials, username, user_topics)
+    return True
+
+def unfollow_topic(username, topic):
+    user_credentials_df = fetch_rows(User_Credentials)
+    # get the row associated with the user parameter
+    user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
+    # get the user's topics list
+    user_topics = user_df['topics_following'].values[0]
+
+    if user_topics is None:
+            return False
+    else:
+        if topic not in user_topics:
+            return False
+        else:
+            user_topics.remove(topic)
+    update_user_topics(User_Credentials, username, user_topics)
+    return True
+
+def add_post_to_topic(topic, postID):
+    topics_df = fetch_rows(Topics)
+
+    topic_df = topics_df.loc[topics_df['topic_title'] == topic]
+    if len(topic_df.index) == 0:
+        update_topic(Topics, topic, [int(postID)])
+    else:
+        posts = topic_df['posts_ids'].values[0]
+        if postID not in posts:
+            posts.append(postID)
+        update_topic(Topics, topic, posts)
+
+def remove_post_from_topic(topic, postID):
+    topics_df = fetch_rows(Topics)
+
+    topic_df = topics_df.loc[topics_df['topic_title'] == topic]
+    if len(topic_df.index) == 0:
+        return False
+    else:
+        posts = topic_df['posts_ids'].values[0]
+        if postID not in posts:
+            return False
+        else:
+            posts.remove(postID)
+            update_topic(Topics, topic, posts)
+    return True
+
+def get_user_topics(username):
+    user_credentials_df = fetch_rows(User_Credentials)
+    # get the row associated with the user parameter
+    user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
+    # get the user's topics list
+    user_topics = user_df['topics_following'].values[0]
+    if user_topics is None:
+        user_topics = []
+    return user_topics

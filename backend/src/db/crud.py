@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes
+from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes, Topics
 from src.config import postgres_config
 
 logger = logging.getLogger(__name__)
@@ -171,6 +171,35 @@ def update_followers(BaseClass, username, followed_username, user_following, fol
     session.commit()
     session.close()
 
+# Update/ Create topic
+def update_topic(BaseClass, topic, posts):
+    # check  procedure if query returns nothing
+    session = Session()
+    query = session.query(BaseClass).filter(BaseClass.topic_title == topic)
+    res = query.first()
+    if res is None:
+        row = Topics(topic_title=topic, posts_ids = posts)
+        session.add(row)
+    else:
+        query.update(
+            {
+            BaseClass.topic_title: topic,
+            BaseClass.posts_ids: posts
+            }
+        )
+    session.commit()
+    session.close()
+
+#update a user's followed topics
+def update_user_topics(BaseClass, username, topics):
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.username == username).update(
+            {
+            BaseClass.topics_following: topics
+            }
+    )
+    session.commit()
+    session.close()
 
 def fetch_user_post(username):
     session = Session()
