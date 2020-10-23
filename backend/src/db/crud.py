@@ -171,7 +171,24 @@ def update_followers(BaseClass, username, followed_username, user_following, fol
     session.commit()
     session.close()
 
-create_tables()
+
+def fetch_user_post(username):
+    session = Session()
+
+    try:
+        result = session.query(Posts).filter(Posts.username == username)
+
+    finally:
+        session.close()
+
+    if result is not None:
+        df = pd.read_sql(result.statement, result.session.bind)
+        return df
+
+    else:
+        return None
+
+#create_tables()
 
 if __name__ == '__main__':
     pass
