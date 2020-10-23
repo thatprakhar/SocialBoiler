@@ -3,7 +3,7 @@ import datetime as dt
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.crud import update_table, fetch_post, update_post_likes, delete_row_likes, fetch_user_post
+from src.db.crud import update_table, fetch_post, update_post_likes, delete_row_likes, fetch_user_post, fetch_posts_with_topic
 from src.db.models import Posts, Likes
 
 
@@ -81,3 +81,8 @@ def get_posts(username):
     user_df = fetch_user_post(username).to_dict('records')
     return user_df
 
+def get_posts_with_topic(topic):
+    posts_df = fetch_posts_with_topic(topic).to_dict('records')
+    return posts_df
+
+print(get_posts_with_topic("asd"))

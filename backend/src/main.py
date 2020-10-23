@@ -1,5 +1,5 @@
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token, token_validation, get_username
-from db.posts_utils import insert_post_details, vote_post_db
+from db.posts_utils import insert_post_details, vote_post_db, get_posts, get_posts_with_topic
 from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
 from db.following_utils import add_follower, remove_follower, get_following, get_followers
 from flask import Flask
@@ -252,5 +252,27 @@ def make_app():
         #     return jsonify("failed")
         # else:
         return jsonify(get_following(profile_user))
+
+    @app.route('/get_own_posts', methods=["GET"])
+    def get_user_posts():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        #returns an empty list or list of dictionaries including posts
+        return jsonify(get_posts(username))
+
+    @app.route('/get_posts_by_topic', methods=["GET"])
+    def get_user_posts_by_topic():
+        topic = request.headers.get("topic")
+        auth_token = request.headers.get("auth_token")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        #returns an empty list or list of dictionaries including posts by topic
+        return jsonify(get_posts_with_topic(topic))
 
     return app
