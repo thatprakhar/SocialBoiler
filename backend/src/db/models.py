@@ -23,8 +23,7 @@ class User_Credentials(Base):
     auth_token = Column(String, nullable=True)
     followers = Column(ARRAY(String), nullable=True)
     following = Column(ARRAY(String), nullable=True)
-    topics_following = Column(ARRAY(Integer), nullable=True)
-
+    topics_following = Column(ARRAY(String), nullable=True)
 
 class Profile_Page(Base):
     __tablename__ = "profile_page"
@@ -63,6 +62,10 @@ class Comments(Base):
     post_id = Column(Integer, nullable=False)
     comment = Column(String, nullable=False)
 
+class Topics(Base):
+    __tablename__ = "topics"
+    topic_title = Column(String, primary_key=True, nullable=False)
+    posts_ids = Column(ARRAY(Integer), nullable=True)
 
 if __name__ == "__main__":
     pass

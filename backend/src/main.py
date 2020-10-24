@@ -1,7 +1,7 @@
 from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token, token_validation, get_username
 from db.posts_utils import insert_post_details, vote_post_db, get_posts, get_posts_with_topic, get_voted_posts
 from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
-from db.following_utils import add_follower, remove_follower, get_following, get_followers
+from db.following_utils import add_follower, remove_follower, get_following, get_followers,get_user_topics, follow_topic, unfollow_topic
 from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
@@ -232,11 +232,7 @@ def make_app():
         username = request.headers.get("username")
         # This is the profile user name and we get followers of that user
         profile_user=request.headers.get("profile_user")
-        # check if the authentication token is valid
-        # status = token_validation(username, auth_token)
-        # if not status:
-        #     return jsonify("failed")
-        # else:
+
         return jsonify(get_followers(profile_user))
 
 
@@ -246,12 +242,46 @@ def make_app():
         username = request.headers.get("username")
         # This is the profile user name and we get followering of that user
         profile_user=request.headers.get("profile_user")
-        # check if the authentication token is valid
-        # status = token_validation(username, auth_token)
-        # if not status:
-        #     return jsonify("failed")
-        # else:
+
         return jsonify(get_following(profile_user))
+
+    @app.route("/follow_topic", methods=["POST"])
+    def topic_follow():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        topic = request.headers.get("topic")
+        status = token_validation(username, auth_token)
+        # status = True
+        if not status:
+            return jsonify("failed")
+        else:
+            status = follow_topic(username, topic)
+
+        if status:
+            return jsonify('success')
+        return jsonify("failed")
+
+    @app.route("/unfollow_topic", methods=["POST"])
+    def topic_unfollow():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        topic = request.headers.get("topic")
+        status = token_validation(username, auth_token)
+        # status = True
+        if not status:
+            return jsonify("failed")
+        else:
+            status = unfollow_topic(username, topic)
+
+        if status:
+            return jsonify('success')
+        return jsonify("failed")
+
+    @app.route("/user_topics", methods=["GET"])
+    def user_topics():
+        # profile_user = request.headers.get("username")
+        profile_user = request.headers.get("profile_user")
+        return jsonify(get_user_topics(profile_user))
 
     @app.route('/get_own_posts', methods=["GET"])
     def get_user_posts():
