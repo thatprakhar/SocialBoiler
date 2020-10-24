@@ -60,45 +60,84 @@ export default function Post(props) {
   function sendPost(e) {
     e.preventDefault();
     const reader = new FileReader();
-    reader.addEventListener("load", event => {
-      const requestOptions = {
-        method: "POST",
-
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          username: localStorage.getItem("username"),
-          auth_token: localStorage.getItem("auth_token"),
-          title: postTitle,
-          description: postText,
-          image: event.target.result,
-          topics: postTopic,
-          anonymous: anonymous
-        }
-      };
-
-      setLoading(true);
-      fetch(API_URL + "/insert_post", requestOptions)
-        .then(res => res.json())
-        .then(res => {
-          if (res === "success") {
-            setLoading(false);
-            setSuccessMessage("Posted Successfully!");
-            setErrorMessage("");
-            setPostImage(null);
-            setPostText("");
-            setPostTitle("");
-            setPostTopic("");
-          } else {
-            setLoading(false);
-            setErrorMessage("The action could not be performed.");
+    if (postImage !== null) {
+      reader.addEventListener("load", event => {
+        const requestOptions = {
+          method: "POST",
+  
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            username: localStorage.getItem("username"),
+            auth_token: localStorage.getItem("auth_token"),
+            title: postTitle,
+            description: postText,
+            image: event.target.result,
+            topics: postTopic,
+            anonymous: anonymous
           }
-        })
-        .catch(err => {
-          setLoading(false);
-          setErrorMessage("Could not connect to the server.");
-        });
-    });
-    reader.readAsDataURL(postImage[0]);
+        };
+  
+        setLoading(true);
+        fetch(API_URL + "/insert_post", requestOptions)
+          .then(res => res.json())
+          .then(res => {
+            if (res === "success") {
+              setLoading(false);
+              setSuccessMessage("Posted Successfully!");
+              setErrorMessage("");
+              setPostImage(null);
+              setPostText("");
+              setPostTitle("");
+              setPostTopic("");
+            } else {
+              setLoading(false);
+              setErrorMessage("The action could not be performed.");
+            }
+          })
+          .catch(err => {
+            setLoading(false);
+            setErrorMessage("Could not connect to the server.");
+          });
+      });
+      reader.readAsDataURL(postImage[0]);
+    } else {
+        const requestOptions = {
+          method: "POST",
+  
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            username: localStorage.getItem("username"),
+            auth_token: localStorage.getItem("auth_token"),
+            title: postTitle,
+            description: postText,
+            image: postImage,
+            topics: postTopic,
+            anonymous: anonymous
+          }
+        };
+  
+        setLoading(true);
+        fetch(API_URL + "/insert_post", requestOptions)
+          .then(res => res.json())
+          .then(res => {
+            if (res === "success") {
+              setLoading(false);
+              setSuccessMessage("Posted Successfully!");
+              setErrorMessage("");
+              setPostImage(null);
+              setPostText("");
+              setPostTitle("");
+              setPostTopic("");
+            } else {
+              setLoading(false);
+              setErrorMessage("The action could not be performed.");
+            }
+          })
+          .catch(err => {
+            setLoading(false);
+            setErrorMessage("Could not connect to the server.");
+          });
+    }
   }
   return (
     <Container className={styling.root}>

@@ -20,12 +20,16 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route path="/home" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/createaccount" component={CreateAccount}></Route>
-          <Route path="/forgotpass" component={ForgotPassword}></Route>
-          <Route path="/profile" component={Profile}></Route>
-          <Route path="/userline" component={Userline}></Route>
+          <Route path="/home">
+            <Home isHome={true}></Home>
+          </Route>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/createaccount" component={CreateAccount}></Route>
+          <Route exact path="/forgotpass" component={ForgotPassword}></Route>
+          <Route exact path="/profile" component={Profile}></Route>
+          <Route exact path="/userline" component={Userline}></Route>
+          <Route exact path={"/get_posts_by_topic"} component={Home}>
+          </Route>
           <Route exact path="/">
             {localStorage.getItem("auth_token") ? (
               <Redirect to="/home" />
