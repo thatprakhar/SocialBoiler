@@ -15,7 +15,8 @@ function ProfileCard({
   followers,
   setFollowers, 
   following,
-  setFollowing
+  setFollowing,
+  topics
 }) {
   
   const [followButton, setFollowButton]=useState(true);
@@ -151,7 +152,10 @@ function ProfileCard({
             <Badge variant="info">Followers:</Badge> {followers.length}
           </h5>
           <h5>
-            <Badge variant="warning">Following:</Badge> {following.length}
+            <Badge variant="warning">Following Users:</Badge> {following.length}
+          </h5>
+          <h5>
+            <Badge variant="primary">Following topics:</Badge> {topics.length}
           </h5>
           
           <div className="text-center profile__delete">

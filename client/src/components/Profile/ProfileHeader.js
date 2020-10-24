@@ -41,6 +41,8 @@ function ProfileHeader() {
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("following");
+    localStorage.removeItem("topic");
+
     history.push("/login");
   };
   return (

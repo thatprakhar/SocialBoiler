@@ -254,6 +254,32 @@ function Profile() {
         console.log("can not update profile: " + err);
         setError("Can not connect to server!");
       });
+  },[]);
+
+  useEffect(() => {
+    //Get the the topics the profile user is following
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        profile_user: profile_user
+      }
+    };
+
+    fetch(API_URL + "/user_topics", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("get topics request back is: ", data);
+        setTopics(data);
+        if (profile_user == localStorage.getItem("username")) {
+          localStorage.setItem("topic", JSON.stringify(data));
+        }
+        
+      })
+      .catch(err => {
+        console.log("can not get following topics: " + err);
+        setError("Can not connect to server!");
+      });
   }, []);
 
   //check if user is logged in
@@ -275,6 +301,7 @@ function Profile() {
               setFollowers={setFollowers}
               following={following}
               setFollowing={setFollowing}
+              topics={topics}
             />
           </Col>
 

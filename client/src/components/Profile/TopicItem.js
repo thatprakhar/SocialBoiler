@@ -5,11 +5,9 @@ import "./Profile.css";
 
 const API_URL = "http://127.0.0.1:5000";
 
-function TopicItem({ name, unfollow, isOwnProfile ,setFollowing}) {
-  const handleUnfollow=()=>{
+function TopicItem({ name, unfollow, isOwnProfile ,setFollowing, isTopic, setTopics}) {
+  const handleUserUnfollow=()=>{
     console.log('tab unfollowing', name);
-
-
     const requestOptions = {
       method: "POST",
 
@@ -41,12 +39,48 @@ function TopicItem({ name, unfollow, isOwnProfile ,setFollowing}) {
         // setError("Can not connect to server!");
       });
     }
+
+  const handleTopicUnfollow=()=>{
+    console.log("unfollowing topic...")
+    const requestOptions = {
+      method: "POST",
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        username: localStorage.getItem("username"),
+        auth_token: localStorage.getItem("auth_token"),
+        topic: name
+      }
+    };
+
+
+    fetch(API_URL + "/unfollow_topic", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("unfollow topic request back is: ", data);
+        if(data!=="success"){
+          alert(data);
+        }
+        //update the following topic in local storage
+        let newFollowing=JSON.parse(localStorage.getItem("topic")).filter((topic)=>topic!==name);
+        localStorage.setItem("topic", JSON.stringify(newFollowing))
+
+        setTopics(newFollowing)
+
+      })
+      .catch(err => {
+        console.log("can not unfollow topic: " + err);
+        // setError("Can not connect to server!");
+      });
+
+
+  }
   return (
     <div className="profile__topic">
-      <a href={"/profile?username=" + name}>{name}</a>
+      <a href={isTopic?("/topic?name="+name):("/profile?username=" + name)}>{name}</a>
 
       {unfollow && isOwnProfile ? (
-        <Button variant="info" onClick={handleUnfollow}>
+        <Button variant="info" onClick={isTopic?(handleTopicUnfollow):(handleUserUnfollow)}>
           Unfollow
         </Button>
       ) : null}

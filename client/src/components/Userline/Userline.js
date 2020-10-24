@@ -1,17 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     Redirect,
   } from "react-router-dom";
-  import {
-    makeStyles,
-    Avatar,
-    Typography,
-    IconButton,
-    Link,
-    Hidden,
-    Button
-  } from "@material-ui/core";
-  import {
+import {
     Container,
     Row,
     Col,
@@ -19,112 +10,96 @@ import {
     Badge,
     Alert
   } from "react-bootstrap";
-  import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-  import ThumbDownIcon from "@material-ui/icons/ThumbDown";
-  import CommentIcon from "@material-ui/icons/Comment";
-  import CloseIcon from "@material-ui/icons/Close";
-  import BookmarkIcon from "@material-ui/icons/Bookmark";
+  import "./Userline.css"
+  import ProfileHeader from '../Profile/ProfileHeader'
+  import UserlinePost from './UserlinePost'
 
-  const styling = makeStyles(theme => ({
-    root: {
-      marignLeft: 10,
-      background: "white",
-      borderRadius: 10,
-      width: "100vw",
-      maxHeight: window.innerHeight
-    },
-    small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3)
-    },
-    body: {
-      marginTop: 5
-    },
-    profile: {
-      marginTop: 10,
-      display: "flex",
-      flexDirection: "row"
-    },
-    userline: {
-      marginLeft: 10,
-      marginTop: 5
-    },
-    endline: {
-      display: "flex",
-      flexDirection: "row"
-    },
-    purple: {
-      background: "black"
-    },
-    closeButton: {
-      position: "fixed",
-      right: -5
-    }
-  }));
+  
 
-function Userline(props) {
+
+function Userline() {
+  const [ownPosts, setOwnPosts]=useState([
+    {
+      username: "cindy",
+      title: "Hello World!",
+      description: "This is a post, how does it look?",
+      image: "https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&rect=37%2C29%2C4955%2C3293&q=45&auto=format&w=926&fit=clip",
+      date_created: "2020-10-23",
+      likes: 3,
+      dislikes: 4,
+      topics: "random"
+    },
+    {
+      username: "cindy",
+      title: "Hello World!",
+      description: "This is a post, how does it look?",
+      image: null,
+      date_created: "2020-10-23",
+      likes: 3,
+      dislikes: 4,
+      topics: "random"
+    },
+    {
+      username: "cindy",
+      title: "Hello World!",
+      description: "This is a post, how does it look?",
+      image: "https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&rect=37%2C29%2C4955%2C3293&q=45&auto=format&w=926&fit=clip",
+      date_created: "2020-10-23",
+      likes: 3,
+      dislikes: 4,
+      topics: "random"
+    },
+  ]);
+  const [votedPosts, setVotedPosts]=useState([]);
+
 
     return localStorage.getItem("username")?
     (
-       
-        <Container className={styling.root}>
-      <Hidden mdUp>
-        <Button
-          color="secondary"
-          
-          className={styling.closeButton}
-        >
-          <CloseIcon />
-        </Button>
-        <br />
-      </Hidden>
+    <div>
+        <ProfileHeader/>
+        <Container>
+          <h1 className="header">
+              <Badge variant="info">User Posts:</Badge>
+          </h1>
 
-      <Row>
-        <Col lg={true}>
-          <Typography variant="h4">Title</Typography>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between"
-            }}
-          >
-            <Typography variant="h6">
-              {/* <a href={"/get_posts_by_topic?topic=" + props.post_data.topic}>
-                <Badge variant="dark" type="link">
-                  {props.post_data.topic}
-                </Badge>
-              </a> */}
-            </Typography>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Avatar className={styling.small && styling.purple}>
-                {/* {props.post_data.username[0]} */}
-                name
-              </Avatar>
-              <Link
-                // href={"profile?username=" + props.post_data.userName}
-                color="inherit"
-              >
-                <Typography variant="body1" className={styling.userline}>
-                  {/* {props.post_data.userName} */}
-                </Typography>
-              </Link>
-            </div>
-          </div>
-        </Col>
-      </Row>
+          {ownPosts.map(post=>(
+              <UserlinePost 
+                username={post.username}
+                title={post.title}
+                description={post.description}
+                image={post.image}
+                date_created={post.date_created}
+                likes={post.likes}
+                dislikes={post.dislikes}
+                topics={post.topics}
+              />
+              )
+          )}
+            
+        </Container>
 
-      <Row style={{ marginTop: 20 }}>
-        <Col lg={true}>
-          {/* <Typography variant="body1">{props.post_data.description}</Typography> */}
-          <Typography variant="body1">description</Typography>
-        </Col>
-      </Row>
+        <Container>
+          <h1 className="header">
+              <Badge variant="info">Voted Posts:</Badge>
+          </h1>
 
-     
-      <br />
+          {ownPosts.map(post=>(
+              <UserlinePost 
+                username={post.username}
+                title={post.title}
+                description={post.description}
+                image={post.image}
+                date_created={post.date_created}
+                likes={post.likes}
+                dislikes={post.dislikes}
+                topics={post.topics}
+              />
+              )
+          )}
+        </Container>
       
-    </Container>
+    </div>
+    
     ):
     (
         <Redirect to="/login"></Redirect>

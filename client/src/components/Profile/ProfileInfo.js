@@ -178,6 +178,8 @@ function ProfileInfo({
               unfollow
               isOwnProfile={isOwnProfile}
               key={uuidv4()}
+              isTopic
+              setTopics={setTopics}
             />
           ))}
         </Tab>

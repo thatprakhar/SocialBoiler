@@ -62,9 +62,13 @@ def make_app():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
         # reset authentication token associated with the username once user logs out
-        if reset_auth_token(username, auth_token):
-            return jsonify("success")
-        else:
+        try:
+            if reset_auth_token(username, auth_token):
+                return jsonify("success")
+            else:
+                return jsonify("failed")
+        except Exception as e:
+            print("logout exception")
             return jsonify("failed")
 
     @app.route("/get_profile_page", methods=["POST"])
