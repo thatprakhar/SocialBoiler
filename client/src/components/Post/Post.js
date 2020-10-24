@@ -186,7 +186,7 @@ export default function Post(props) {
             </Typography>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar className={styling.small && styling.purple}>
-                {props.post_data.userName[0]}
+                {props.post_data.username[0]}
               </Avatar>
               <Link
                 href={"profile?username=" + props.post_data.userName}
@@ -203,7 +203,7 @@ export default function Post(props) {
 
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
-          <Typography variant="body1">{props.post_data.text}</Typography>
+          <Typography variant="body1">{props.post_data.description}</Typography>
         </Col>
       </Row>
 

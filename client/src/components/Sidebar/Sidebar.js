@@ -56,9 +56,9 @@ export default function App(props) {
                   className={styling.inline}
                   color="textPrimary"
                 >
-                  {post_data.userName} -{" "}
+                  {post_data.username} -{" "}
                 </Typography>
-                {post_data.text.substr(0, 120)}
+                {post_data.description.substr(0, 120)}
                 {"..."}
                 <Badge variant="dark">{post_data.topic}</Badge>
               </React.Fragment>
@@ -69,6 +69,6 @@ export default function App(props) {
     );
   }
 
-  var posts = props.posts.map(x => <li>{post_view(x)}</li>);
+  var posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
   return <List className={styling.root}>{posts}</List>;
 }

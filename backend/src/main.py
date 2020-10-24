@@ -296,6 +296,7 @@ def make_app():
 
     @app.route('/get_posts_by_topic', methods=["GET"])
     def get_user_posts_by_topic():
+        username = request.headers.get("username")
         topic = request.headers.get("topic")
         auth_token = request.headers.get("auth_token")
         status = token_validation(username, auth_token)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Login from "../Login/Login";
 import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
@@ -35,89 +35,42 @@ const createStyles = makeStyles(() => ({
   }
 }));
 
-export default function Home() {
+export default function Home(props) {
   const styling = createStyles();
-
-  const posts = [
-    {
-      postID: 1,
-      userName: "Prakhar",
-      title: "A new post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general",
-      upVoted: true,
-      downVoted: false
-    },
-    {
-      postID: 2,
-      userName: "Cindy",
-      title: "A second post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1",
-      upVoted: false,
-      downVoted: true
-    },
-    {
-      postId: 3,
-      userName: "Onur",
-      title: "Another post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2",
-      upVoted: false,
-      downVoted: false
-    },
-    {
-      postID: 4,
-      userName: "Sayed",
-      title: "Last post",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general",
-      upVoted: false,
-      downVoted: false
-    },
-    {
-      postID: 5,
-      userName: "Uras",
-      title: "A new post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit.",
-      topic: "#general",
-      upVoted: false,
-      downVoted: false
-    },
-    {
-      postID: 6,
-      userName: "Cindy",
-      title: "A second post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic1",
-      upVoted: false,
-      downVoted: false
-    },
-    {
-      postId: 7,
-      userName: "Onur",
-      title: "Another post",
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer molestie lacus et pulvinar laoreet. Sed vitae egestas velit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Praesent ac ante pharetra, fringilla libero quis, ultrices turpis. Mauris dapibus commodo tellus, rhoncus eleifend lectus placerat ac. Fusce ante est, consequat a lorem eu, molestie varius arcu. Pellentesque maximus orci est, ut condimentum neque gravida ut.",
-      topic: "#topic2",
-      upVoted: false,
-      downVoted: false
-    },
-    {
-      postID: 8,
-      userName: "Sayed",
-      title: "Last post",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      topic: "#general",
-      upVoted: false,
-      downVoted: false
+  const [posts, setPosts] = useState([]);
+  const API_URL = "http://127.0.0.1:5000";
+  useEffect(() => {
+    if (props.isHome) {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token")
+        }
+      };
+      fetch(API_URL + "/get_own_posts", requestOptions)
+      .then(res => {})
+      .catch(err => console.log(err));
+    } else {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          topic: "topic"
+        }
+      };
+      fetch(API_URL + "/get_posts_by_topic", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setPosts(data);
+      })
+      .catch(err => console.log(err));
     }
-  ];
+  }, );
 
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -153,17 +106,17 @@ export default function Home() {
             parentHandler={parentHandler}
           />
         )}
-        {}
-        {showCreateScreen ? null : (
+        {
+          !showCreateScreen && props.isHome && 
           <IconButton
             className={styling.addButton}
             onClick={e => setShowCreateScreen(!showCreateScreen)}
           >
             <AddCircleIcon className={styling.addButtonIcon} color="primary" />
-          </IconButton>
-        )}
+          </IconButton> 
+        }
         <Hidden mdDown>
-          {showCreateScreen ? (
+          {showCreateScreen && props.isHome ? (
             <CreatePost
               toggleView={() => setShowCreateScreen(!showCreateScreen)}
             />
@@ -174,7 +127,7 @@ export default function Home() {
           )}
         </Hidden>
         <Hidden mdUp>
-          {showCreateScreen && (
+          {showCreateScreen && props.isHome && (
             <CreatePost
               toggleView={() => setShowCreateScreen(!showCreateScreen)}
             />
