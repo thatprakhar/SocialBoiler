@@ -77,7 +77,7 @@ function TopicItem({ name, unfollow, isOwnProfile ,setFollowing, isTopic, setTop
   }
   return (
     <div className="profile__topic">
-      <a href={isTopic?("/topic?name="+name):("/profile?username=" + name)}>{name}</a>
+      <a href={isTopic?("/get_posts_by_topic?topic="+name):("/profile?username=" + name)}>{name}</a>
 
       {unfollow && isOwnProfile ? (
         <Button variant="info" onClick={isTopic?(handleTopicUnfollow):(handleUserUnfollow)}>

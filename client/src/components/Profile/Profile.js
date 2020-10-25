@@ -7,7 +7,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
-import Userline from "../Userline/Userline";
+
 
 const API_URL = "http://127.0.0.1:5000";
 

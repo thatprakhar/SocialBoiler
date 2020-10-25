@@ -16,12 +16,15 @@
 
 .post_footer {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-top: 30px;
   margin-bottom: -40px;
 }
 .post_timestamp {
   display: flex;
+  width: 100%;
+  justify-content: flex-end;
 }
 .post_badges {
   display: flex;
@@ -29,4 +32,9 @@
 
 .post_badges * {
   margin-right: 10px;
+}
+
+#loader {
+  position: relative;
+  top: 50px;
 }

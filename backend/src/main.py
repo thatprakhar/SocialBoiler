@@ -1,7 +1,34 @@
-from db.authentication_utils import check_login_credentials, insert_user_credentials, create_auth_token, reset_auth_token, token_validation, get_username
-from db.posts_utils import insert_post_details, vote_post_db, get_posts, get_posts_with_topic, get_voted_posts
-from db.profile_page_utils import get_profile_details, update_profile_details, insert_profile_details, delete_user_account, update_profile_image
-from db.following_utils import add_follower, remove_follower, get_following, get_followers,get_user_topics, follow_topic, unfollow_topic
+from db.authentication_utils import (
+    check_login_credentials,
+    insert_user_credentials,
+    create_auth_token,
+    reset_auth_token,
+    token_validation,
+    get_username,
+)
+from db.posts_utils import (
+    insert_post_details,
+    vote_post_db,
+    get_posts,
+    get_posts_with_topic,
+    get_voted_posts,
+)
+from db.profile_page_utils import (
+    get_profile_details,
+    update_profile_details,
+    insert_profile_details,
+    delete_user_account,
+    update_profile_image,
+)
+from db.following_utils import (
+    add_follower,
+    remove_follower,
+    get_following,
+    get_followers,
+    get_user_topics,
+    follow_topic,
+    unfollow_topic,
+)
 from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
@@ -9,6 +36,7 @@ from flask import render_template
 
 import os
 import sys
+
 sys.path.append(os.getcwd())
 
 
@@ -77,7 +105,7 @@ def make_app():
         username = request.headers.get("username")
         # This is the username of the profile we want to get
         profile_user = request.headers.get("profile_user")
-        print("profile_user:"+profile_user)
+        print("profile_user:" + profile_user)
         # This is auth token front frontedn
         auth_token = request.headers.get("auth_token")
 
@@ -113,7 +141,8 @@ def make_app():
         if status:
             # update database with the related fields.
             update_status = update_profile_details(
-                username, email, phone_number, age, about)
+                username, email, phone_number, age, about
+            )
             if update_status == False:
                 return jsonify("This email already used!")
 
@@ -156,7 +185,7 @@ def make_app():
         else:
             return jsonify("failed")
 
-    @app.route('/insert_post', methods=["POST"])
+    @app.route("/insert_post", methods=["POST"])
     def insert_new_post():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
@@ -175,7 +204,7 @@ def make_app():
 
         return jsonify("success")
 
-    @app.route('/vote', methods=["POST"])
+    @app.route("/vote", methods=["POST"])
     def vote_post():
         auth_token = request.headers.get("auth_token")
         # check if the authentication token is valid
@@ -194,7 +223,7 @@ def make_app():
         vote_post_db(post_id, username, liked, disliked)
         return jsonify("success")
 
-    @app.route('/follow', methods=["POST"])
+    @app.route("/follow", methods=["POST"])
     def follow_user():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
@@ -213,7 +242,7 @@ def make_app():
 
         return jsonify("success")
 
-    @app.route('/unfollow', methods=["POST"])
+    @app.route("/unfollow", methods=["POST"])
     def unfollow_user():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
@@ -230,22 +259,21 @@ def make_app():
 
         return jsonify("success")
 
-    @app.route('/followers', methods=["GET"])
+    @app.route("/followers", methods=["GET"])
     def user_followers():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
         # This is the profile user name and we get followers of that user
-        profile_user=request.headers.get("profile_user")
+        profile_user = request.headers.get("profile_user")
 
         return jsonify(get_followers(profile_user))
 
-
-    @app.route('/following', methods=["GET"])
+    @app.route("/following", methods=["GET"])
     def user_following():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
         # This is the profile user name and we get followering of that user
-        profile_user=request.headers.get("profile_user")
+        profile_user = request.headers.get("profile_user")
 
         return jsonify(get_following(profile_user))
 
@@ -262,7 +290,7 @@ def make_app():
             status = follow_topic(username, topic)
 
         if status:
-            return jsonify('success')
+            return jsonify("success")
         return jsonify("failed")
 
     @app.route("/unfollow_topic", methods=["POST"])
@@ -278,7 +306,7 @@ def make_app():
             status = unfollow_topic(username, topic)
 
         if status:
-            return jsonify('success')
+            return jsonify("success")
         return jsonify("failed")
 
     @app.route("/user_topics", methods=["GET"])
@@ -287,7 +315,7 @@ def make_app():
         profile_user = request.headers.get("profile_user")
         return jsonify(get_user_topics(profile_user))
 
-    @app.route('/get_own_posts', methods=["GET"])
+    @app.route("/get_own_posts", methods=["GET"])
     def get_user_posts():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
@@ -295,10 +323,10 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty list or list of dictionaries including posts
+        # returns an empty list or list of dictionaries including posts
         return jsonify(get_posts(username))
 
-    @app.route('/get_posts_by_topic', methods=["GET"])
+    @app.route("/get_posts_by_topic", methods=["GET"])
     def get_user_posts_by_topic():
         username = request.headers.get("username")
         topic = request.headers.get("topic")
@@ -307,11 +335,10 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty list or list of dictionaries including posts by topic
+        # returns an empty list or list of dictionaries including posts by topic
         return jsonify(get_posts_with_topic(topic))
 
-
-    @app.route('/get_voted_posts', methods=["GET"])
+    @app.route("/get_voted_posts", methods=["GET"])
     def get_user_voted_posts():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
@@ -319,8 +346,7 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty list or list of dictionaries including posts by topic
+        # returns an empty list or list of dictionaries including posts by topic
         return jsonify(get_voted_posts(username))
-
 
     return app
