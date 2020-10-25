@@ -10,6 +10,7 @@ function ProfileHeader() {
   const [topic, setTopic] = useState("");
 
   function searchByTopic(e) {
+    e.preventDefault();
     if (topic === "") return;
     history.push({
       pathname: '/get_posts_by_topic',
@@ -59,6 +60,9 @@ function ProfileHeader() {
 
           {localStorage.getItem("username") ? (
             <Nav.Link href="/profile">My Profile</Nav.Link>
+          ) : null}
+          {localStorage.getItem("username") ? (
+            <Nav.Link href="/my_posts">My Posts</Nav.Link>
           ) : null}
           {localStorage.getItem("username") ? (
             <Button variant="info" onClick={handleLogOut}>

@@ -21,14 +21,18 @@ function App() {
       <Router>
         <Switch>
           <Route path="/home">
-            <Home isHome={true}></Home>
+            <Home page_type="home"></Home>
           </Route>
           <Route exact path="/login" component={Login} />
           <Route exact path="/createaccount" component={CreateAccount}></Route>
           <Route exact path="/forgotpass" component={ForgotPassword}></Route>
           <Route exact path="/profile" component={Profile}></Route>
           <Route exact path="/userline" component={Userline}></Route>
-          <Route exact path={"/get_posts_by_topic"} component={Home}>
+          <Route exact path={"/get_posts_by_topic"}>
+            <Home page_type="search_posts"></Home>
+          </Route>
+          <Route exact path="/my_posts">
+            <Home page_type="my_posts"></Home>
           </Route>
           <Route exact path="/">
             {localStorage.getItem("auth_token") ? (

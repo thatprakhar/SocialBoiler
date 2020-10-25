@@ -15,7 +15,6 @@ const createStyles = makeStyles(theme => ({
     display: "inline"
   },
   post: {
-    border: "1px solid black",
     marginTop: 50,
     width: "100%"
   },
@@ -38,7 +37,7 @@ export default function App(props) {
 
   function post_view(post_data) {
     return (
-      <Button variant="light" onClick={() => parentHandle(post_data)}>
+      <Button style={{width: "100%"}} variant="light" onClick={() => parentHandle(post_data)}>
         <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar
