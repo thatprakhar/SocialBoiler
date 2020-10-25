@@ -13,6 +13,7 @@ from src.db.crud import (
     delete_row_likes,
     fetch_user_post,
     fetch_posts_with_topic,
+    fetch_users_following
 )
 from src.db.models import Posts, Likes
 
@@ -110,10 +111,26 @@ def get_posts_with_topic(topic):
 
 def get_voted_posts(username):
     user_posts = fetch_user_post(username)
-    # print("debugging here")
+    
     df = user_posts.loc[(user_posts["likes"] > 0) | (user_posts["dislikes"] > 0)]
     # Check of the dataframe get back is empty, if empty we return empty array
     if df.empty:
         return []
     else:
         return df
+
+
+def get_followings_posts(username):
+    users_following = fetch_users_following(username)
+    users_following = users_following.iloc[0]['following']
+  
+    #if the user is not following anyone return empty list
+    if not users_following:
+        return []
+    
+    result = []
+    for user in users_following:
+        result += (fetch_user_post(user).to_dict("records"))
+
+    return result
+    
