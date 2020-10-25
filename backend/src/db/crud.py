@@ -250,6 +250,22 @@ def fetch_users_following(username):
     else:
         return None
 
+def fetch_topics_following(username):
+    session = Session()
+
+    try:
+        result = session.query(User_Credentials.topics_following).filter(User_Credentials.username == username)
+
+    finally:
+        session.close()
+
+    if result is not None:
+        df = pd.read_sql(result.statement, result.session.bind)
+        return df
+
+    else:
+        return None
+
 #create_tables()
 
 if __name__ == '__main__':

@@ -13,7 +13,8 @@ from src.db.crud import (
     delete_row_likes,
     fetch_user_post,
     fetch_posts_with_topic,
-    fetch_users_following
+    fetch_users_following,
+    fetch_topics_following
 )
 from src.db.models import Posts, Likes
 
@@ -123,14 +124,23 @@ def get_voted_posts(username):
 def get_followings_posts(username):
     users_following = fetch_users_following(username)
     users_following = users_following.iloc[0]['following']
-  
-    #if the user is not following anyone return empty list
-    if not users_following:
-        return []
-    
     result = []
-    for user in users_following:
-        result += (fetch_user_post(user).to_dict("records"))
 
-    return result
+    #if the user is following anyone fetch records
+    if users_following:
+        for user in users_following:
+            result += fetch_user_post(user).to_dict("records")
+
+    
+    topics_following = fetch_topics_following(username)
+    topics_following = topics_following.iloc[0]['topics_following']
+    #if the user is following anyone fetch topics
+    if topics_following:
+        #fetch posts associated with the topics
+        for topic in topics_following:
+            result += fetch_posts_with_topic(topic).to_dict("records")
+    
+    #convert to dataframe to easily drop duplicates from combined df
+    result = pd.DataFrame(result).drop_duplicates()
+    return result.to_dict('records')
     
