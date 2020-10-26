@@ -117,6 +117,22 @@ def get_following(username):
     except Exception as inst:
         return None
 
+def user_Is_followed(username, followed):
+    try:
+        # fetch data in user credentials
+        user_credentials_df = fetch_rows(User_Credentials)
+        # get the row associated with the user parameter
+        user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
+
+        # get the user's following list
+        following = user_df['following'].values[0]
+        if followed in following:
+            return True
+        else:
+            return False
+    except Exception as inst:
+        return None
+
 def mass_remove_followings(user_credentials_df, username, user_followed):
     # this function does not retreive the user_credentials table, it is passed to it
     # by the function that removes a user's followers/following when deleting the account
@@ -126,7 +142,7 @@ def mass_remove_followings(user_credentials_df, username, user_followed):
         user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
 
         # get the followed user credentials
-        followed_df = user_credentials_df.loc[user_credentials_df['username'] == user_followed]
+        followed_df = user_df.loc[user_credentials_df['username'] == user_followed]
 
         # get the followed user followers list
         followed_followers  = followed_df['followers'].values[0]
@@ -215,6 +231,23 @@ def unfollow_topic(username, topic):
             user_topics.remove(topic)
     update_user_topics(User_Credentials, username, user_topics)
     return True
+
+
+
+def topic_Is_Followed(username, topic):
+    user_credentials_df = fetch_rows(User_Credentials)
+    # get the row associated with the user parameter
+    user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
+    # get the user's topics list
+    user_topics = user_df['topics_following'].values[0]
+
+    if user_topics is None:
+            return False
+    else:
+        if topic in user_topics:
+            return True
+        else:
+            return False
 
 def create_topic(topic):
     topics_df = fetch_rows(Topics)

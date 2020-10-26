@@ -29,7 +29,9 @@ from db.following_utils import (
     get_user_topics,
     follow_topic,
     unfollow_topic,
-    create_topic
+    create_topic,
+    topic_Is_Followed,
+    user_Is_followed
 )
 from flask import Flask
 from flask_cors import CORS
@@ -198,11 +200,11 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
-
         if not status:
             return jsonify("failed")
         else:
             insert_post_details(username, title, description, image, topics)
+            print('topic = ', topics)
             create_topic(topics)
 
         return jsonify("success")
@@ -319,6 +321,42 @@ def make_app():
         profile_user = request.headers.get("profile_user")
         return jsonify(get_user_topics(profile_user))
 
+    # topic_Is_Followed,
+    # user_Is_followed
+    @app.route("/user_is_followed", methods=["GET"])
+    def user_is_followed_get():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        followed = request.headers.get("followed")
+
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        else:
+            status = user_Is_followed(username, followed)
+            if status is None:
+                return jsonify("failed")
+            else:
+                return jsonify(status)
+
+    @app.route("/topic_is_followed", methods=["GET"])
+    def topic_is_followed_get():
+        auth_token = request.headers.get("auth_token")
+        username = request.headers.get("username")
+        topic = request.headers.get("topic")
+
+        # check if the authentication token is valid
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        else:
+            status = topic_Is_Followed(username, topic)
+            if status is None:
+                return jsonify("failed")
+            else:
+                return jsonify(status)
+
     @app.route("/get_own_posts", methods=["GET"])
     def get_user_posts():
         username = request.headers.get("username")
@@ -329,6 +367,8 @@ def make_app():
 
         # returns an empty list or list of dictionaries including posts
         return jsonify(get_posts(username))
+
+
 
     @app.route("/get_posts_by_topic", methods=["GET"])
     def get_user_posts_by_topic():
