@@ -24,7 +24,7 @@ import BookmarkIcon from "@material-ui/icons/Bookmark";
 
 const createStyles = makeStyles(theme => ({
   root: {
-    marignLeft: 10,
+    marignLeft: 20,
     background: "white",
     borderRadius: 10,
     width: "100vw",
@@ -51,7 +51,7 @@ const createStyles = makeStyles(theme => ({
     flexDirection: "row"
   },
   purple: {
-    background: "black"
+    background: "purple"
   },
   closeButton: {
     position: "fixed",
@@ -97,7 +97,7 @@ export default function Post(props) {
         disliked: original_downvote
       }
     };
-
+    console.log(original_upvote + " " + original_downvote);
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
       .then(res => {
@@ -178,9 +178,9 @@ export default function Post(props) {
             }}
           >
             <Typography variant="h6">
-              <a href={"/get_posts_by_topic?topic=" + props.post_data.topic}>
+              <a href={"/get_posts_by_topic?topic=" + props.post_data.topics}>
                 <Badge variant="dark" type="link">
-                  {props.post_data.topic}
+                  {props.post_data.topics}
                 </Badge>
               </a>
             </Typography>

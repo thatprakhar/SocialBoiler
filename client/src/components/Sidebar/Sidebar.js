@@ -59,7 +59,7 @@ export default function App(props) {
                 </Typography>
                 {post_data.description.substr(0, 120)}
                 {"..."}
-                <Badge variant="dark">{post_data.topic}</Badge>
+                <Badge variant="dark">{post_data.topics}</Badge>
               </React.Fragment>
             }
           />

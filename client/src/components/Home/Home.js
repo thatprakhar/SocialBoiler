@@ -44,7 +44,19 @@ export default function Home(props) {
   const [posts, setPosts] = useState([]);
 
   const API_URL = "http://127.0.0.1:5000";
-  const fetch_posts = () =>  {
+  // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showCreateScreen, setShowCreateScreen] = useState(false);
+
+  function parentHandler(selection) {
+    setSelectedPost(selection);
+  }
+  function removePost() {
+    console.log("changed\n");
+    setSelectedPost(null);
+  }
+
+  useEffect(() => {
     if (props.page_type === "my_posts") {
       setPosts([]);
       const requestOptions = {
@@ -86,20 +98,10 @@ export default function Home(props) {
       });
     } else if (props.page_type === "home") {
       setPosts([]);
+      console.log("home");
     }
-  }
-
-  // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [showCreateScreen, setShowCreateScreen] = useState(false);
-
-  function parentHandler(selection) {
-    setSelectedPost(selection);
-  }
-  function removePost() {
-    console.log("changed\n");
-    setSelectedPost(null);
-  }
+  }, [])
+  console.log(posts);
   return (
     <div>
       <Router>
