@@ -153,7 +153,7 @@ export default function Post(props) {
     // console.log("removing");
     props.removePost();
   }
-
+  console.log(props.post_data);
   return (
     <Container className={styling.root}>
       <Hidden mdUp>
@@ -189,11 +189,11 @@ export default function Post(props) {
                 {props.post_data.username[0]}
               </Avatar>
               <Link
-                href={"profile?username=" + props.post_data.userName}
+                href={"profile?username=" + props.post_data.username}
                 color="inherit"
               >
                 <Typography variant="body1" className={styling.userline}>
-                  {props.post_data.userName}
+                  {props.post_data.username}
                 </Typography>
               </Link>
             </div>

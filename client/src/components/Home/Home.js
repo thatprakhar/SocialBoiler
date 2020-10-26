@@ -134,6 +134,8 @@ export default function Home(props) {
             className={styling.sidebar}
             posts={posts}
             parentHandler={parentHandler}
+            page_type={props.page_type}
+            topic={props.page_type === "search_posts" ? new URLSearchParams(location.search).get("topic"): ""}
           />
         )}
         {
