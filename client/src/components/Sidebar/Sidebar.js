@@ -35,6 +35,10 @@ export default function App(props) {
     props.parentHandler(post_data);
   }
 
+  function followTopic() {
+    
+  }
+
   function post_view(post_data) {
     return (
       <Button style={{width: "100%"}} variant="light" onClick={() => parentHandle(post_data)}>
@@ -59,7 +63,7 @@ export default function App(props) {
                 </Typography>
                 {post_data.description.substr(0, 120)}
                 {"..."}
-                <Badge variant="dark">{post_data.topic}</Badge>
+                <Badge variant="dark">{post_data.topics}</Badge>
               </React.Fragment>
             }
           />
@@ -68,6 +72,22 @@ export default function App(props) {
     );
   }
 
+  function topic_view(topic) {
+    return (
+      <Button variant="light" style={{width: "100%"}} onClick={followTopic}>
+        Follow   <Badge variant="info">{topic}</Badge>
+      </Button>
+    )
+  }
+
   var posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
-  return <List className={styling.root}>{posts}</List>;
+return <List className={styling.root}>
+  {
+  props.page_type === "search_posts" ?
+    <li><Typography variant="h5">{topic_view(props.topic)}</Typography></li>
+  : 
+    null
+  }
+  {posts}
+  </List>;
 }

@@ -216,6 +216,14 @@ def unfollow_topic(username, topic):
     update_user_topics(User_Credentials, username, user_topics)
     return True
 
+def create_topic(topic):
+    topics_df = fetch_rows(Topics)
+    topic_df = topics_df.loc[topics_df['topic_title'] == topic]
+
+    if topic_df.empty:
+        posts = []
+        update_topic(Topics, topic, posts)
+
 def add_post_to_topic(topic, postID):
     topics_df = fetch_rows(Topics)
 

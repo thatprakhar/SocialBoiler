@@ -188,7 +188,7 @@ function Profile() {
         // alert("Could not connect to server" + err);
         setError("Can not connect to server!");
       });
-  }, []);
+  }, [history]);
 
   useEffect(() => {
     //Get the followers and following info
@@ -242,7 +242,7 @@ function Profile() {
           console.log(data);
           if (data != null) {
             setFollowing(data);
-            if (profile_user == localStorage.getItem("username")) {
+            if (profile_user === localStorage.getItem("username")) {
               localStorage.setItem("following", JSON.stringify(data));
             }
           }
@@ -271,7 +271,7 @@ function Profile() {
       .then(data => {
         console.log("get topics request back is: ", data);
         setTopics(data);
-        if (profile_user == localStorage.getItem("username")) {
+        if (profile_user === localStorage.getItem("username")) {
           localStorage.setItem("topic", JSON.stringify(data));
         }
         

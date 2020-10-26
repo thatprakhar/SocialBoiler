@@ -29,6 +29,7 @@ from db.following_utils import (
     get_user_topics,
     follow_topic,
     unfollow_topic,
+    create_topic
 )
 from flask import Flask
 from flask_cors import CORS
@@ -202,6 +203,7 @@ def make_app():
             return jsonify("failed")
         else:
             insert_post_details(username, title, description, image, topics)
+            create_topic(topics)
 
         return jsonify("success")
 
@@ -283,6 +285,7 @@ def make_app():
         auth_token = request.headers.get("auth_token")
         username = request.headers.get("username")
         topic = request.headers.get("topic")
+
         status = token_validation(username, auth_token)
         # status = True
         if not status:

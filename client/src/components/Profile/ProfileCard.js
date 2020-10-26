@@ -129,7 +129,7 @@ function ProfileCard({
       }
     }
    
-  },[])
+  },[profileUser])
 
 
   return (
