@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Nav, Navbar, Button, Form, FormControl } from "react-bootstrap";
+import { Nav, Navbar, Button, FormControl } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { Link } from "@material-ui/core";
 
@@ -9,15 +9,6 @@ const API_URL = "http://127.0.0.1:5000";
 function ProfileHeader() {
   const history = useHistory();
   const [topic, setTopic] = useState("");
-
-  function searchByTopic(e) {
-    e.preventDefault();
-    if (topic === "") return;
-    history.push({
-      pathname: '/get_posts_by_topic',
-      search: '?topic=' + topic
-    })
-  }
 
   const handleLogOut = () => {
     const requestOptions = {
@@ -54,7 +45,7 @@ function ProfileHeader() {
       <Navbar.Collapse id="basic-navbar-nav">
       <div style={{display: "flex", flexDirection: "row"}}>
         <FormControl type="text" placeholder="Search by topic" className=" mr-sm-2" onChange={e => setTopic(e.target.value)}/>
-        <Link href={"\get_posts_by_topic?topic=" + topic}>
+        <Link href={"get_posts_by_topic?topic=" + topic}>
           <Button type="submit">
             Search
           </Button>

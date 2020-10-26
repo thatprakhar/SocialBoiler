@@ -7,6 +7,8 @@ import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
 import { BrowserRouter as Router, Route, Redirect, useLocation } from "react-router-dom";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles((theme) => ({
   feed: {
@@ -34,7 +36,8 @@ const createStyles = makeStyles((theme) => ({
     fontSize: 50
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff"
   }
 }));
 
@@ -42,6 +45,7 @@ export default function Home(props) {
   const styling = createStyles();
   const location = useLocation();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const API_URL = "http://127.0.0.1:5000";
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
@@ -70,9 +74,11 @@ export default function Home(props) {
       fetch(API_URL + "/get_own_posts", requestOptions)
       .then(res => {
         console.log(res)
+        setLoading(false);
       })
       .catch(err => {
         console.log(err)
+        setLoading(false);
       });
     } else if (props.page_type === "search_posts") {
       setPosts([]);
@@ -92,15 +98,18 @@ export default function Home(props) {
       .then(data => {
         console.log(data);
         setPosts(data);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err)
+        setLoading(false);
       });
     } else if (props.page_type === "home") {
       setPosts([]);
       console.log("home");
+      setLoading(false);
     }
-  }, [])
+  }, [location.search, props.page_type])
   console.log(posts);
   return (
     <div>
@@ -115,6 +124,9 @@ export default function Home(props) {
         </Route>
       </Router>
       <ProfileHeader />
+      <Backdrop className={styling.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className={styling.main}>
         {(selectedPost !== null || showCreateScreen === true) &&
         window.innerWidth <= 600 ? null : (
