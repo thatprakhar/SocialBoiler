@@ -8,7 +8,6 @@ import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
 
-
 const API_URL = "http://127.0.0.1:5000";
 
 let profile_user;
@@ -254,7 +253,7 @@ function Profile() {
         console.log("can not update profile: " + err);
         setError("Can not connect to server!");
       });
-  },[]);
+  }, []);
 
   useEffect(() => {
     //Get the the topics the profile user is following
@@ -274,7 +273,6 @@ function Profile() {
         if (profile_user === localStorage.getItem("username")) {
           localStorage.setItem("topic", JSON.stringify(data));
         }
-        
       })
       .catch(err => {
         console.log("can not get following topics: " + err);
@@ -312,7 +310,6 @@ function Profile() {
                 </div>
               ) : null}
             </div>
-            
           </Col>
 
           <Col md={8}>
@@ -333,7 +330,6 @@ function Profile() {
               setFollowing={setFollowing}
               setError={setError}
             />
-            
           </Col>
         </Row>
       </Container>

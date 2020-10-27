@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 
-
 const API_URL = "http://127.0.0.1:5000";
 
 function ProfileCard({
@@ -13,23 +12,21 @@ function ProfileCard({
   image,
   profileUser,
   followers,
-  setFollowers, 
+  setFollowers,
   following,
   setFollowing,
   topics
 }) {
-  
-  const [followButton, setFollowButton]=useState(true);
-  const history=useHistory();
-  
-  
-  const handleFollow=()=>{
+  const [followButton, setFollowButton] = useState(true);
+  const history = useHistory();
+
+  const handleFollow = () => {
     //first check if user is logged in
-    if(!localStorage.getItem("username")){
-      history.push("/login")
+    if (!localStorage.getItem("username")) {
+      history.push("/login");
       return;
     }
-    console.log('following', profileUser);
+    console.log("following", profileUser);
     setFollowButton(false);
 
     const requestOptions = {
@@ -47,35 +44,31 @@ function ProfileCard({
       .then(res => res.json())
       .then(data => {
         console.log("put request back is: ", data);
-        if(data!=="success"){
+        if (data !== "success") {
           alert(data);
         }
 
         //update the following list in local storage
-        let newFollowing=JSON.parse(localStorage.getItem("following"))
-        if(newFollowing==null){
-          newFollowing=[]
+        let newFollowing = JSON.parse(localStorage.getItem("following"));
+        if (newFollowing == null) {
+          newFollowing = [];
         }
-        
-        newFollowing.push(profileUser)
-        
 
-        localStorage.setItem("following", JSON.stringify(newFollowing))
+        newFollowing.push(profileUser);
+
+        localStorage.setItem("following", JSON.stringify(newFollowing));
 
         //update followers of the profile user
-        setFollowers([...followers, localStorage.getItem("username")])
-        
+        setFollowers([...followers, localStorage.getItem("username")]);
       })
       .catch(err => {
         console.log("can not update profile: " + err);
         // setError("Can not connect to server!");
       });
-    
-  }
+  };
 
-  const handleUnfollow=()=>{
-    console.log('unfollowing', profileUser);
-
+  const handleUnfollow = () => {
+    console.log("unfollowing", profileUser);
 
     const requestOptions = {
       method: "POST",
@@ -92,45 +85,44 @@ function ProfileCard({
       .then(res => res.json())
       .then(data => {
         console.log("put request back is: ", data);
-        if(data!=="success"){
+        if (data !== "success") {
           alert(data);
         }
-        
+
         //update the following list in local storage
-        let newFollowing=JSON.parse(localStorage.getItem("following")).filter((name)=>name!==profileUser);
-        localStorage.setItem("following", JSON.stringify(newFollowing))
+        let newFollowing = JSON.parse(localStorage.getItem("following")).filter(
+          name => name !== profileUser
+        );
+        localStorage.setItem("following", JSON.stringify(newFollowing));
 
         //update followers of the profile
-        let newFollowers=followers.filter((name)=>name!==localStorage.getItem("username"))
-        setFollowers(newFollowers)
-        
+        let newFollowers = followers.filter(
+          name => name !== localStorage.getItem("username")
+        );
+        setFollowers(newFollowers);
       })
       .catch(err => {
         console.log("can not update profile: " + err);
         // setError("Can not connect to server!");
       });
-    
 
-    setFollowButton(true)
-  }
+    setFollowButton(true);
+  };
 
-  useEffect(()=>{
-    console.log("following:", localStorage.getItem("following"))
-    console.log("profile user:", profileUser)
+  useEffect(() => {
+    console.log("following:", localStorage.getItem("following"));
+    console.log("profile user:", profileUser);
 
-    if(localStorage.getItem("following")){
-      const followingArray=JSON.parse(localStorage.getItem("following"))
-      if(followingArray.includes(profileUser)){
-        console.log("true")
-        setFollowButton(false)
-      }
-      else {
-        setFollowButton(true)
+    if (localStorage.getItem("following")) {
+      const followingArray = JSON.parse(localStorage.getItem("following"));
+      if (followingArray.includes(profileUser)) {
+        console.log("true");
+        setFollowButton(false);
+      } else {
+        setFollowButton(true);
       }
     }
-   
-  },[profileUser])
-
+  }, [profileUser]);
 
   return (
     <div className="profile__card">
@@ -157,7 +149,7 @@ function ProfileCard({
           <h5>
             <Badge variant="primary">Following topics:</Badge> {topics.length}
           </h5>
-          
+
           <div className="text-center profile__delete">
             {isOwnProfile ? (
               <div className="profile__card__button">
@@ -169,13 +161,14 @@ function ProfileCard({
                   Upload Avatar
                 </Button>
               </div>
+            ) : followButton ? (
+              <Button variant="info" onClick={handleFollow}>
+                Follow
+              </Button>
             ) : (
-              followButton?(
-                <Button variant="info" onClick={handleFollow}>Follow</Button>
-              ):(
-                <Button variant="danger" onClick={handleUnfollow}>Unfollow</Button>
-              )
-              
+              <Button variant="danger" onClick={handleUnfollow}>
+                Unfollow
+              </Button>
             )}
           </div>
         </Card.Body>

@@ -13,8 +13,6 @@ import { Button, Badge, Alert } from "react-bootstrap";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-
-
 const createStyles = makeStyles(theme => ({
   inline: {
     display: "inline"
@@ -48,7 +46,6 @@ export default function App(props) {
   const [showError, setShowError] = useState(false);
   const [topicFollowed, setTopicFollowed] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  
 
   const API_URL = "http://127.0.0.1:5000";
 
@@ -68,22 +65,22 @@ export default function App(props) {
       }
     };
     fetch(API_URL + "/follow_topic", requestOptions)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      if (data === "failed") {
-        setShowError(true); 
-      } else {
-        setTopicFollowed(true);
-        setShowSuccessFollow(true);
-        setSuccessMessage("Now following");
-      }
-      setLoading(false);
-    })
-    .catch(err => {
-      console.log(err)
-      setLoading(false);
-    });
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data === "failed") {
+          setShowError(true);
+        } else {
+          setTopicFollowed(true);
+          setShowSuccessFollow(true);
+          setSuccessMessage("Now following");
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setLoading(false);
+      });
   }
 
   function unfollowTopic() {
@@ -98,22 +95,22 @@ export default function App(props) {
       }
     };
     fetch(API_URL + "/unfollow_topic", requestOptions)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      if (data === "failed") {
-        setShowError(true); 
-      } else {
-        setTopicFollowed(false);
-        setShowSuccessFollow(true);
-        setSuccessMessage("Unfollowed");
-      }
-      setLoading(false);
-    })
-    .catch(err => {
-      console.log(err)
-      setLoading(false);
-    });
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data === "failed") {
+          setShowError(true);
+        } else {
+          setTopicFollowed(false);
+          setShowSuccessFollow(true);
+          setSuccessMessage("Unfollowed");
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -127,16 +124,20 @@ export default function App(props) {
       }
     };
     fetch(API_URL + "/topic_is_followed", requestOptions)
-    .then(res => res.json())
-    .then(data => {
-      setTopicFollowed(data);
-    })
-    .catch(err => console.log(err));
+      .then(res => res.json())
+      .then(data => {
+        setTopicFollowed(data);
+      })
+      .catch(err => console.log(err));
   }, [props.topic]);
 
   function post_view(post_data) {
     return (
-      <Button style={{width: "100%"}} variant="light" onClick={() => parentHandle(post_data)}>
+      <Button
+        style={{ width: "100%" }}
+        variant="light"
+        onClick={() => parentHandle(post_data)}
+      >
         <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar>{post_data.username[0]}</Avatar>
@@ -167,42 +168,67 @@ export default function App(props) {
   function topic_view(topic) {
     if (topicFollowed === false) {
       return (
-        <Button variant="success" style={{width: "100%"}} onClick={followTopic}>
-          Follow   <Badge variant="info">{topic}</Badge>
+        <Button
+          variant="success"
+          style={{ width: "100%" }}
+          onClick={followTopic}
+        >
+          Follow <Badge variant="info">{topic}</Badge>
         </Button>
-      )
+      );
     } else {
       return (
-        <Button variant="danger" style={{width: "100%"}} onClick={unfollowTopic}>
-          Unfollow   <Badge variant="info">{topic}</Badge>
+        <Button
+          variant="danger"
+          style={{ width: "100%" }}
+          onClick={unfollowTopic}
+        >
+          Unfollow <Badge variant="info">{topic}</Badge>
         </Button>
-      )
+      );
     }
   }
 
   var posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
-return <>
-    <Snackbar open={showSuccessFollow} autoHideDuration={6000} onClose={() => setShowSuccessFollow(!showSuccessFollow)}>
-      <Alert onClose={() => setShowSuccessFollow(!showSuccessFollow)} variant="success" dismissible>
-        {successMessage + ' ' + props.topic} 
-      </Alert>
-    </Snackbar>
-    <Snackbar open={showError} autoHideDuration={6000} onClose={() => setShowError(!showError)}>
-      <Alert onClose={() => setShowError(!showError)} variant="danger" dismissible>
-        An error occured
-      </Alert>
+  return (
+    <>
+      <Snackbar
+        open={showSuccessFollow}
+        autoHideDuration={6000}
+        onClose={() => setShowSuccessFollow(!showSuccessFollow)}
+      >
+        <Alert
+          onClose={() => setShowSuccessFollow(!showSuccessFollow)}
+          variant="success"
+          dismissible
+        >
+          {successMessage + " " + props.topic}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={showError}
+        autoHideDuration={6000}
+        onClose={() => setShowError(!showError)}
+      >
+        <Alert
+          onClose={() => setShowError(!showError)}
+          variant="danger"
+          dismissible
+        >
+          An error occured
+        </Alert>
       </Snackbar>
       <Backdrop className={styling.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <List className={styling.root}>
-        {
-          props.page_type === "search_posts" ?
-          <li><Typography variant="h5">{topic_view(props.topic)}</Typography></li>
-          : 
-          null
-        }
-      {posts}
+        {props.page_type === "search_posts" ? (
+          <li>
+            <Typography variant="h5">{topic_view(props.topic)}</Typography>
+          </li>
+        ) : null}
+        {posts}
       </List>
-  </>
+    </>
+  );
 }

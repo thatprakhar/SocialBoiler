@@ -43,15 +43,17 @@ function ProfileHeader() {
       <Navbar.Brand href="/home">SocialBoiler</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-      <div style={{display: "flex", flexDirection: "row"}}>
-        <FormControl type="text" placeholder="Search by topic" className=" mr-sm-2" onChange={e => setTopic(e.target.value)}/>
-        <Link href={"get_posts_by_topic?topic=" + topic}>
-          <Button type="submit">
-            Search
-          </Button>
-        </Link>
-       
-      </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <FormControl
+            type="text"
+            placeholder="Search by topic"
+            className=" mr-sm-2"
+            onChange={e => setTopic(e.target.value)}
+          />
+          <Link href={"get_posts_by_topic?topic=" + topic}>
+            <Button type="submit">Search</Button>
+          </Link>
+        </div>
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
 

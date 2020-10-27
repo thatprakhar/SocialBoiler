@@ -4,13 +4,18 @@ import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
 import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
-import { BrowserRouter as Router, Route, Redirect, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  useLocation
+} from "react-router-dom";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const createStyles = makeStyles((theme) => ({
+const createStyles = makeStyles(theme => ({
   feed: {
     marginTop: 40,
     maxHeight: window.innerHeight
@@ -72,16 +77,16 @@ export default function Home(props) {
         }
       };
       fetch(API_URL + "/get_own_posts", requestOptions)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log(err)
-        setLoading(false);
-      });
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          setPosts(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
+        });
     } else if (props.page_type === "search_posts") {
       setPosts([]);
       const query = new URLSearchParams(location.search);
@@ -96,16 +101,16 @@ export default function Home(props) {
         }
       };
       fetch(API_URL + "/get_posts_by_topic", requestOptions)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log(err)
-        setLoading(false);
-      });
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          setPosts(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
+        });
     } else if (props.page_type === "home") {
       setPosts([]);
       const requestOptions = {
@@ -117,18 +122,18 @@ export default function Home(props) {
         }
       };
       fetch(API_URL + "/get_following_user_posts", requestOptions)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log(err)
-        setLoading(false);
-      });
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          setPosts(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+          setLoading(false);
+        });
     }
-  }, [location.search, props.page_type])
+  }, [location.search, props.page_type]);
   console.log(posts);
   return (
     <div>
@@ -154,18 +159,21 @@ export default function Home(props) {
             posts={posts}
             parentHandler={parentHandler}
             page_type={props.page_type}
-            topic={props.page_type === "search_posts" ? new URLSearchParams(location.search).get("topic"): ""}
+            topic={
+              props.page_type === "search_posts"
+                ? new URLSearchParams(location.search).get("topic")
+                : ""
+            }
           />
         )}
-        {
-          !showCreateScreen && 
+        {!showCreateScreen && (
           <IconButton
             className={styling.addButton}
             onClick={e => setShowCreateScreen(!showCreateScreen)}
           >
             <AddCircleIcon className={styling.addButtonIcon} color="primary" />
-          </IconButton> 
-        }
+          </IconButton>
+        )}
         <Hidden mdDown>
           {showCreateScreen ? (
             <CreatePost

@@ -139,7 +139,9 @@ export default function Post(props) {
       .then(res => res.json())
       .then(data => {
         if (data === "failed") {
-          setErrorMessage("Could not perform the action. Server is down. Try again later");
+          setErrorMessage(
+            "Could not perform the action. Server is down. Try again later"
+          );
         } else {
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
@@ -187,20 +189,22 @@ export default function Post(props) {
               </a>
             </Typography>
             <div>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Avatar className={styling.small && styling.purple}>
-                {props.post_data.username[0]}
-              </Avatar>
-              <Link
-                href={"profile?username=" + props.post_data.username}
-                color="inherit"
-              >
-                <Typography variant="body1" className={styling.userline}>
-                  {props.post_data.username}
-                </Typography>
-              </Link>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <Avatar className={styling.small && styling.purple}>
+                  {props.post_data.username[0]}
+                </Avatar>
+                <Link
+                  href={"profile?username=" + props.post_data.username}
+                  color="inherit"
+                >
+                  <Typography variant="body1" className={styling.userline}>
+                    {props.post_data.username}
+                  </Typography>
+                </Link>
               </div>
-              <Typography variant="caption">Posted on {props.post_data.date_created.slice(0, -7)}</Typography>
+              <Typography variant="caption">
+                Posted on {props.post_data.date_created.slice(0, -7)}
+              </Typography>
             </div>
           </div>
         </Col>
@@ -209,7 +213,9 @@ export default function Post(props) {
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
           <Typography variant="body1">{props.post_data.description}</Typography>
-          {props.post_data.image !== "null" && <Image src={props.post_data.image} fluid />}
+          {props.post_data.image !== "null" && (
+            <Image src={props.post_data.image} fluid />
+          )}
         </Col>
       </Row>
 

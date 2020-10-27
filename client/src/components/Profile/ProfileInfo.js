@@ -78,8 +78,6 @@ function ProfileInfo({
       });
   };
 
-  
-
   return (
     <div className="profile__info">
       <h2>
