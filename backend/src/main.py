@@ -411,27 +411,27 @@ def make_app():
         # returns an empty list or list of dictionaries including all post details
         return jsonify(get_followings_posts(username))
 
-<<<<<<< HEAD
     @app.route("/get_voted_posts_by_user", methods=["GET"])
     def get_voted_posts_of_user():
         username = request.headers.get("username")
-=======
+        auth_token = request.headers.get("auth_token")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")        
+
+         # returns an empty list or list of dictionaries including posts by topic
+        return jsonify(get_voted_posts_by_user(username))
+
+
     @app.route("/get_topics", methods=["GET"])
     def get_existing_topics():
->>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
         auth_token = request.headers.get("auth_token")
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
-<<<<<<< HEAD
 
-        # returns an empty list or list of dictionaries including posts by topic
-        return jsonify(get_voted_posts_by_user(username))
-=======
-        
         #returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
         return jsonify(get_all_topics())
 
->>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
 
     return app
