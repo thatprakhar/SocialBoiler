@@ -14,7 +14,8 @@ from src.db.crud import (
     fetch_user_post,
     fetch_posts_with_topic,
     fetch_users_following,
-    fetch_topics_following
+    fetch_topics_following,
+    fetch_votes_by_user
 )
 from src.db.models import Posts, Likes
 
@@ -144,3 +145,18 @@ def get_followings_posts(username):
     result = pd.DataFrame(result).drop_duplicates()
     return result.to_dict('records')
     
+def get_voted_posts_by_user(username):
+    user_votes = fetch_votes_by_user(username)
+    
+    if user_votes.empty:
+        return []
+
+    result = []
+
+    post_ids = user_votes['post_id'].to_dict()
+    for postid in post_ids:
+        post_df = fetch_post(Posts, post_ids[postid]).to_dict("records")
+        result += post_df
+
+    return result
+

@@ -266,8 +266,24 @@ def fetch_topics_following(username):
     else:
         return None
 
+# fetches the votes by the user
+def fetch_votes_by_user(username):
+    session = Session()
+
+    try:
+        result = session.query(Likes).filter(Likes.username == username)
+
+    finally:
+        session.close()
+
+    if result is not None:
+        df = pd.read_sql(result.statement, result.session.bind)
+        return df
+
+    else:
+        return None
+
 #create_tables()
 
 if __name__ == '__main__':
     pass
-
