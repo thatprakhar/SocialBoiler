@@ -72,8 +72,10 @@ export default function Home(props) {
         }
       };
       fetch(API_URL + "/get_own_posts", requestOptions)
-      .then(res => {
-        console.log(res)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setPosts(data);
         setLoading(false);
       })
       .catch(err => {
@@ -106,8 +108,25 @@ export default function Home(props) {
       });
     } else if (props.page_type === "home") {
       setPosts([]);
-      console.log("home");
-      setLoading(false);
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token")
+        }
+      };
+      fetch(API_URL + "/get_following_user_posts", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err)
+        setLoading(false);
+      });
     }
   }, [location.search, props.page_type])
   console.log(posts);
@@ -139,7 +158,7 @@ export default function Home(props) {
           />
         )}
         {
-          !showCreateScreen && props.page_type === "home" && 
+          !showCreateScreen && 
           <IconButton
             className={styling.addButton}
             onClick={e => setShowCreateScreen(!showCreateScreen)}
@@ -148,7 +167,7 @@ export default function Home(props) {
           </IconButton> 
         }
         <Hidden mdDown>
-          {showCreateScreen && props.page_type === "home" ? (
+          {showCreateScreen ? (
             <CreatePost
               toggleView={() => setShowCreateScreen(!showCreateScreen)}
             />
