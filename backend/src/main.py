@@ -12,7 +12,7 @@ from db.posts_utils import (
     get_posts,
     get_posts_with_topic,
     get_voted_posts,
-    get_followings_posts
+    get_followings_posts,
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -31,7 +31,7 @@ from db.following_utils import (
     unfollow_topic,
     create_topic,
     topic_Is_Followed,
-    user_Is_followed
+    user_Is_followed,
 )
 from flask import Flask
 from flask_cors import CORS
@@ -204,7 +204,7 @@ def make_app():
             return jsonify("failed")
         else:
             insert_post_details(username, title, description, image, topics)
-            print('topic = ', topics)
+            print("topic = ", topics)
             create_topic(topics)
 
         return jsonify("success")
@@ -215,8 +215,8 @@ def make_app():
         # check if the authentication token is valid
         post_id = request.headers.get("post_id")
         username = request.headers.get("username")
-        liked = request.headers.get("liked")
-        disliked = request.headers.get("disliked")
+        liked = request.headers.get("liked") == "true"
+        disliked = request.headers.get("disliked") == "true"
 
         status = token_validation(username, auth_token)
         if not status:
@@ -361,14 +361,15 @@ def make_app():
     def get_user_posts():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
+        # get the userline for a specific user
+        profile_user = request.headers.get("profile_user")
+
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
 
         # returns an empty list or list of dictionaries including posts
-        return jsonify(get_posts(username))
-
-
+        return jsonify(get_posts(profile_user))
 
     @app.route("/get_posts_by_topic", methods=["GET"])
     def get_user_posts_by_topic():
@@ -402,7 +403,7 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty list or list of dictionaries including all post details
+        # returns an empty list or list of dictionaries including all post details
         return jsonify(get_followings_posts(username))
 
     return app
