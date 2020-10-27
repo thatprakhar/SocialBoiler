@@ -416,7 +416,7 @@ def make_app():
         if not status:
             return jsonify("failed")        
 
-         # returns an empty list or list of dictionaries including posts by topic
+         # returns an empty list or list of dictionaries including posts voted by user
         return jsonify(get_voted_posts_by_user(username))
 
 
