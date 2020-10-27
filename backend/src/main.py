@@ -216,7 +216,7 @@ def make_app():
         post_id = request.headers.get("post_id")
         username = request.headers.get("username")
         liked = (request.headers.get("liked") == "true")
-        disliked = (request.headers.get("disliked") == "false")
+        disliked = (request.headers.get("disliked") == "true")
 
         status = token_validation(username, auth_token)
         if not status:
