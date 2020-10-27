@@ -215,8 +215,8 @@ def make_app():
         # check if the authentication token is valid
         post_id = request.headers.get("post_id")
         username = request.headers.get("username")
-        liked = request.headers.get("liked")
-        disliked = request.headers.get("disliked")
+        liked = (request.headers.get("liked") == "true")
+        disliked = (request.headers.get("disliked") == "false")
 
         status = token_validation(username, auth_token)
         if not status:
