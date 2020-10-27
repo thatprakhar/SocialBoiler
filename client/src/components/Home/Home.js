@@ -76,6 +76,7 @@ export default function Home(props) {
       .then(data => {
         console.log(data);
         setPosts(data);
+        setLoading(false);
       })
       .catch(err => {
         console.log(err)

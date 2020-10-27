@@ -8,6 +8,7 @@ sys.path.append(
 )
 from src.db.crud import (
     update_table,
+    fetch_rows,
     fetch_post,
     update_post_likes,
     delete_row_likes,
@@ -17,7 +18,7 @@ from src.db.crud import (
     fetch_topics_following,
     fetch_votes_by_user
 )
-from src.db.models import Posts, Likes
+from src.db.models import Posts, Likes, Topics
 
 
 def insert_post_details(username, title, description, image, topics):
@@ -160,3 +161,12 @@ def get_voted_posts_by_user(username):
 
     return result
 
+
+
+def get_all_topics():
+    df = fetch_rows(Topics)
+    if not df:
+        return {}
+    
+    df = df['topic_title']
+    return df.to_dict()

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   makeStyles,
@@ -46,6 +46,8 @@ export default function App(props) {
   const [loading, setLoading] = useState(false);
   const [showSuccessFollow, setShowSuccessFollow] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [topicFollowed, setTopicFollowed] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   
 
   const API_URL = "http://127.0.0.1:5000";
@@ -72,7 +74,9 @@ export default function App(props) {
       if (data === "failed") {
         setShowError(true); 
       } else {
+        setTopicFollowed(true);
         setShowSuccessFollow(true);
+        setSuccessMessage("Now following");
       }
       setLoading(false);
     })
@@ -82,15 +86,60 @@ export default function App(props) {
     });
   }
 
+  function unfollowTopic() {
+    setLoading(true);
+    const requestOptions = {
+      method: "POSt",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        username: localStorage.getItem("username"),
+        auth_token: localStorage.getItem("auth_token"),
+        topic: props.topic
+      }
+    };
+    fetch(API_URL + "/unfollow_topic", requestOptions)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      if (data === "failed") {
+        setShowError(true); 
+      } else {
+        setTopicFollowed(false);
+        setShowSuccessFollow(true);
+        setSuccessMessage("Unfollowed");
+      }
+      setLoading(false);
+    })
+    .catch(err => {
+      console.log(err)
+      setLoading(false);
+    });
+  }
+
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+        topic: props.topic
+      }
+    };
+    fetch(API_URL + "/topic_is_followed", requestOptions)
+    .then(res => res.json())
+    .then(data => {
+      setTopicFollowed(data);
+    })
+    .catch(err => console.log(err));
+  }, [props.topic]);
+
   function post_view(post_data) {
     return (
       <Button style={{width: "100%"}} variant="light" onClick={() => parentHandle(post_data)}>
         <ListItem alignItems="flex-start">
           <ListItemAvatar>
-            <Avatar
-              alt={post_data.userName}
-              src="/static/images/avatar/1.jpg"
-            />
+            <Avatar>{post_data.username[0]}</Avatar>
           </ListItemAvatar>
           <ListItemText
             primary={post_data.title}
@@ -116,18 +165,26 @@ export default function App(props) {
   }
 
   function topic_view(topic) {
-    return (
-      <Button variant="light" style={{width: "100%"}} onClick={followTopic}>
-        Follow   <Badge variant="info">{topic}</Badge>
-      </Button>
-    )
+    if (topicFollowed === false) {
+      return (
+        <Button variant="success" style={{width: "100%"}} onClick={followTopic}>
+          Follow   <Badge variant="info">{topic}</Badge>
+        </Button>
+      )
+    } else {
+      return (
+        <Button variant="danger" style={{width: "100%"}} onClick={unfollowTopic}>
+          Unfollow   <Badge variant="info">{topic}</Badge>
+        </Button>
+      )
+    }
   }
 
   var posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
 return <>
     <Snackbar open={showSuccessFollow} autoHideDuration={6000} onClose={() => setShowSuccessFollow(!showSuccessFollow)}>
       <Alert onClose={() => setShowSuccessFollow(!showSuccessFollow)} variant="success" dismissible>
-        Now following {props.topic}
+        {successMessage + ' ' + props.topic} 
       </Alert>
     </Snackbar>
     <Snackbar open={showError} autoHideDuration={6000} onClose={() => setShowError(!showError)}>

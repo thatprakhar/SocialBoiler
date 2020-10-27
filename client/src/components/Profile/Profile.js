@@ -303,6 +303,16 @@ function Profile() {
               setFollowing={setFollowing}
               topics={topics}
             />
+            <div className="userline__box">
+              {isLoggedIn ? (
+                <div className="userline__link">
+                  <a href={"/userline?username=" + profile_user}>
+                    Go to Userline
+                  </a>
+                </div>
+              ) : null}
+            </div>
+            
           </Col>
 
           <Col md={8}>
@@ -323,13 +333,7 @@ function Profile() {
               setFollowing={setFollowing}
               setError={setError}
             />
-            {isLoggedIn ? (
-              <div className="userline__link">
-                <a href={"/userline?username=" + profile_user}>
-                  Go to Userline
-                </a>
-              </div>
-            ) : null}
+            
           </Col>
         </Row>
       </Container>

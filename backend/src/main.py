@@ -13,7 +13,11 @@ from db.posts_utils import (
     get_posts_with_topic,
     get_voted_posts,
     get_followings_posts,
+<<<<<<< HEAD
     get_voted_posts_by_user
+=======
+    get_all_topics
+>>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -32,7 +36,7 @@ from db.following_utils import (
     unfollow_topic,
     create_topic,
     topic_Is_Followed,
-    user_Is_followed
+    user_Is_followed,
 )
 from flask import Flask
 from flask_cors import CORS
@@ -205,7 +209,7 @@ def make_app():
             return jsonify("failed")
         else:
             insert_post_details(username, title, description, image, topics)
-            print('topic = ', topics)
+            print("topic = ", topics)
             create_topic(topics)
 
         return jsonify("success")
@@ -216,8 +220,8 @@ def make_app():
         # check if the authentication token is valid
         post_id = request.headers.get("post_id")
         username = request.headers.get("username")
-        liked = (request.headers.get("liked") == "true")
-        disliked = (request.headers.get("disliked") == "true")
+        liked = request.headers.get("liked") == "true"
+        disliked = request.headers.get("disliked") == "true"
 
         status = token_validation(username, auth_token)
         if not status:
@@ -362,14 +366,15 @@ def make_app():
     def get_user_posts():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
+        # get the userline for a specific user
+        profile_user = request.headers.get("profile_user")
+
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
 
         # returns an empty list or list of dictionaries including posts
-        return jsonify(get_posts(username))
-
-
+        return jsonify(get_posts(profile_user))
 
     @app.route("/get_posts_by_topic", methods=["GET"])
     def get_user_posts_by_topic():
@@ -403,18 +408,30 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty list or list of dictionaries including all post details
+        # returns an empty list or list of dictionaries including all post details
         return jsonify(get_followings_posts(username))
 
+<<<<<<< HEAD
     @app.route("/get_voted_posts_by_user", methods=["GET"])
     def get_voted_posts_of_user():
         username = request.headers.get("username")
+=======
+    @app.route("/get_topics", methods=["GET"])
+    def get_existing_topics():
+>>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
         auth_token = request.headers.get("auth_token")
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
+<<<<<<< HEAD
 
         # returns an empty list or list of dictionaries including posts by topic
         return jsonify(get_voted_posts_by_user(username))
+=======
+        
+        #returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
+        return jsonify(get_all_topics())
+
+>>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
 
     return app
