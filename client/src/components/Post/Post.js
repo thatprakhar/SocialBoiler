@@ -14,7 +14,8 @@ import {
   Col,
   ButtonGroup,
   Badge,
-  Alert
+  Alert,
+  Image
 } from "react-bootstrap";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
@@ -136,16 +137,17 @@ export default function Post(props) {
     };
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
-      .then(res => {
-        if (res === "failed") {
-          setErrorMessage("Could not perform the action. Try again later");
+      .then(data => {
+        if (data === "failed") {
+          setErrorMessage("Could not perform the action. Server is down. Try again later");
         } else {
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
         }
       })
       .catch(err => {
-        setErrorMessage("Could not connect to the server. Try again later");
+        console.log(err);
+        setErrorMessage(err);
       });
   }
 
@@ -184,6 +186,7 @@ export default function Post(props) {
                 </Badge>
               </a>
             </Typography>
+            <div>
             <div style={{ display: "flex", flexDirection: "row" }}>
               <Avatar className={styling.small && styling.purple}>
                 {props.post_data.username[0]}
@@ -196,6 +199,8 @@ export default function Post(props) {
                   {props.post_data.username}
                 </Typography>
               </Link>
+              </div>
+              <Typography variant="caption">Posted on {props.post_data.date_created.slice(0, -7)}</Typography>
             </div>
           </div>
         </Col>
@@ -204,6 +209,7 @@ export default function Post(props) {
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
           <Typography variant="body1">{props.post_data.description}</Typography>
+          {props.post_data.image !== "null" && <Image src={props.post_data.image} fluid />}
         </Col>
       </Row>
 
