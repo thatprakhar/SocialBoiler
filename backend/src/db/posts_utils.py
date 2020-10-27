@@ -8,6 +8,7 @@ sys.path.append(
 )
 from src.db.crud import (
     update_table,
+    fetch_rows,
     fetch_post,
     update_post_likes,
     delete_row_likes,
@@ -16,7 +17,7 @@ from src.db.crud import (
     fetch_users_following,
     fetch_topics_following
 )
-from src.db.models import Posts, Likes
+from src.db.models import Posts, Likes, Topics
 
 
 def insert_post_details(username, title, description, image, topics):
@@ -143,4 +144,12 @@ def get_followings_posts(username):
     #convert to dataframe to easily drop duplicates from combined df
     result = pd.DataFrame(result).drop_duplicates()
     return result.to_dict('records')
+
+
+def get_all_topics():
+    df = fetch_rows(Topics)
+    if not df:
+        return {}
     
+    df = df['topic_title']
+    return df.to_dict()
