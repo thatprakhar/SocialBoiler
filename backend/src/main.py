@@ -13,11 +13,8 @@ from db.posts_utils import (
     get_posts_with_topic,
     get_voted_posts,
     get_followings_posts,
-<<<<<<< HEAD
     get_voted_posts_by_user
-=======
     get_all_topics
->>>>>>> 3bddf0cb2bb58cd9818037aebd3f069ddc8f4b1a
 )
 from db.profile_page_utils import (
     get_profile_details,
