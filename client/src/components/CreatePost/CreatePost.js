@@ -5,7 +5,7 @@ import {
   FormControlLabel,
   Switch
 } from "@material-ui/core";
-import { Container, Row, Alert } from "react-bootstrap";
+import { Container, Row, Alert, Button as ButtonRB } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField, Button } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
@@ -221,6 +221,22 @@ export default function Post(props) {
             </label>
           </Row>
           <br />
+
+          {postImage !== null &&
+          <>
+            <Row>
+              {postImage[0].name}
+            </Row>
+            <br />
+            <Row>
+              <ButtonRB variant="outline-danger" onClick={() => setPostImage(null)}>
+                Remove Image
+              </ButtonRB>
+            </Row>
+            <br />
+          </>
+          }
+
           <Row>
             <FormControlLabel
               value="end"

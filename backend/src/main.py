@@ -13,7 +13,7 @@ from db.posts_utils import (
     get_posts_with_topic,
     get_voted_posts,
     get_followings_posts,
-    get_voted_posts_by_user
+    get_voted_posts_by_user,
     get_all_topics
 )
 from db.profile_page_utils import (
