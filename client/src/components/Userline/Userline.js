@@ -10,13 +10,17 @@ import {
     Badge,
     Alert
   } from "react-bootstrap";
-  import { v4 as uuidv4 } from "uuid";
-  import "./Userline.css"
-  import ProfileHeader from '../Profile/ProfileHeader'
-  import UserlinePost from './UserlinePost'
+import { v4 as uuidv4 } from "uuid";
+import "./Userline.css"
+import ProfileHeader from '../Profile/ProfileHeader'
+import UserlinePost from './UserlinePost'
+import queryString from "query-string";
 
   
-  const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000";
+
+let profile_user;
+
 function Userline() {
   const [ownPosts, setOwnPosts]=useState([]);
   const [votedPosts, setVotedPosts]=useState([]);
@@ -25,12 +29,19 @@ function Userline() {
 
   //get own posts
   useEffect(()=>{
+    let parsed = queryString.parse(window.location.search);
+    profile_user=parsed.username;
+    console.log(profile_user)
+
+    
     const requestOptions = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         auth_token: localStorage.getItem("auth_token"),
-        username: localStorage.getItem("username")
+        username: localStorage.getItem("username"),
+        profile_user: profile_user
+
       }
     }
 
@@ -39,7 +50,7 @@ function Userline() {
       .then(data => {
         console.log("get own post request back is: ", data);
         if(data!=="failed"){
-          setOwnPosts(data.reverse());
+          setOwnPosts(data.sort((a, b)=>b.post_id-a.post_id));
           setLoading(false)
           setError(null)
         }
@@ -58,39 +69,39 @@ function Userline() {
   }, [])
 
   //get voted posts
-  useEffect(()=>{
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        auth_token: localStorage.getItem("auth_token"),
-        username: localStorage.getItem("username")
-      }
-    }
+  // useEffect(()=>{
+  //   const requestOptions = {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       auth_token: localStorage.getItem("auth_token"),
+  //       username: localStorage.getItem("username")
+  //     }
+  //   }
 
-    fetch(API_URL + "/get_voted_posts", requestOptions)
-      .then(res => res.json())
-      .then(data => {
-        console.log("get voted post request back is: ", data);
-        if(data!=="failed"){
-          setVotedPosts(data)
-          setLoading(false)
-          setError(null)
+  //   fetch(API_URL + "/get_voted_posts", requestOptions)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       console.log("get voted post request back is: ", data);
+  //       if(data!=="failed"){
+  //         setVotedPosts(data)
+  //         setLoading(false)
+  //         setError(null)
           
-        }
-        else {
-          // alert(data);
-          setError(data)
-        }
+  //       }
+  //       else {
+  //         // alert(data);
+  //         setError(data)
+  //       }
         
-      })
-      .catch(err => {
-        console.log("can not get voted posts: " + err);
-        setError("Can not connect to server!");
-      });
+  //     })
+  //     .catch(err => {
+  //       console.log("can not get voted posts: " + err);
+  //       setError("Can not connect to server!");
+  //     });
 
       
-  }, [])
+  // }, [])
 
 
 

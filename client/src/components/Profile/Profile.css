@@ -41,6 +41,11 @@
   padding: 20px;
 }
 
+.userline__box {
+  display: flex;
+  justify-content: center;
+}
+
 .userline__link {
   background-color: #a450d9;
   height: 60px;
@@ -48,7 +53,8 @@
   border-radius: 10px;
   padding-top: 15px;
   text-align: center;
-  margin-left: 20px;
+
+  margin-top: 30px;
 }
 
 .userline__link a {
