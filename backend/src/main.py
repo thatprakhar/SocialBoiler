@@ -12,7 +12,8 @@ from db.posts_utils import (
     get_posts,
     get_posts_with_topic,
     get_voted_posts,
-    get_followings_posts
+    get_followings_posts,
+    get_all_topics
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -364,5 +365,16 @@ def make_app():
 
         #returns an empty list or list of dictionaries including all post details
         return jsonify(get_followings_posts(username))
+
+    @app.route("/get_topics", methods=["GET"])
+    def get_existing_topics():
+        auth_token = request.headers.get("auth_token")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        
+        #returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
+        return jsonify(get_all_topics())
+
 
     return app
