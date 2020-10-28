@@ -14,7 +14,7 @@ from db.posts_utils import (
     get_voted_posts,
     get_followings_posts,
     get_voted_posts_by_user,
-    get_all_topics
+    get_all_topics,
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -412,13 +412,13 @@ def make_app():
     def get_voted_posts_of_user():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
+        profile_user = request.headers.get("profile_user")
         status = token_validation(username, auth_token)
         if not status:
-            return jsonify("failed")        
+            return jsonify("failed")
 
         # returns an empty list or list of dictionaries including posts voted by user
-        return jsonify(get_voted_posts_by_user(username))
-
+        return jsonify(get_voted_posts_by_user(profile_user))
 
     @app.route("/get_topics", methods=["GET"])
     def get_existing_topics():
@@ -427,8 +427,7 @@ def make_app():
         if not status:
             return jsonify("failed")
 
-        #returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
+        # returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
         return jsonify(get_all_topics())
-
 
     return app

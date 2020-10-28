@@ -61,9 +61,6 @@ function ProfileHeader() {
             <Nav.Link href="/profile">My Profile</Nav.Link>
           ) : null}
           {localStorage.getItem("username") ? (
-            <Nav.Link href="/my_posts">My Posts</Nav.Link>
-          ) : null}
-          {localStorage.getItem("username") ? (
             <Button variant="info" onClick={handleLogOut}>
               Logout
             </Button>

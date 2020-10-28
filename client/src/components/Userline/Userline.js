@@ -59,39 +59,44 @@ function Userline() {
       });
   }, []);
 
-  //get voted posts
-  // useEffect(()=>{
-  //   const requestOptions = {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       auth_token: localStorage.getItem("auth_token"),
-  //       username: localStorage.getItem("username")
-  //     }
-  //   }
+  //get voted posts of the user
+  useEffect(()=>{
+    let parsed = queryString.parse(window.location.search);
+    profile_user = parsed.username;
+    console.log(profile_user);
 
-  //   fetch(API_URL + "/get_voted_posts", requestOptions)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       console.log("get voted post request back is: ", data);
-  //       if(data!=="failed"){
-  //         setVotedPosts(data)
-  //         setLoading(false)
-  //         setError(null)
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+        profile_user: profile_user
+      }
+    }
 
-  //       }
-  //       else {
-  //         // alert(data);
-  //         setError(data)
-  //       }
+    fetch(API_URL + "/get_voted_posts_by_user", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("get voted post request back is: ", data);
+        if(data!=="failed"){
+          setVotedPosts(data.sort((a, b) => b.post_id - a.post_id))
+          setLoading(false)
+          setError(null)
 
-  //     })
-  //     .catch(err => {
-  //       console.log("can not get voted posts: " + err);
-  //       setError("Can not connect to server!");
-  //     });
+        }
+        else {
+          // alert(data);
+          setError(data)
+        }
 
-  // }, [])
+      })
+      .catch(err => {
+        console.log("can not get voted posts: " + err);
+        setError("Can not connect to server!");
+      });
+
+  }, [])
 
   return localStorage.getItem("username") ? (
     <div>
@@ -149,6 +154,7 @@ function Userline() {
                 key={uuidv4()}
               />
             ))}
+           
           </Container>
         </div>
       )}
