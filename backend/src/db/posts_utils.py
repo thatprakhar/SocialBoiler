@@ -162,6 +162,48 @@ def get_voted_posts_by_user(username):
     return result
 
 
+def get_upvoted_posts_by_user(username):
+    user_votes = fetch_votes_by_user(username)
+    
+    if user_votes.empty:
+        return []
+
+    result = []
+
+    upvotes = user_votes.loc[(user_votes['liked'] == True)]
+
+    if upvotes.empty:
+        return []
+
+    post_ids = upvotes['post_id'].to_dict()
+
+    for postid in post_ids:
+        post_df = fetch_post(Posts, post_ids[postid]).to_dict("records")
+        result += post_df
+
+    return result
+
+def get_downvoted_posts_by_user(username):
+    user_votes = fetch_votes_by_user(username)
+    
+    if user_votes.empty:
+        return []
+
+    result = []
+
+    downvotes = user_votes.loc[(user_votes['disliked'] == True)]
+
+    if downvotes.empty:
+        return []
+
+    post_ids = downvotes['post_id'].to_dict()
+
+    for postid in post_ids:
+        post_df = fetch_post(Posts, post_ids[postid]).to_dict("records")
+        result += post_df
+
+    return result
+
 
 def get_all_topics():
     df = fetch_rows(Topics)

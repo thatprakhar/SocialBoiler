@@ -15,6 +15,8 @@ from db.posts_utils import (
     get_followings_posts,
     get_voted_posts_by_user,
     get_all_topics,
+    get_upvoted_posts_by_user,
+    get_downvoted_posts_by_user
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -429,5 +431,30 @@ def make_app():
 
         # returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
         return jsonify(get_all_topics())
+
+
+    @app.route("/get_liked_posts_by_user", methods=["GET"])
+    def get_liked_posts_by_user():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        profile_user = request.headers.get("profile_user")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        # returns an empty list or list of dictionaries including posts upvoted by user
+        return jsonify(get_upvoted_posts_by_user(profile_user))
+
+    @app.route("/get_disliked_posts_by_user", methods=["GET"])
+    def get_disliked_posts_by_user():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        profile_user = request.headers.get("profile_user")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        # returns an empty list or list of dictionaries including posts upvoted by user
+        return jsonify(get_downvoted_posts_by_user(profile_user))
 
     return app
