@@ -46,6 +46,7 @@ class Posts(Base):
     image = Column(String, nullable=True)
     date_created = Column(String, nullable=True)
     topics = Column(String, nullable=True)
+    anonymous = Column(String, nullable=False)
 
 class Likes(Base):
     __tablename__ = "likes"

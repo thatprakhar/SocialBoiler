@@ -21,7 +21,7 @@ from src.db.crud import (
 from src.db.models import Posts, Likes, Topics
 
 
-def insert_post_details(username, title, description, image, topics):
+def insert_post_details(username, title, description, image, topics, anonymous):
     data = {
         "username": [username],
         "title": [title],
@@ -31,6 +31,7 @@ def insert_post_details(username, title, description, image, topics):
         "dislikes": 0,
         "date_created": dt.datetime.utcnow(),
         "topics": [topics],
+        "anonymous": [anonymous]
     }
 
     new_df = pd.DataFrame(data)

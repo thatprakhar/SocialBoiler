@@ -117,6 +117,12 @@ def delete_rows(BaseClass, username):
     session.commit()
     session.close()
 
+def delete_account_likes(post_id):
+    session = Session()
+    session.query(Likes).filter(Likes.post_id == post_id).delete()
+    session.commit()
+    session.close()
+
 def fetch_post(BaseClass, post_id):
     session = Session()
 
@@ -283,6 +289,14 @@ def fetch_votes_by_user(username):
     else:
         return None
 
+
+def delete_topics_data():
+    session = Session()
+    session.query(Topics).delete()
+    session.commit()
+    session.close()
+
+   
 #create_tables()
 
 if __name__ == '__main__':
