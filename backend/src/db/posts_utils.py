@@ -114,7 +114,7 @@ def get_posts_with_topic(topic):
 
 def get_voted_posts(username):
     user_posts = fetch_user_post(username)
-    
+
     df = user_posts.loc[(user_posts["likes"] > 0) | (user_posts["dislikes"] > 0)]
     # Check of the dataframe get back is empty, if empty we return empty array
     if df.empty:
@@ -133,7 +133,7 @@ def get_followings_posts(username):
         for user in users_following:
             result += fetch_user_post(user).to_dict("records")
 
-    
+
     topics_following = fetch_topics_following(username)
     topics_following = topics_following.iloc[0]['topics_following']
     #if the user is following anyone fetch topics
@@ -141,14 +141,14 @@ def get_followings_posts(username):
         #fetch posts associated with the topics
         for topic in topics_following:
             result += fetch_posts_with_topic(topic).to_dict("records")
-    
+
     #convert to dataframe to easily drop duplicates from combined df
     result = pd.DataFrame(result).drop_duplicates()
     return result.to_dict('records')
-    
+
 def get_voted_posts_by_user(username):
     user_votes = fetch_votes_by_user(username)
-    
+
     if user_votes.empty:
         return []
 
@@ -164,7 +164,7 @@ def get_voted_posts_by_user(username):
 
 def get_upvoted_posts_by_user(username):
     user_votes = fetch_votes_by_user(username)
-    
+
     if user_votes.empty:
         return []
 
@@ -185,7 +185,7 @@ def get_upvoted_posts_by_user(username):
 
 def get_downvoted_posts_by_user(username):
     user_votes = fetch_votes_by_user(username)
-    
+
     if user_votes.empty:
         return []
 
@@ -209,6 +209,6 @@ def get_all_topics():
     df = fetch_rows(Topics)
     if not df:
         return {}
-    
+
     df = df['topic_title']
     return df.to_dict()

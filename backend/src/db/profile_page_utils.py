@@ -3,9 +3,12 @@ import datetime as dt
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.crud import update_table, fetch_rows, update_authentication_token, update_user_profile, delete_rows, update_user_credentials, update_profile_avatar
+from src.db.crud import (update_table, fetch_rows, update_authentication_token,
+                         update_user_profile, delete_rows, update_user_credentials,
+                         update_profile_avatar, update_post_likes, delete_post_likes_or_comments)
 from src.db.following_utils import remove_deleted_followings
-from src.db.models import User_Credentials,Profile_Page
+from src.db.posts_utils import get_downvoted_posts_by_user, get_upvoted_posts_by_user, get_posts
+from src.db.models import User_Credentials, Profile_Page, Likes, Comments
 
 # def insert_profile_details(email, name, surname):
 def insert_profile_details(email, username):
@@ -78,7 +81,37 @@ def update_profile_image(username, image):
     update_profile_avatar(Profile_Page, username, image)
     return True
 
+def delete_user_comments(username):
+    delete_rows(Comments, username)
+
+def delete_user_posts_votes_and_comments(username):
+    userPosts = get_posts(username)
+    for post in userPosts:
+        delete_post_likes_or_comments(Likes, post['post_id'])
+        delete_post_likes_or_comments(Comments, post['post_id'])
+    delete_rows(Comments, username)
+
+def delete_user_votes(username):
+    upvotedPosts = get_upvoted_posts_by_user(username)
+    for post in upvotedPosts:
+        likes = post["likes"]
+        dislikes = post["dislikes"]
+        likes -= 1
+        update_post_likes(post["post_id"], likes, dislikes)
+
+    downvotedPosts = get_downvoted_posts_by_user(username)
+    for post in downvotedPosts:
+        likes = post["likes"]
+        dislikes = post["dislikes"]
+        dislikes -= 1
+        update_post_likes(post["post_id"], likes, dislikes)
+    delete_rows(Likes, username)
+    # print(upvoted)
+
 def delete_user_account(username):
+    delete_user_votes(username)
+    delete_user_posts_votes_and_comments(username)
+    delete_user_comments(username)
     remove_deleted_followings(username)
     delete_rows(User_Credentials, username)
     delete_rows(Profile_Page, username)
