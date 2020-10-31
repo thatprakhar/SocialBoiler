@@ -119,7 +119,7 @@ def delete_user_account(username):
     posts_to_deleted = get_posts(username)
     if not posts_to_deleted:
         return
-    
+
     #delete the posts that user posted
     delete_rows(Posts, username)
 
@@ -130,9 +130,9 @@ def delete_user_account(username):
         delete_account_likes(post['post_id'])
 
     #extract the post_ids from topics too
-    topics_df = fetch_rows(topics_df)
+    topics_df = fetch_rows(Topics)
 
-    if not topics_df:
+    if topics_df.empty:
         return
 
     topics_dict = topics_df.to_dict('records')
@@ -146,7 +146,3 @@ def delete_user_account(username):
     updated_df = pd.DataFrame(topics_dict)
     delete_topics_data()
     update_table(updated_df, Topics)
-  
-
-
-    

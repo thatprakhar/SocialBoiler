@@ -136,19 +136,18 @@ def user_Is_followed(username, followed):
 def mass_remove_followings(user_credentials_df, username, user_followed):
     # this function does not retreive the user_credentials table, it is passed to it
     # by the function that removes a user's followers/following when deleting the account
-
     try:
         # get the row associated with the user parameter
         user_df = user_credentials_df.loc[user_credentials_df['username'] == username]
 
         # get the followed user credentials
-        followed_df = user_df.loc[user_credentials_df['username'] == user_followed]
+        followed_df = user_credentials_df.loc[user_credentials_df['username'] == user_followed]
 
         # get the followed user followers list
         followed_followers  = followed_df['followers'].values[0]
 
         # if no followers, then the call failed.
-        if followed_followers is None:
+        if followed_followers is None or len(followed_followers) == 0:
             return False
         else:
             # update the user's followers list
@@ -159,9 +158,11 @@ def mass_remove_followings(user_credentials_df, username, user_followed):
         user_following = []
 
         #make the call to the database to make changes
-        update_followers(User_Credentials,username, user_followed,
+        update_followers(User_Credentials, username, user_followed,
                                 user_following, followed_followers)
+
     except Exception as inst:
+        print('error deleting ', username, user_followed)
         return False
     return True
 

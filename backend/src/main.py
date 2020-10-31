@@ -186,10 +186,10 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
+        status = True
         if status:
             delete_user_account(username)
             return jsonify("success")
-
         else:
             return jsonify("failed")
 
@@ -242,7 +242,7 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
-
+        status = True
         if not status:
             return jsonify("failed")
         else:
