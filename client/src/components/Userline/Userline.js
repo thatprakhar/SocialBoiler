@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import {
   Container,
-  Row,
-  Col,
-  ButtonGroup,
   Badge,
   Alert
 } from "react-bootstrap";
@@ -21,6 +18,7 @@ let profile_user;
 function Userline() {
   const [ownPosts, setOwnPosts] = useState([]);
   const [votedPosts, setVotedPosts] = useState([]);
+  const [downVotedPosts, setDownVotedPosts]=useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -75,10 +73,11 @@ function Userline() {
       }
     }
 
-    fetch(API_URL + "/get_voted_posts_by_user", requestOptions)
+    //get like posts by user
+    fetch(API_URL + "/get_liked_posts_by_user", requestOptions)
       .then(res => res.json())
       .then(data => {
-        console.log("get voted post request back is: ", data);
+        console.log("get like post request back is: ", data);
         if(data!=="failed"){
           setVotedPosts(data.sort((a, b) => b.post_id - a.post_id))
           setLoading(false)
@@ -92,7 +91,29 @@ function Userline() {
 
       })
       .catch(err => {
-        console.log("can not get voted posts: " + err);
+        console.log("can not get liked posts: " + err);
+        setError("Can not connect to server!");
+      });
+
+      //Get disliked posts
+      fetch(API_URL + "/get_disliked_posts_by_user", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("get dislike post request back is: ", data);
+        if(data!=="failed"){
+          setDownVotedPosts(data.sort((a, b) => b.post_id - a.post_id))
+          setLoading(false)
+          setError(null)
+
+        }
+        else {
+          // alert(data);
+          setError(data)
+        }
+
+      })
+      .catch(err => {
+        console.log("can not get dislike posts: " + err);
         setError("Can not connect to server!");
       });
 
@@ -135,12 +156,36 @@ function Userline() {
 
           <Container>
             <h1 className="header">
-              <Badge variant="info">Voted Posts:</Badge>
+              <Badge variant="info">Liked Posts:</Badge>
             </h1>
 
-            {votedPosts.length == 0 ? <h4>No voted posts yet...</h4> : null}
+            {votedPosts.length == 0 ? <h4>No liked posts yet...</h4> : null}
 
             {votedPosts.map(post => (
+              <UserlinePost
+                username={post.username}
+                title={post.title}
+                description={post.description}
+                image={post.image}
+                date_created={post.date_created}
+                likes={post.likes}
+                dislikes={post.dislikes}
+                topics={post.topics}
+                post_id={post.post_id}
+                key={uuidv4()}
+              />
+            ))}
+           
+          </Container>
+
+          <Container>
+            <h1 className="header">
+              <Badge variant="info">Disliked Posts:</Badge>
+            </h1>
+
+            {downVotedPosts.length == 0 ? <h4>No disliked posts yet...</h4> : null}
+
+            {downVotedPosts.map(post => (
               <UserlinePost
                 username={post.username}
                 title={post.title}

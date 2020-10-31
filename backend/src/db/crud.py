@@ -161,6 +161,12 @@ def delete_row_likes(BaseClass, post_id, username):
     session.commit()
     session.close()
 
+def delete_post_likes_or_comments(BaseClass, post_id):
+    session = Session()
+    session.query(BaseClass).filter(BaseClass.post_id == post_id).delete()
+    session.commit()
+    session.close()
+
 def update_followers(BaseClass, username, followed_username, user_following, followed_followers):
     session = Session()
 
