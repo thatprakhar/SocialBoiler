@@ -41,6 +41,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
 from flask import render_template
+import json
 
 import os
 import sys
@@ -201,13 +202,15 @@ def make_app():
         description = request.headers.get("description")
         image = request.headers.get("image")
         topics = request.headers.get("topics")
+        #convert json boolean to python object
+        anonymous = json.loads(request.headers.get("anonymous"))
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
         else:
-            insert_post_details(username, title, description, image, topics)
+            insert_post_details(username, title, description, image, topics, anonymous)
             print("topic = ", topics)
             create_topic(topics)
 
