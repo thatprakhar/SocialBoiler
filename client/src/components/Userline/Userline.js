@@ -149,6 +149,8 @@ function Userline() {
                 dislikes={post.dislikes}
                 topics={post.topics}
                 post_id={post.post_id}
+                anonymous={post.anonymous}
+                isUserPosts={true}
                 key={uuidv4()}
               />
             ))}
@@ -172,6 +174,8 @@ function Userline() {
                 dislikes={post.dislikes}
                 topics={post.topics}
                 post_id={post.post_id}
+                anonymous={post.anonymous}
+                isUserPosts={false}
                 key={uuidv4()}
               />
             ))}
@@ -196,6 +200,8 @@ function Userline() {
                 dislikes={post.dislikes}
                 topics={post.topics}
                 post_id={post.post_id}
+                anonymous={post.anonymous}
+                isUserPosts={false}
                 key={uuidv4()}
               />
             ))}

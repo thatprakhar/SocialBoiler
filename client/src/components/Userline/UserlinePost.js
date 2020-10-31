@@ -1,8 +1,6 @@
 import React from "react";
 import {
   Jumbotron,
-  Button,
-  Container,
   Badge,
   Col,
   Row,
@@ -19,10 +17,26 @@ function UserlinePost({
   likes,
   dislikes,
   topics,
-  post_id
+  post_id,
+  anonymous,
+  isUserPosts,
 }) {
+  let displayName;
+  if(anonymous==="true" && localStorage.getItem("username")!==username && !isUserPosts){
+    displayName=<Badge variant="light">Posted by: Anonymous</Badge>;
+  }
+  else if(anonymous=="true" && localStorage.getItem("username")!==username && isUserPosts){
+    displayName=null;
+  }
+  else if(anonymous=="true" && localStorage.getItem("username")==username){
+    displayName=<Badge variant="light">Posted by: {username} (Anonymous to others)</Badge>;
+  }
+  else {
+    displayName=<Badge variant="light">Posted by: {username}</Badge>;
+  }
   return (
-    <Row>
+    displayName?(
+      <Row>
       <Col md={12}>
         <a
           href={"/posts_details?id=" + post_id}
@@ -32,7 +46,8 @@ function UserlinePost({
             <div className="post_header">
               <h3>{title}</h3>
               <div>
-                <Badge variant="light">Posted by: {username}</Badge>
+                {displayName}
+                
               </div>
             </div>
 
@@ -60,6 +75,10 @@ function UserlinePost({
         </a>
       </Col>
     </Row>
+    ):(
+      null
+    )
+    
   );
 }
 
