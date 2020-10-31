@@ -6,7 +6,9 @@ import {
   IconButton,
   Link,
   Hidden,
-  Button
+  Button,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import {
   Container,
@@ -57,6 +59,10 @@ const createStyles = makeStyles(theme => ({
   closeButton: {
     position: "fixed",
     right: -5
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff"
   }
 }));
 
@@ -66,11 +72,54 @@ export default function Post(props) {
   const styling = createStyles();
   const API_URL = "http://127.0.0.1:5000";
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (props.post_data !== null) {
       setUpVoted(props.post_data.upVoted);
       setDownVoted(props.post_data.downVoted);
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          profile_user: localStorage.getItem("username")
+        }
+      };
+      setLoading(true);
+      var done = 0;
+      fetch(API_URL + '/get_liked_posts_by_user', requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        done++;
+        if (done >= 2) {
+          setLoading(false);
+        }
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].post_id === props.post_data.post_id) {
+            setUpVoted(true);
+            setDownVoted(false);
+          }
+        }
+      })
+      .catch(err => console.log(err))
+
+      fetch(API_URL + '/get_disliked_posts_by_user', requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        done++;
+        if (done >= 2) {
+          setLoading(false);
+        }
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].post_id === props.post_data.post_id) {
+            setUpVoted(false);
+            setDownVoted(true);
+          }
+        }
+      })
+      .catch(err => console.log(err))
     }
   }, [props.post_data]);
   if (props.post_data === null) {
@@ -99,9 +148,11 @@ export default function Post(props) {
       }
     };
     console.log(original_upvote + " " + original_downvote);
+    setLoading(true)
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
       .then(res => {
+        setLoading(false)
         if (res === "failed") {
           setErrorMessage("Could not perform the action. Try again later");
         } else {
@@ -110,6 +161,7 @@ export default function Post(props) {
         }
       })
       .catch(err => {
+        setLoading(false)
         setErrorMessage("Could not connect to the server. Try again later");
       });
   }
@@ -135,9 +187,11 @@ export default function Post(props) {
         disliked: original_downvote
       }
     };
+    setLoading(true)
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
       .then(data => {
+        setLoading(false)
         if (data === "failed") {
           setErrorMessage(
             "Could not perform the action. Server is down. Try again later"
@@ -148,6 +202,7 @@ export default function Post(props) {
         }
       })
       .catch(err => {
+        setLoading(false)
         console.log(err);
         setErrorMessage(err);
       });
@@ -160,6 +215,9 @@ export default function Post(props) {
   console.log(props.post_data);
   return (
     <Container className={styling.root}>
+      <Backdrop className={styling.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Hidden mdUp>
         <Button
           color="secondary"
@@ -240,6 +298,12 @@ export default function Post(props) {
             </IconButton>
           </ButtonGroup>
         </Col>
+      </Row>
+      <br />
+      <Row>
+          <Col>
+            <Typography variant="h5">Comments </Typography>
+          </Col>
       </Row>
       <br />
       {errorMessage !== "" && (
