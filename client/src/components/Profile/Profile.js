@@ -96,7 +96,6 @@ function Profile() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        email: localStorage.getItem("email"),
         username: localStorage.getItem("username"),
         auth_token: localStorage.getItem("auth_token")
       }
@@ -116,8 +115,9 @@ function Profile() {
 
     //remove data in local storage
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("email");
     localStorage.removeItem("username");
+    localStorage.removeItem("topic")
+    localStorage.removeItem("following")
 
     //redirect to login page
     history.push("/login");

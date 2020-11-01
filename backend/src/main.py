@@ -16,7 +16,7 @@ from db.posts_utils import (
     get_voted_posts_by_user,
     get_all_topics,
     get_upvoted_posts_by_user,
-    get_downvoted_posts_by_user
+    get_downvoted_posts_by_user,
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -186,7 +186,7 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
-        status = True
+        # status = True
         if status:
             delete_user_account(username)
             return jsonify("success")
@@ -201,7 +201,7 @@ def make_app():
         description = request.headers.get("description")
         image = request.headers.get("image")
         topics = request.headers.get("topics")
-        #convert json boolean to python object
+        # convert json boolean to python object
         anonymous = json.loads(request.headers.get("anonymous"))
 
         # check if the authentication token is valid
@@ -433,7 +433,6 @@ def make_app():
 
         # returns an empty dictionary or a dictionary in the format {1: topic1, 2: topic2, ...}
         return jsonify(get_all_topics())
-
 
     @app.route("/get_liked_posts_by_user", methods=["GET"])
     def get_liked_posts_by_user():
