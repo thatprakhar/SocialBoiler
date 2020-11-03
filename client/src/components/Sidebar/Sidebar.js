@@ -154,7 +154,7 @@ export default function App(props) {
                 >
                   {post_data.anonymous === "false" ? post_data.username : post_data.username === localStorage.getItem("username") ? post_data.username + "(Anonymous to others)": "Anonymous"} {" - "}
                 </Typography>
-                {post_data.description.substr(0, 120)}
+                {post_data.description.substr(0, 50)}
                 {"..."}
                 <Badge variant="dark">{post_data.topics}</Badge>
               </React.Fragment>

@@ -73,11 +73,15 @@ export default function Post(props) {
   const API_URL = "http://127.0.0.1:5000";
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
 
   useEffect(() => {
     if (props.post_data !== null) {
       setUpVoted(props.post_data.upVoted);
       setDownVoted(props.post_data.downVoted);
+      setLikes(props.post_data.likes);
+      setDislikes(props.post_data.dislikes);
       const requestOptions = {
         method: "GET",
         headers: {
@@ -156,6 +160,7 @@ export default function Post(props) {
         if (res === "failed") {
           setErrorMessage("Could not perform the action. Try again later");
         } else {
+          setLikes(likes + 1);
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
         }
@@ -197,6 +202,7 @@ export default function Post(props) {
             "Could not perform the action. Server is down. Try again later"
           );
         } else {
+          setDislikes(dislikes + 1);
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
         }
@@ -269,8 +275,8 @@ export default function Post(props) {
       </Row>
 
       <Row style={{ marginTop: 20 }}>
-        <Col lg={true}>
-          <Typography variant="body1">{props.post_data.description}</Typography>
+        <Col style={{wordWrap: 'break-word'}} sm={12}>
+          <Typography variant="body1" >{props.post_data.description}</Typography>
           {props.post_data.image !== "null" && (
             <Image src={props.post_data.image} fluid />
           )}
@@ -298,6 +304,15 @@ export default function Post(props) {
             </IconButton>
           </ButtonGroup>
         </Col>
+      </Row>
+      <br />
+      <Row>
+          <Col xs={1}>
+            <Badge variant="primary">Likes: {likes}</Badge>
+          </Col>
+          <Col xs={1}>
+            <Badge variant="danger">Dislikes: {dislikes}</Badge>
+          </Col>
       </Row>
       <br />
       <Row>
