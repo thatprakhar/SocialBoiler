@@ -252,11 +252,11 @@ export default function Post(props) {
                   {props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username[0] : "A"}
                 </Avatar>
                 <Link
-                  href={"profile?username=" + props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username : "Anonymous"}
+                  href={"profile?username=" + (props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username : "Anonymous")}
                   color="inherit"
                 >
                   <Typography variant="body1" className={styling.userline}>
-                    {props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username : "Anonymous"}
+                    {props.post_data.anonymous === "false" ? props.post_data.username : props.post_data.username === localStorage.getItem("username") ? props.post_data.username + "(Anonymous to others)" : "Anonymous"}
                   </Typography>
                 </Link>
               </div>

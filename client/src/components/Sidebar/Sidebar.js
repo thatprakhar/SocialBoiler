@@ -152,7 +152,7 @@ export default function App(props) {
                   className={styling.inline}
                   color="textPrimary"
                 >
-                  {post_data.anonymous === "false" || post_data.username === localStorage.getItem("username") ? post_data.username : "Anonymous"} {" - "}
+                  {post_data.anonymous === "false" ? post_data.username : post_data.username === localStorage.getItem("username") ? post_data.username + "(Anonymous to others)": "Anonymous"} {" - "}
                 </Typography>
                 {post_data.description.substr(0, 120)}
                 {"..."}
