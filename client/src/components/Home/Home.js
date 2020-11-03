@@ -65,6 +65,17 @@ export default function Home(props) {
     setSelectedPost(null);
   }
 
+  function comparePosts(a, b) {
+    if (a.post_id < b.post_id) {
+      return 1;
+    } else if (a.post_id > b.post_id) {
+      return -1;
+    } else {
+      return 0;
+    }
+
+  }
+
   useEffect(() => {
     if (props.page_type === "my_posts") {
       setPosts([]);
@@ -73,12 +84,14 @@ export default function Home(props) {
         headers: {
           "Content-type": "application/json; charset=UTF-8",
           username: localStorage.getItem("username"),
-          auth_token: localStorage.getItem("auth_token")
+          auth_token: localStorage.getItem("auth_token"),
+          profile_user: localStorage.getItem("username")
         }
       };
       fetch(API_URL + "/get_own_posts", requestOptions)
         .then(res => res.json())
         .then(data => {
+          data.sort(comparePosts);
           console.log(data);
           setPosts(data);
           setLoading(false);
@@ -103,6 +116,7 @@ export default function Home(props) {
       fetch(API_URL + "/get_posts_by_topic", requestOptions)
         .then(res => res.json())
         .then(data => {
+          data.sort(comparePosts);
           console.log(data);
           setPosts(data);
           setLoading(false);
@@ -124,6 +138,7 @@ export default function Home(props) {
       fetch(API_URL + "/get_following_user_posts", requestOptions)
         .then(res => res.json())
         .then(data => {
+          data.sort(comparePosts);
           console.log(data);
           setPosts(data);
           setLoading(false);

@@ -249,14 +249,14 @@ export default function Post(props) {
             <div>
               <div style={{ display: "flex", flexDirection: "row" }}>
                 <Avatar className={styling.small && styling.purple}>
-                  {props.post_data.username[0]}
+                  {props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username[0] : "A"}
                 </Avatar>
                 <Link
-                  href={"profile?username=" + props.post_data.username}
+                  href={"profile?username=" + props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username : "Anonymous"}
                   color="inherit"
                 >
                   <Typography variant="body1" className={styling.userline}>
-                    {props.post_data.username}
+                    {props.post_data.anonymous === "false" || props.post_data.username === localStorage.getItem("username") ? props.post_data.username : "Anonymous"}
                   </Typography>
                 </Link>
               </div>

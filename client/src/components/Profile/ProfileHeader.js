@@ -60,7 +60,9 @@ function ProfileHeader() {
         )}
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
-
+          {localStorage.getItem("username") ? (
+            <Nav.Link href="/my_posts">My Posts</Nav.Link>
+          ) : null}
           {localStorage.getItem("username") ? (
             <Nav.Link href="/profile">My Profile</Nav.Link>
           ) : null}

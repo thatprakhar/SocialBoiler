@@ -140,7 +140,7 @@ export default function App(props) {
       >
         <ListItem alignItems="flex-start">
           <ListItemAvatar>
-            <Avatar>{post_data.username[0]}</Avatar>
+            <Avatar>{post_data.anonymous === "false" || post_data.username === localStorage.getItem("username") ? post_data.username[0] : "A"}</Avatar>
           </ListItemAvatar>
           <ListItemText
             primary={post_data.title}
@@ -152,7 +152,7 @@ export default function App(props) {
                   className={styling.inline}
                   color="textPrimary"
                 >
-                  {post_data.username} -{" "}
+                  {post_data.anonymous === "false" || post_data.username === localStorage.getItem("username") ? post_data.username : "Anonymous"} {" - "}
                 </Typography>
                 {post_data.description.substr(0, 120)}
                 {"..."}
@@ -189,7 +189,10 @@ export default function App(props) {
     }
   }
 
-  var posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
+  var posts = null;
+  if (props.posts.length > 0) {
+    posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
+  }
   return (
     <>
       <Snackbar
