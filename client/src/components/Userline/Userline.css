@@ -35,6 +35,9 @@
 .post_badges * {
   margin-right: 10px;
 }
+.post_text {
+  word-wrap: break-word;
+}
 
 #loader {
   position: relative;

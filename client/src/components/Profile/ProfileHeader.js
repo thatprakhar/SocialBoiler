@@ -43,7 +43,8 @@ function ProfileHeader() {
       <Navbar.Brand href="/home">SocialBoiler</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        {localStorage.getItem("username")?(
+          <div style={{ display: "flex", flexDirection: "row" }}>
           <FormControl
             type="text"
             placeholder="Search by topic"
@@ -54,6 +55,9 @@ function ProfileHeader() {
             <Button type="submit">Search</Button>
           </Link>
         </div>
+        ):(
+          null
+        )}
         <Nav className="ml-auto">
           <Nav.Link href="/">Home</Nav.Link>
 

@@ -42,7 +42,7 @@ function UserlinePost({
           href={"/posts_details?id=" + post_id}
           style={{ textDecoration: "none", color: "black" }}
         >
-          <Jumbotron>
+          <Jumbotron >
             <div className="post_header">
               <h3>{title}</h3>
               <div>
@@ -51,7 +51,7 @@ function UserlinePost({
               </div>
             </div>
 
-            <p>{description}</p>
+            <p className="post_text">{description}</p>  
 
             {image != "null" ? (
               <Image className="post_image" src={image} rounded />
