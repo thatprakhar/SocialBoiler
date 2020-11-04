@@ -192,6 +192,8 @@ export default function App(props) {
   var posts = null;
   if (props.posts.length > 0) {
     posts = props.posts.map(x => <li key={x.post_id}>{post_view(x)}</li>);
+  } else if (props.posts.length === 0) {
+    posts = <Badge variant="info"><Typography vairant="caption">Search for topics and people to view posts</Typography></Badge>
   }
   return (
     <>

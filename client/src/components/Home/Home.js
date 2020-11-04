@@ -149,7 +149,7 @@ export default function Home(props) {
         });
     }
   }, [location.search, props.page_type]);
-  console.log(posts);
+
   return (
     <div>
       <Router>

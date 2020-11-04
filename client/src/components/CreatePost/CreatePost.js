@@ -3,7 +3,8 @@ import {
   makeStyles,
   IconButton,
   FormControlLabel,
-  Switch
+  Switch,
+  Typography
 } from "@material-ui/core";
 import { Container, Row, Alert, Button as ButtonRB } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
@@ -165,6 +166,7 @@ export default function Post(props) {
               value={postTitle}
               onChange={e => setPostTitle(e.target.value)}
             />
+             <Typography variant="caption">{postTitle.length} / 150</Typography>
           </Row>
           <br />
           <Row>
@@ -181,6 +183,7 @@ export default function Post(props) {
               }}
               onChange={e => setPostText(e.target.value)}
             />
+            <Typography variant="caption">{postText.length} / 500</Typography>
           </Row>
           <br />
           <Row>
