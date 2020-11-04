@@ -69,6 +69,7 @@ const createStyles = makeStyles(theme => ({
 export default function Post(props) {
   const [upVoted, setUpVoted] = useState(false);
   const [downVoted, setDownVoted] = useState(false);
+  const [showCommentBox, setShowCommentBox] = useState(false);
   const styling = createStyles();
   const API_URL = "http://127.0.0.1:5000";
   const [errorMessage, setErrorMessage] = useState("");
@@ -127,7 +128,9 @@ export default function Post(props) {
     }
   }, [props.post_data]);
   if (props.post_data === null) {
-    return <div></div>;
+    return <Container className={styling.root} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Typography variant="caption">Select a post to view</Typography>
+    </Container>;
   }
 
   function upVotePost() {
@@ -304,7 +307,7 @@ export default function Post(props) {
                 color={downVoted ? "secondary" : "inherit"}
               ></ThumbDownIcon>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => setShowCommentBox(!showCommentBox)}>
               <CommentIcon></CommentIcon>
             </IconButton>
             <IconButton>
