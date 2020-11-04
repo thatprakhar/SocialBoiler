@@ -133,6 +133,7 @@ export default function Post(props) {
   function upVotePost() {
     let original_upvote = upVoted;
     let original_downvote = downVoted;
+    let decreaseDislikeCount = downVoted;
     if (original_upvote === true) {
       original_downvote = false;
       original_upvote = false;
@@ -160,6 +161,9 @@ export default function Post(props) {
         if (res === "failed") {
           setErrorMessage("Could not perform the action. Try again later");
         } else {
+          if (decreaseDislikeCount) {
+            setDislikes(dislikes - 1);
+          }
           setLikes(likes + 1);
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
@@ -174,6 +178,7 @@ export default function Post(props) {
   function downVotePost() {
     let original_upvote = upVoted;
     let original_downvote = downVoted;
+    let decreaseLikecount = upVoted;
     if (original_downvote === true) {
       original_downvote = false;
       original_upvote = false;
@@ -202,6 +207,9 @@ export default function Post(props) {
             "Could not perform the action. Server is down. Try again later"
           );
         } else {
+          if (decreaseLikecount) {
+            setLikes(likes - 1);
+          }
           setDislikes(dislikes + 1);
           setUpVoted(original_upvote);
           setDownVoted(original_downvote);
