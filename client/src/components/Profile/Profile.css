@@ -40,3 +40,24 @@
   justify-content: space-between;
   padding: 20px;
 }
+
+.userline__box {
+  display: flex;
+  justify-content: center;
+}
+
+.userline__link {
+  background-color: #a450d9;
+  height: 60px;
+  width: 200px;
+  border-radius: 10px;
+  padding-top: 15px;
+  text-align: center;
+
+  margin-top: 30px;
+}
+
+.userline__link a {
+  color: white;
+  text-decoration: none;
+}

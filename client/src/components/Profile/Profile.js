@@ -3,18 +3,21 @@ import { Col, Container, Row, Modal, Button, Alert } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
 import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
-import queryString, { parse } from "query-string";
-import { Redirect, useLocation, useHistory } from "react-router-dom";
+import queryString from "query-string";
+import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
 
 const API_URL = "http://127.0.0.1:5000";
+
+let profile_user;
 
 function Profile() {
   const history = useHistory();
 
   const [showDelete, setShowDelete] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,21 +29,13 @@ function Profile() {
     email: "",
     tel: "",
     age: "",
-    about: "",
+    about: ""
   });
 
-  const [topics, setTopics] = useState([
-    "#purdue",
-    "#computer science",
-    "#React",
-  ]);
-  const [following, setFollowing] = useState([
-    "Roopsha Samanta",
-    "Jeffrey A. Turkstra",
-    "Gustavo Rodriguez-Rivera",
-  ]);
+  const [topics, setTopics] = useState([]);
+  const [following, setFollowing] = useState([]);
 
-  const [followers, setFollowers] = useState(["cindy123", "jane", "tom"]);
+  const [followers, setFollowers] = useState([]);
 
   const handleDeleteClose = () => setShowDelete(false);
   const handleDeleteShow = () => setShowDelete(true);
@@ -56,7 +51,7 @@ function Profile() {
     }
 
     const reader = new FileReader();
-    reader.addEventListener("load", (event) => {
+    reader.addEventListener("load", event => {
       // console.log("readinf image:", event.target.result);
       const requestOptions = {
         method: "POST",
@@ -65,17 +60,17 @@ function Profile() {
           "Content-type": "application/json; charset=UTF-8",
           username: localStorage.getItem("username"),
           auth_token: localStorage.getItem("auth_token"),
-          image: event.target.result,
-        },
+          image: event.target.result
+        }
       };
 
       fetch(API_URL + "/update_profile_avatar", requestOptions)
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => res.json())
+        .then(data => {
           console.log("put request back is: ", data);
           // alert(data);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log("can not update image: " + err);
           setError("Can not upload image!");
         });
@@ -101,37 +96,40 @@ function Profile() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        email: localStorage.getItem("email"),
         username: localStorage.getItem("username"),
-        auth_token: localStorage.getItem("auth_token"),
-      },
+        auth_token: localStorage.getItem("auth_token")
+      }
     };
 
     fetch(API_URL + "/delete", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data !== "success") {
           // alert("delete account failed!");
           setError("delete account failed");
         }
       })
-      .catch((err) => {
+      .catch(err => {
         alert("server can not delete account " + err);
       });
 
     //remove data in local storage
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("email");
     localStorage.removeItem("username");
+    localStorage.removeItem("topic")
+    localStorage.removeItem("following")
 
     //redirect to login page
     history.push("/login");
   };
 
   useEffect(() => {
+    //Check if the user is logged in
+    if (localStorage.getItem("username") != null) {
+      setIsLoggedIn(true);
+    }
     let parsed = queryString.parse(window.location.search);
 
-    let profile_user;
     if (
       Object.keys(parsed).length === 0 ||
       localStorage.getItem("username") === parsed.username
@@ -145,6 +143,13 @@ function Profile() {
 
     console.log(profile_user);
 
+    //If user is not logged in and want to access own profile, return to login page
+    if (localStorage.getItem("username") == null && parsed.username == null) {
+      console.log("here");
+      history.push("/login");
+      return;
+    }
+
     //check if user is logged in before fetching data from the server
 
     const requestOptions = {
@@ -153,20 +158,20 @@ function Profile() {
         "Content-Type": "application/json",
         auth_token: localStorage.getItem("auth_token"),
         username: localStorage.getItem("username"),
-        profile_user: profile_user,
-      },
+        profile_user: profile_user
+      }
     };
 
     fetch(API_URL + "/get_profile_page", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         console.log("request is ", data);
         if (data !== "failed" && !data.error) {
           setProfile({
             email: data.email,
             tel: data.phone_number == null ? "" : data.phone_number,
             age: data.age == null ? "" : data.age,
-            about: data.about == null ? "" : data.about,
+            about: data.about == null ? "" : data.about
           });
           setName("@" + data.username);
           setImage(data.image);
@@ -178,8 +183,99 @@ function Profile() {
           history.push("/login");
         }
       })
-      .catch((err) => {
+      .catch(err => {
         // alert("Could not connect to server" + err);
+        setError("Can not connect to server!");
+      });
+  }, [history]);
+
+  useEffect(() => {
+    //Get the followers and following info
+    console.log("profile user is " + profile_user);
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+        profile_user: profile_user
+      }
+    };
+
+    fetch(API_URL + "/followers", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("follwers request back is: ", data);
+        if (data !== "failed") {
+          console.log(data);
+          if (data != null) {
+            setFollowers(data);
+          }
+        } else {
+          setError("Can not get followers!");
+        }
+      })
+      .catch(err => {
+        console.log("can not update profile: " + err);
+        setError("Can not connect to server!");
+      });
+  }, []);
+
+  useEffect(() => {
+    //Get the followers and following info
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+        profile_user: profile_user
+      }
+    };
+
+    fetch(API_URL + "/following", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("following request back is: ", data);
+        if (data !== "failed") {
+          console.log(data);
+          if (data != null) {
+            setFollowing(data);
+            if (profile_user === localStorage.getItem("username")) {
+              localStorage.setItem("following", JSON.stringify(data));
+            }
+          }
+        } else {
+          setError("Can not get following users!");
+        }
+      })
+      .catch(err => {
+        console.log("can not update profile: " + err);
+        setError("Can not connect to server!");
+      });
+  }, []);
+
+  useEffect(() => {
+    //Get the the topics the profile user is following
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        profile_user: profile_user
+      }
+    };
+
+    fetch(API_URL + "/user_topics", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("get topics request back is: ", data);
+        setTopics(data);
+        if (profile_user === localStorage.getItem("username")) {
+          localStorage.setItem("topic", JSON.stringify(data));
+        }
+      })
+      .catch(err => {
+        console.log("can not get following topics: " + err);
         setError("Can not connect to server!");
       });
   }, []);
@@ -198,7 +294,22 @@ function Profile() {
               isOwnProfile={isOwnProfile}
               name={name}
               image={image}
+              profileUser={queryString.parse(window.location.search).username}
+              followers={followers}
+              setFollowers={setFollowers}
+              following={following}
+              setFollowing={setFollowing}
+              topics={topics}
             />
+            <div className="userline__box">
+              {isLoggedIn ? (
+                <div className="userline__link">
+                  <a href={"/userline?username=" + profile_user}>
+                    Go to Userline
+                  </a>
+                </div>
+              ) : null}
+            </div>
           </Col>
 
           <Col md={8}>
@@ -248,7 +359,7 @@ function Profile() {
             id="avatar"
             name="avatar"
             accept="image/png, image/jpeg"
-            onChange={(e) => setFile(e.target.files)}
+            onChange={e => setFile(e.target.files)}
           />
         </Modal.Body>
         <Modal.Footer>

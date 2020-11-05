@@ -14,16 +14,16 @@ function ProfileInfo({
   setProfile,
   setTopics,
   setFollowing,
-  setError,
+  setError
 }) {
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     console.log("submitting form...");
     console.log(profile.email, profile.tel, profile.age, profile.about);
 
     //check if email field is correct
     if (
-      !profile.email.toString().match(/^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$/g)
+      !profile.email.toString().match(/^[a-z0-9]+[_]?[a-z0-9]+[@]\w+[.]\w+$/g)
     ) {
       // alert("email format incorrect!");
       setError("Invalid email format!");
@@ -57,13 +57,13 @@ function ProfileInfo({
         auth_token: localStorage.getItem("auth_token"),
         tel: profile.tel,
         age: profile.age,
-        about: profile.about,
-      },
+        about: profile.about
+      }
     };
 
     fetch(API_URL + "/update_profile_page", requestOptions)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         console.log("put request back is: ", data);
         // alert(data);
         if (data === "This email already used!") {
@@ -72,23 +72,12 @@ function ProfileInfo({
           setError(null);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         // console.log("can not update profile: " + err);
         setError("Can not connect to server!");
       });
   };
 
-  const unfollowTopic = (topicName) => {
-    setTopics((prevTopics) => {
-      return prevTopics.filter((topic) => topic !== topicName);
-    });
-  };
-
-  const unfollowUser = (userName) => {
-    setFollowing((prevFollowing) => {
-      return prevFollowing.filter((user) => user !== userName);
-    });
-  };
   return (
     <div className="profile__info">
       <h2>
@@ -105,13 +94,17 @@ function ProfileInfo({
               <Form.Control
                 plaintext
                 value={profile.email}
-                onChange={(e) =>
+                onChange={e =>
                   setProfile({ ...profile, email: e.target.value })
                 }
                 placeholder={"Email Address"}
               />
             ) : (
-              <Form.Control plaintext value={profile.email} readOnly />
+              <Form.Control
+                plaintext
+                value={profile.email.replace(/./g, "*")}
+                readOnly
+              />
             )}
           </Col>
           <Form.Label column sm="2" className="font-weight-bold">
@@ -122,9 +115,7 @@ function ProfileInfo({
               <Form.Control
                 plaintext
                 value={profile.tel}
-                onChange={(e) =>
-                  setProfile({ ...profile, tel: e.target.value })
-                }
+                onChange={e => setProfile({ ...profile, tel: e.target.value })}
                 placeholder={"phone number: xxx-xxx-xxxx"}
               />
             ) : (
@@ -140,9 +131,7 @@ function ProfileInfo({
               <Form.Control
                 plaintext
                 value={profile.age}
-                onChange={(e) =>
-                  setProfile({ ...profile, age: e.target.value })
-                }
+                onChange={e => setProfile({ ...profile, age: e.target.value })}
                 placeholder={"age: must be a number"}
               />
             ) : (
@@ -157,7 +146,7 @@ function ProfileInfo({
               <Form.Control
                 as="textarea"
                 value={profile.about}
-                onChange={(e) =>
+                onChange={e =>
                   setProfile({ ...profile, about: e.target.value })
                 }
                 placeholder={"Tell us about yourself"}
@@ -181,27 +170,30 @@ function ProfileInfo({
         className="profile__tabs"
       >
         <Tab eventKey="topics" title="Following topics">
-          {topics.map((topic) => (
+          {topics.map(topic => (
             <TopicItem
               name={topic}
-              unfollow={unfollowTopic}
-              key={uuidv4()}
+              unfollow
               isOwnProfile={isOwnProfile}
+              key={uuidv4()}
+              isTopic
+              setTopics={setTopics}
             />
           ))}
         </Tab>
         <Tab eventKey="users" title="Following users">
-          {following.map((user) => (
+          {following.map(user => (
             <TopicItem
               name={user}
-              unfollow={unfollowUser}
-              key={uuidv4()}
+              unfollow
               isOwnProfile={isOwnProfile}
+              setFollowing={setFollowing}
+              key={uuidv4()}
             />
           ))}
         </Tab>
         <Tab eventKey="followers" title="Followers">
-          {followers.map((follower) => (
+          {followers.map(follower => (
             <TopicItem name={follower} key={uuidv4()} />
           ))}
         </Tab>
