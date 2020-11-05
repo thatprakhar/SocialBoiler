@@ -171,8 +171,7 @@ export default function Post(props) {
           <br />
           <Row>
             <TextField
-              required
-              id="outlined-required"
+              id="outlined"
               label="Post Body"
               variant="outlined"
               style={{ width: "100%" }}
