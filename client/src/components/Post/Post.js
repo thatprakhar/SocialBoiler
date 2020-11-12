@@ -27,11 +27,13 @@ import BookmarkIcon from "@material-ui/icons/Bookmark";
 
 const createStyles = makeStyles(theme => ({
   root: {
+    marginTop: 20,
     marignLeft: 20,
-    background: "white",
     borderRadius: 10,
     width: "100vw",
-    maxHeight: window.innerHeight
+    maxHeight: window.innerHeight,
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   small: {
     width: theme.spacing(3),
@@ -258,7 +260,7 @@ export default function Post(props) {
           >
             <Typography variant="h6">
               <a href={"/get_posts_by_topic?topic=" + props.post_data.topics}>
-                <Badge variant="dark" type="link">
+                <Badge variant={localStorage.getItem("theme") ? localStorage.getItem("theme") === 'Light' ? "dark" : "light" : "dark"} type="link">
                   {props.post_data.topics}
                 </Badge>
               </a>

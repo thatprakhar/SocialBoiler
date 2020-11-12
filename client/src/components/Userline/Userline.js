@@ -136,7 +136,7 @@ function Userline() {
               <Badge variant="info">User Posts:</Badge>
             </h1>
 
-            {ownPosts.length == 0 ? <h4>No posts yet...</h4> : null}
+            {ownPosts.length === 0 ? <h4>No posts yet...</h4> : null}
 
             {ownPosts.map(post => (
               <UserlinePost
@@ -161,7 +161,7 @@ function Userline() {
               <Badge variant="info">Liked Posts:</Badge>
             </h1>
 
-            {votedPosts.length == 0 ? <h4>No liked posts yet...</h4> : null}
+            {votedPosts.length === 0 ? <h4>No liked posts yet...</h4> : null}
 
             {votedPosts.map(post => (
               <UserlinePost
@@ -187,7 +187,7 @@ function Userline() {
               <Badge variant="info">Disliked Posts:</Badge>
             </h1>
 
-            {downVotedPosts.length == 0 ? <h4>No disliked posts yet...</h4> : null}
+            {downVotedPosts.length === 0 ? <h4>No disliked posts yet...</h4> : null}
 
             {downVotedPosts.map(post => (
               <UserlinePost

@@ -17,16 +17,20 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles(theme => ({
   feed: {
-    marginTop: 40,
-    maxHeight: window.innerHeight
+    marginTop: 0,
+    maxHeight: "100vw",
+    maxWidth: window.innerWidth,
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   main: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   sidebar: {
     height: "100vw",
-    border: "1px solid red",
     width: 400,
     marginLeft: 100,
     background: "red"

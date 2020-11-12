@@ -25,10 +25,10 @@ function UserlinePost({
   if(anonymous==="true" && localStorage.getItem("username")!==username && !isUserPosts){
     displayName=<Badge variant="light">Posted by: Anonymous</Badge>;
   }
-  else if(anonymous=="true" && localStorage.getItem("username")!==username && isUserPosts){
+  else if(anonymous==="true" && localStorage.getItem("username")!==username && isUserPosts){
     displayName=null;
   }
-  else if(anonymous=="true" && localStorage.getItem("username")==username){
+  else if(anonymous==="true" && localStorage.getItem("username")===username){
     displayName=<Badge variant="light">Posted by: {username} (Anonymous to others)</Badge>;
   }
   else {
@@ -53,7 +53,7 @@ function UserlinePost({
 
             <p className="post_text">{description}</p>  
 
-            {image != "null" ? (
+            {image !== "null" ? (
               <Image className="post_image" src={image} rounded />
             ) : null}
 

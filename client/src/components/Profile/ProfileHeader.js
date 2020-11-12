@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Nav, Navbar, Button, FormControl } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { Link } from "@material-ui/core";
+import { Link, Switch, FormControlLabel } from "@material-ui/core";
 
 import "./Profile.css";
 
@@ -9,6 +9,25 @@ const API_URL = "http://127.0.0.1:5000";
 function ProfileHeader() {
   const history = useHistory();
   const [topic, setTopic] = useState("");
+  const [theme, setTheme] = useState(localStorage.getItem('theme') ? localStorage.getItem('theme') : 'Light');
+
+  useEffect(() => {
+
+  }, [theme])
+
+  function changeTheme() {
+    if (localStorage.getItem('theme')) {
+      if (localStorage.getItem('theme') === 'Light') {
+        localStorage.setItem('theme', 'Dark');
+      } else {
+        localStorage.setItem('theme', 'Light');
+      }
+    } else {
+      localStorage.setItem('theme', 'Dark');
+    }
+    setTheme(localStorage.getItem('theme'));
+    window.location.reload(false);
+  }
 
   const handleLogOut = () => {
     const requestOptions = {
@@ -59,6 +78,14 @@ function ProfileHeader() {
           null
         )}
         <Nav className="ml-auto">
+          <FormControlLabel 
+          className="theme-switch"
+          control={
+            <Switch color="primary" checked={theme === 'Light' ? false : true}/>
+          } label={theme} 
+          onChange={() => changeTheme()}
+          />
+          
           <Nav.Link href="/">Home</Nav.Link>
           {localStorage.getItem("username") ? (
             <Nav.Link href="/my_posts">My Posts</Nav.Link>

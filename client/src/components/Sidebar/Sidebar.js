@@ -14,18 +14,24 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles(theme => ({
+  overlay: {
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+  },
   inline: {
-    display: "inline"
+    display: "inline",
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   post: {
     marginTop: 50,
-    width: "100%"
+    width: "100%",
+    overflowWrap: 'normal',
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   root: {
     position: "relative",
     overflow: "auto",
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
     maxHeight: window.innerHeight,
     maxWidth: "50ch"
   },
@@ -36,6 +42,11 @@ const createStyles = makeStyles(theme => ({
   notif: {
     zIndex: theme.zIndex.drawer + 1,
     position: "absolute"
+  },
+  description: {
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    wordWrap: 'break-word',
+    width: "100%"
   }
 }));
 
@@ -135,7 +146,7 @@ export default function App(props) {
     return (
       <Button
         style={{ width: "100%" }}
-        variant="light"
+        variant={localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'light' : 'dark': 'light'}
         onClick={() => parentHandle(post_data)}
       >
         <ListItem alignItems="flex-start">
@@ -154,9 +165,9 @@ export default function App(props) {
                 >
                   {post_data.anonymous === "false" ? post_data.username : post_data.username === localStorage.getItem("username") ? post_data.username + "(Anonymous to others)": "Anonymous"} {" - "}
                 </Typography>
-                {post_data.description.substr(0, 50)}
+                <div className={styling.description}>{post_data.description.substr(0, 75)}</div>
                 {"..."}
-                <Badge variant="dark">{post_data.topics}</Badge>
+                <Badge variant={localStorage.getItem("theme") ? localStorage.getItem("theme") === 'Light' ? "dark" : "light" : "dark"}>{post_data.topics}</Badge>
               </React.Fragment>
             }
           />
@@ -196,7 +207,7 @@ export default function App(props) {
     posts = <Badge variant="info"><Typography vairant="caption">Search for topics and people to view posts</Typography></Badge>
   }
   return (
-    <>
+    <div className={styling.overlay}>
       <Snackbar
         open={showSuccessFollow}
         autoHideDuration={6000}
@@ -234,6 +245,6 @@ export default function App(props) {
         ) : null}
         {posts}
       </List>
-    </>
+    </div>
   );
 }
