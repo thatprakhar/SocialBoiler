@@ -457,5 +457,6 @@ def make_app():
 
         # returns an empty list or list of dictionaries including posts upvoted by user
         return jsonify(get_downvoted_posts_by_user(profile_user))
+        
 
     return app

@@ -59,9 +59,12 @@ class Likes(Base):
 
 class Comments(Base):
     __tablename__ = "comments"
-    username = Column(String, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, nullable=False)
     post_id = Column(Integer, nullable=False)
     comment = Column(String, nullable=False)
+    post_time = Column(String, nullable=True)
+    bookmarked = Column(Boolean, nullable=True)
 
 class Topics(Base):
     __tablename__ = "topics"

@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes, Topics
+from src.db.models import User_Credentials, Base, Profile_Page, Posts, Likes, Topics, Comments
 from src.config import postgres_config
 
 logger = logging.getLogger(__name__)
@@ -301,6 +301,23 @@ def delete_topics_data():
     session.query(Topics).delete()
     session.commit()
     session.close()
+
+
+def fetch_comments_by_user():
+    session = Session()
+
+    try:
+        result = session.query(Comments).filter(Comments.username == username)
+
+    finally:
+        session.close()
+
+    if result is not None:
+        df = pd.read_sql(result.statement, result.session.bind)
+        return df
+
+    else:
+        return None
 
    
 #create_tables()
