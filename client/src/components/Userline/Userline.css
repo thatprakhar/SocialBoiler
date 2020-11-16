@@ -43,3 +43,9 @@
   position: relative;
   top: 50px;
 }
+
+.Dark__userline {
+  height: max-content;
+  background-color: #363738;
+  color: white;
+}

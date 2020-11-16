@@ -283,7 +283,7 @@ function Profile() {
   //check if user is logged in
 
   return (
-    <div className="profile">
+    <div className={localStorage.getItem("theme")}>
       <ProfileHeader />
       <Container fluid>
         <Row>

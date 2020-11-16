@@ -3,6 +3,8 @@ import { Form, Row, Col, Button, Tab, Tabs, Badge } from "react-bootstrap";
 import TopicItem from "./TopicItem";
 import { v4 as uuidv4 } from "uuid";
 
+import "./Profile.css";
+
 const API_URL = "http://127.0.0.1:5000";
 
 function ProfileInfo({
@@ -104,6 +106,7 @@ function ProfileInfo({
                 plaintext
                 value={profile.email.replace(/./g, "*")}
                 readOnly
+                className={localStorage.getItem("theme")}
               />
             )}
           </Col>

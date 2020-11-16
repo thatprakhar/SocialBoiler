@@ -120,7 +120,7 @@ function Userline() {
   }, [])
 
   return localStorage.getItem("username") ? (
-    <div>
+    <div className={localStorage.getItem("theme")+"__userline"}>
       <ProfileHeader />
       {loading ? (
         <div class="text-center" id="loader">
