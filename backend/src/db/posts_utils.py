@@ -205,6 +205,8 @@ def get_downvoted_posts_by_user(username):
 
     return result
 
+def get_post_by_id(post_id):
+    return fetch_post(Posts, post_id).to_dict("records")
 
 def get_all_topics():
     df = fetch_rows(Topics)

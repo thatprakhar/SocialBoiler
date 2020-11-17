@@ -17,6 +17,7 @@ from db.posts_utils import (
     get_all_topics,
     get_upvoted_posts_by_user,
     get_downvoted_posts_by_user,
+    get_post_by_id
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -242,7 +243,7 @@ def make_app():
 
         # check if the authentication token is valid
         status = token_validation(username, auth_token)
-        status = True
+        # status = True
         if not status:
             return jsonify("failed")
         else:
@@ -327,8 +328,6 @@ def make_app():
         profile_user = request.headers.get("profile_user")
         return jsonify(get_user_topics(profile_user))
 
-    # topic_Is_Followed,
-    # user_Is_followed
     @app.route("/user_is_followed", methods=["GET"])
     def user_is_followed_get():
         auth_token = request.headers.get("auth_token")
@@ -457,6 +456,17 @@ def make_app():
 
         # returns an empty list or list of dictionaries including posts upvoted by user
         return jsonify(get_downvoted_posts_by_user(profile_user))
-        
+
+
+    @app.route("/get_post_by_id", methods=["GET"])
+    def get_post_with_id():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        post_id = request.headers.get("post_id")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        return jsonify(get_post_by_id(post_id))
 
     return app
