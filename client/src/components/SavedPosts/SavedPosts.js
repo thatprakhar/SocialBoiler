@@ -16,8 +16,6 @@ let profile_user;
 
 function SavedPosts() {
   const [ownPosts, setOwnPosts] = useState([]);
-  const [votedPosts, setVotedPosts] = useState([]);
-  const [downVotedPosts, setDownVotedPosts]=useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 

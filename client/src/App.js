@@ -15,6 +15,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Userline from "./components/Userline/Userline";
 import SavedPosts from './components/SavedPosts/SavedPosts'
+import PostDetails from './components/PostDetails/PostDetails'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route exact path="/profile" component={Profile}></Route>
           <Route exact path="/userline" component={Userline}></Route>
           <Route exact path="/saved_posts" component={SavedPosts}></Route>
+          <Route exact path="/posts_details" component={PostDetails}></Route>
           <Route exact path={"/get_posts_by_topic"}>
             <Home page_type="search_posts"></Home>
           </Route>
