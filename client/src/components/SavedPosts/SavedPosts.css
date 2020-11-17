@@ -1,0 +1,51 @@
+.header {
+  margin-top: 20px;
+}
+
+.post_header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -20px;
+}
+
+.post_image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.post_footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 30px;
+  margin-bottom: -40px;
+}
+
+.post_timestamp {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.post_badges {
+  display: flex;
+}
+
+.post_badges * {
+  margin-right: 10px;
+}
+.post_text {
+  word-wrap: break-word;
+}
+
+#loader {
+  position: relative;
+  top: 50px;
+}
+
+.Dark__userline {
+  height: max-content;
+  background-color: #363738;
+  color: white;
+}
