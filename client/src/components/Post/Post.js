@@ -8,7 +8,7 @@ import {
   Hidden,
   Button,
   Backdrop,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import {
   Container,
@@ -21,9 +21,12 @@ import {
 } from "react-bootstrap";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import SendIcon from "@material-ui/icons/Send";
 import CommentIcon from "@material-ui/icons/Comment";
 import CloseIcon from "@material-ui/icons/Close";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
+import Comments from "./Comments";
+import { CssTextField } from "../CreatePost/CreatePost";
 
 const createStyles = makeStyles(theme => ({
   root: {
@@ -65,6 +68,9 @@ const createStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff"
+  },
+  input: {
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
   }
 }));
 
@@ -78,6 +84,7 @@ export default function Post(props) {
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     if (props.post_data !== null) {
@@ -310,7 +317,7 @@ export default function Post(props) {
               ></ThumbDownIcon>
             </IconButton>
             <IconButton onClick={() => setShowCommentBox(!showCommentBox)}>
-              <CommentIcon></CommentIcon>
+              <CommentIcon color="primary"></CommentIcon>
             </IconButton>
             <IconButton>
               <BookmarkIcon />
@@ -328,9 +335,49 @@ export default function Post(props) {
           </Col>
       </Row>
       <br />
+      {showCommentBox && 
+      <>
+      <Row>
+        <Col xs={12}>
+        <CssTextField
+              id="outlined"
+              InputProps={{
+                className: styling.input
+              }}
+              label="Comment"
+              variant="outlined"
+              style={{ width: "100%" }}
+              multiline
+              value={comment}
+              onInput={e => {
+                e.target.value = e.target.value.slice(0, 100);
+              }}
+              onChange={e => setComment(e.target.value)}
+            />
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col xs={12}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {}}
+            startIcon={<SendIcon />}
+            >
+              Comment
+          </Button>
+        </Col>
+      </Row>
+      <br />
+      </>
+      }
       <Row>
           <Col>
-            <Typography variant="h5">Comments </Typography>
+            <Typography variant="h5">
+                Comments 
+              <Comments />
+            </Typography>
           </Col>
       </Row>
       <br />
