@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row, Modal, Button, Alert } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
-import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
@@ -284,7 +283,6 @@ function Profile() {
 
   return (
     <div className={localStorage.getItem("theme")}>
-      <ProfileHeader />
       <Container fluid>
         <Row>
           <Col md={4}>

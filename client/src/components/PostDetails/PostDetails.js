@@ -7,7 +7,6 @@ import {
 } from "react-bootstrap";
 import queryString from 'query-string';
 import "./PostDetails.css";
-import ProfileHeader from "../Profile/ProfileHeader";
 import UserlinePost from "../Userline/UserlinePost";
 
 const API_URL = "http://127.0.0.1:5000";
@@ -73,7 +72,6 @@ function PostDetails() {
 
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
-      <ProfileHeader />
       {loading ? (
         <div class="text-center" id="loader">
           <div class="spinner-border" role="status">

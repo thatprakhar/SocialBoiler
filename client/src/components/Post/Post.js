@@ -7,7 +7,6 @@ import {
   Link,
   Hidden,
   Button,
-  Backdrop,
   CircularProgress,
 } from "@material-ui/core";
 import {
@@ -71,17 +70,22 @@ const createStyles = makeStyles(theme => ({
   },
   input: {
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+  },
+  buttonLoading: {
+    fontSize: '12'
   }
 }));
 
 export default function Post(props) {
   const [upVoted, setUpVoted] = useState(false);
   const [downVoted, setDownVoted] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [loadingComments, setLoadingComments] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const styling = createStyles();
   const API_URL = "http://127.0.0.1:5000";
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingButtons, setLoadingButtons] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [comment, setComment] = useState("");
@@ -101,14 +105,14 @@ export default function Post(props) {
           profile_user: localStorage.getItem("username")
         }
       };
-      setLoading(true);
+      setLoadingButtons(true);
       var done = 0;
       fetch(API_URL + '/get_liked_posts_by_user', requestOptions)
       .then(res => res.json())
       .then(data => {
         done++;
         if (done >= 2) {
-          setLoading(false);
+          setLoadingButtons(false);
         }
         for (var i = 0; i < data.length; i++) {
           if (data[i].post_id === props.post_data.post_id) {
@@ -124,7 +128,7 @@ export default function Post(props) {
       .then(data => {
         done++;
         if (done >= 2) {
-          setLoading(false);
+          setLoadingButtons(false);
         }
         for (var i = 0; i < data.length; i++) {
           if (data[i].post_id === props.post_data.post_id) {
@@ -165,11 +169,11 @@ export default function Post(props) {
       }
     };
     console.log(original_upvote + " " + original_downvote);
-    setLoading(true)
+    setLoadingButtons(true)
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
       .then(res => {
-        setLoading(false)
+        setLoadingButtons(false)
         if (res === "failed") {
           setErrorMessage("Could not perform the action. Try again later");
         } else {
@@ -182,7 +186,7 @@ export default function Post(props) {
         }
       })
       .catch(err => {
-        setLoading(false)
+        setLoadingButtons(false)
         setErrorMessage("Could not connect to the server. Try again later");
       });
   }
@@ -209,11 +213,11 @@ export default function Post(props) {
         disliked: original_downvote
       }
     };
-    setLoading(true)
+    setLoadingButtons(true)
     fetch(API_URL + "/vote", requestOptions)
       .then(res => res.json())
       .then(data => {
-        setLoading(false)
+        setLoadingButtons(false)
         if (data === "failed") {
           setErrorMessage(
             "Could not perform the action. Server is down. Try again later"
@@ -228,7 +232,7 @@ export default function Post(props) {
         }
       })
       .catch(err => {
-        setLoading(false)
+        setLoadingButtons(false)
         console.log(err);
         setErrorMessage(err);
       });
@@ -239,11 +243,9 @@ export default function Post(props) {
     props.removePost();
   }
   console.log(props.post_data);
+
   return (
     <Container className={styling.root}>
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <Hidden mdUp>
         <Button
           color="secondary"
@@ -306,23 +308,24 @@ export default function Post(props) {
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
           <ButtonGroup>
-            <IconButton onClick={upVotePost}>
+            <IconButton onClick={upVotePost} disabled={loadingButtons}>
               <ThumbUpAltIcon
                 color={upVoted ? "primary" : "inherit"}
               ></ThumbUpAltIcon>
             </IconButton>
-            <IconButton onClick={downVotePost}>
+            <IconButton onClick={downVotePost} disabled={loadingButtons}>
               <ThumbDownIcon
                 color={downVoted ? "secondary" : "inherit"}
               ></ThumbDownIcon>
             </IconButton>
-            <IconButton onClick={() => setShowCommentBox(!showCommentBox)}>
-              <CommentIcon color="primary"></CommentIcon>
+            <IconButton onClick={() => setShowCommentBox(!showCommentBox)} disabled={loadingButtons}>
+              <CommentIcon color={loadingButtons ? "" : 'primary'}></CommentIcon>
             </IconButton>
-            <IconButton>
+            <IconButton disabled={loadingButtons}>
               <BookmarkIcon />
             </IconButton>
           </ButtonGroup>
+          {loadingButtons && <CircularProgress color="primary" size={20}/>}
         </Col>
       </Row>
       <br />
@@ -376,9 +379,15 @@ export default function Post(props) {
           <Col>
             <Typography variant="h5">
                 Comments 
-              <Comments />
             </Typography>
           </Col>
+      </Row>
+      <br />
+      <Row>
+        {loadingComments ? 
+          <CircularProgress color="primary" /> 
+            :  
+          <Comments />}
       </Row>
       <br />
       {errorMessage !== "" && (

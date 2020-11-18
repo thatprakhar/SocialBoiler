@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Login from "../Login/Login";
-import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
 import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
@@ -12,7 +11,6 @@ import {
 } from "react-router-dom";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles(theme => ({
@@ -154,6 +152,24 @@ export default function Home(props) {
     }
   }, [location.search, props.page_type]);
 
+  if (loading) {
+    return (
+      <div className={styling.main}>
+        <Router>
+          <Route path="/login" component={Login}></Route>
+            <Route exact path="/home">
+              {localStorage.getItem("auth_token") ? (
+              <Redirect to="/home" />
+              ) : (
+                <Redirect to="/login" />
+              )}
+              </Route>
+          </Router>
+        <CircularProgress style={{ margin: 'auto', marginTop: '20%' }} color="primary" />
+      </div>
+    )
+  }
+
   return (
     <div>
       <Router>
@@ -166,10 +182,6 @@ export default function Home(props) {
           )}
         </Route>
       </Router>
-      <ProfileHeader />
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <div className={styling.main}>
         {(selectedPost !== null || showCreateScreen === true) &&
         window.innerWidth <= 600 ? null : (

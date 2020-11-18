@@ -7,7 +7,6 @@ import {
 } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import "./SavedPosts.css";
-import ProfileHeader from "../Profile/ProfileHeader";
 import UserlinePost from "../Userline/UserlinePost";
 
 const API_URL = "http://127.0.0.1:5000";
@@ -122,7 +121,6 @@ useEffect(()=>{
 
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
-      <ProfileHeader />
       {loading ? (
         <div class="text-center" id="loader">
           <div class="spinner-border" role="status">

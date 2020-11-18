@@ -7,11 +7,10 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core";
-import { Container, Row, Alert, Button as ButtonRB } from "react-bootstrap";
+import { Container, Row, Col, Alert, Button as ButtonRB } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField, Button } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 export const CssTextField = withStyles({
@@ -164,9 +163,6 @@ export default function Post(props) {
   }
   return (
     <Container className={styling.root}>
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <IconButton onClick={props.toggleView} className={styling.closeButton}>
         <CloseIcon className={styling.closeIcon} color="secondary" />
       </IconButton>
@@ -284,6 +280,7 @@ export default function Post(props) {
           </Row>
           <br />
           <Row>
+          <Col>
             <Button
               color="primary"
               type="submit"
@@ -292,6 +289,10 @@ export default function Post(props) {
             >
               Post
             </Button>
+          </Col>
+            <Col>
+              {loading && <CircularProgress color="inherit" />}
+            </Col>
           </Row>
           <br />
           <br />

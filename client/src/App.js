@@ -16,10 +16,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Userline from "./components/Userline/Userline";
 import SavedPosts from './components/SavedPosts/SavedPosts'
 import PostDetails from './components/PostDetails/PostDetails'
+import ProfileHeader from "./components/Profile/ProfileHeader";
 
 function App() {
   return (
     <div className={"App"+" "+localStorage.getItem("theme")}>
+    <ProfileHeader />
       <Router>
         <Switch>
           <Route path="/home">

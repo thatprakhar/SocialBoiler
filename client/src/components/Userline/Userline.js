@@ -7,7 +7,6 @@ import {
 } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 import "./Userline.css";
-import ProfileHeader from "../Profile/ProfileHeader";
 import UserlinePost from "./UserlinePost";
 import queryString from "query-string";
 
@@ -121,7 +120,6 @@ function Userline() {
 
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
-      <ProfileHeader />
       {loading ? (
         <div class="text-center" id="loader">
           <div class="spinner-border" role="status">
