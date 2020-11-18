@@ -319,6 +319,17 @@ def fetch_comments_by_user():
     else:
         return None
 
+
+def update_post_bookmarked(post_id, bookmarked_users):
+    session = Session()
+    session.query(Posts).filter(Posts.post_id == post_id).update(
+            {
+            Posts.bookmarked: bookmarked_users
+            }
+    )
+    session.commit()
+    session.close()
+
    
 #create_tables()
 

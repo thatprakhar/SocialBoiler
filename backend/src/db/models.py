@@ -47,6 +47,7 @@ class Posts(Base):
     date_created = Column(String, nullable=True)
     topics = Column(String, nullable=True)
     anonymous = Column(String, nullable=False)
+    bookmarked = Column(ARRAY(String), nullable=True)
 
 class Likes(Base):
     __tablename__ = "likes"
@@ -56,7 +57,6 @@ class Likes(Base):
     liked = Column(Boolean, nullable=True)
     disliked = Column(Boolean, nullable=True)
 
-
 class Comments(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -64,8 +64,7 @@ class Comments(Base):
     post_id = Column(Integer, nullable=False)
     comment = Column(String, nullable=False)
     post_time = Column(String, nullable=True)
-    bookmarked = Column(Boolean, nullable=True)
-
+    
 class Topics(Base):
     __tablename__ = "topics"
     topic_title = Column(String, primary_key=True, nullable=False)

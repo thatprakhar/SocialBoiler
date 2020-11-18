@@ -16,7 +16,8 @@ from src.db.crud import (
     fetch_posts_with_topic,
     fetch_users_following,
     fetch_topics_following,
-    fetch_votes_by_user
+    fetch_votes_by_user,
+    update_post_bookmarked
 )
 from src.db.models import Posts, Likes, Topics
 
@@ -215,3 +216,31 @@ def get_all_topics():
 
     df = df['topic_title']
     return df.to_dict()
+
+def bookmark_or_debookmark_post(post_id, username):
+    # get the post associated with the post id
+    df = get_post_by_id(post_id)
+    
+    # if the username is already bookmarked, remove the username, (the user wants to remove bookmark)
+    if username in df[0]['bookmarked']:
+        df[0]['bookmarked'].remove(username)
+    else:
+        df[0]['bookmarked'].append(username)
+    
+    update_post_bookmarked(post_id, df[0]['bookmarked'])
+
+
+def get_bookmarked_posts_by_user(username):
+    df = fetch_rows(Posts)
+    if df is None or df.empty:
+        return []
+
+    df = df.to_dict("records")
+    filtered_dict = []
+    for record in df:
+        if username in record['bookmarked']:
+            filtered_dict.append(record)
+
+    return filtered_dict
+
+#print(get_bookmarked_posts_by_user("onur"))

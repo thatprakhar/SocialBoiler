@@ -17,7 +17,9 @@ from db.posts_utils import (
     get_all_topics,
     get_upvoted_posts_by_user,
     get_downvoted_posts_by_user,
-    get_post_by_id
+    get_post_by_id,
+    bookmark_or_debookmark_post,
+    get_bookmarked_posts_by_user
 )
 from db.profile_page_utils import (
     get_profile_details,
@@ -468,5 +470,31 @@ def make_app():
             return jsonify("failed")
 
         return jsonify(get_post_by_id(post_id))
+
+    @app.route("/bookmark_post_user", methods=["GET"])
+    def bookmark_post():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+        post_id = request.headers.get("post_id")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        bookmark_or_debookmark_post(post_id, username)
+        return jsonify("success")
+
+    @app.route("/all_bookmarked_posts", methods=["GET"])
+    def get_bookmarked_posts():
+        username = request.headers.get("username")
+        auth_token = request.headers.get("auth_token")
+
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        
+        result = get_bookmarked_posts_by_user(username)
+        # returns an empty list or list of dictionaries including posts bookmarked by user
+        return jsonify(result)
+
 
     return app

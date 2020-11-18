@@ -18,7 +18,6 @@ def save_comment(username, post_id, comment, bookmarked):
         "post_id": [post_id],
         "comment": [comment],
         "post_time": dt.datetime.utcnow(),
-        "bookmarked": [bookmarked],
     }
 
     new_df = pd.DataFrame(data)
