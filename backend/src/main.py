@@ -40,6 +40,12 @@ from db.following_utils import (
     topic_Is_Followed,
     user_Is_followed,
 )
+from db.commenting_utils import {
+    save_comment,
+    get_commented_posts_by_username,
+    get_commented_posts_by_id,
+} 
+
 from flask import Flask
 from flask_cors import CORS
 from flask import request, jsonify
@@ -496,5 +502,46 @@ def make_app():
         # returns an empty list or list of dictionaries including posts bookmarked by user
         return jsonify(result)
 
+    @app.route("/comment", methods=["GET"])
+    def save_comment_route():
+        username = request.headers.get("profile_user")
+        auth_token = request.headers.get("auth_token")
+        post_id =  request.headers.get("post_id")
+        comment = request.headers.get("comment")
+        bookmarked = request.headers.get("bookmarked")
+
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+        
+        result = save_comment(username, post_id, comment, bookmarked)
+        # returns an empty list or list of dictionaries including posts bookmarked by user
+        return jsonify(result)
+
+    @app.route("/get_commented_posts_by_user", methods=["GET"])
+    def get_commented_posts_by_user_route():
+        username = request.headers.get("profile_user")
+        auth_token = request.headers.get("auth_token")
+        profile_user = request.headers.get("profile_user")
+
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        # returns an empty list or list of dictionaries including commented posts by user
+        return jsonify(get_commented_posts_by_username(username))
+
+
+    @app.route("/get_commented_post_by_id", methods=["GET"])
+    def get_commented_posts_by_id_route():
+        username = request.headers.get("profile_user")
+        auth_token = request.headers.get("auth_token")
+        post_id = request.headers.get("post_id")
+        status = token_validation(username, auth_token)
+        if not status:
+            return jsonify("failed")
+
+        # returns an empty list or list of dictionaries including commented posts by id
+        return jsonify(get_commented_posts_by_id(post_id))
 
     return app
