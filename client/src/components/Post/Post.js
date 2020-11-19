@@ -25,6 +25,7 @@ import CommentIcon from "@material-ui/icons/Comment";
 import CloseIcon from "@material-ui/icons/Close";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import Comments from "./Comments";
+import InboxOutlinedIcon from '@material-ui/icons/InboxOutlined';
 import { CssTextField } from "../CreatePost/CreatePost";
 
 const createStyles = makeStyles(theme => ({
@@ -80,7 +81,6 @@ export default function Post(props) {
   const [upVoted, setUpVoted] = useState(false);
   const [downVoted, setDownVoted] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [loadingComments, setLoadingComments] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const styling = createStyles();
   const API_URL = "http://127.0.0.1:5000";
@@ -89,6 +89,7 @@ export default function Post(props) {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [comment, setComment] = useState("");
+  const [sendingComment, setSendingComment] = useState(false);
 
   useEffect(() => {
     if (props.post_data !== null) {
@@ -141,9 +142,74 @@ export default function Post(props) {
     }
   }, [props.post_data]);
   if (props.post_data === null) {
-    return <Container className={styling.root} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <Typography variant="caption">Select a post to view</Typography>
+    return <Container className={styling.root}>
+    <div style={{ margin: 'auto', width: "50%", marginTop: '20%' }}>
+    <Row>
+      <InboxOutlinedIcon style={{ margin: "auto" }} fontSize="large" />
+    </Row>
+      <Row>
+        <Typography style={{ margin: "auto" }} variant="caption">Select a post to view</Typography>
+      </Row>
+    </div>
     </Container>;
+  }
+
+  function postComment() {
+    setComment(comment.trim());
+    if (comment === '') return;
+    setSendingComment(true);
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        username: localStorage.getItem("username"),
+        auth_token: localStorage.getItem("auth_token"),
+        post_id: props.post_data.post_id,
+        comment: comment,
+        Bookmarked: saved
+      }
+    };
+
+    fetch(API_URL + "/comment", requestOptions)
+    .then(res => res.json())
+    .then(data => {
+      if (data === 'failed') {
+        setErrorMessage('Could not perform the action.');
+      }
+      console.log(data)
+    })
+    .err(err => {
+      setErrorMessage(err);
+    })
+  }
+
+  function handleSavePost() {
+    setLoadingButtons(true)
+    // const savedState = !saved;
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        username: localStorage.getItem("username"),
+        auth_token: localStorage.getItem("auth_token"),
+        post_id: props.post_data.post_id
+      }
+    };
+    fetch(API_URL + "/bookmark_post_user", requestOptions)
+    .then(res => res.json())
+    .then(data => {
+      if (data === 'failed') {
+        setErrorMessage('Failed to perform action.');
+      } else {
+        setSaved(!saved);
+      }
+      setLoadingButtons(false)
+    })
+    .catch(err => {
+      setLoadingButtons(false);
+      setErrorMessage(err);
+    })
+
   }
 
   function upVotePost() {
@@ -242,7 +308,6 @@ export default function Post(props) {
     // console.log("removing");
     props.removePost();
   }
-  console.log(props.post_data);
 
   return (
     <Container className={styling.root}>
@@ -321,8 +386,8 @@ export default function Post(props) {
             <IconButton onClick={() => setShowCommentBox(!showCommentBox)} disabled={loadingButtons}>
               <CommentIcon color={loadingButtons ? "" : 'primary'}></CommentIcon>
             </IconButton>
-            <IconButton disabled={loadingButtons}>
-              <BookmarkIcon />
+            <IconButton onClick={() => handleSavePost()} disabled={loadingButtons}>
+              <BookmarkIcon color={saved ? "primary" : ''}/>
             </IconButton>
           </ButtonGroup>
           {loadingButtons && <CircularProgress color="primary" size={20}/>}
@@ -365,12 +430,13 @@ export default function Post(props) {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => {}}
+            onClick={() => postComment()}
             startIcon={<SendIcon />}
             >
               Comment
           </Button>
         </Col>
+        {sendingComment && <CircularProgress color="primary" size={20}/>}
       </Row>
       <br />
       </>
@@ -384,10 +450,7 @@ export default function Post(props) {
       </Row>
       <br />
       <Row>
-        {loadingComments ? 
-          <CircularProgress color="primary" /> 
-            :  
-          <Comments />}
+          <Comments postId={props.post_data.post_id}/>
       </Row>
       <br />
       {errorMessage !== "" && (
