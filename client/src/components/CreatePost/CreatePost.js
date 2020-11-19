@@ -63,7 +63,7 @@ const createStyles = makeStyles(theme => ({
     display: "none"
   },
   input: {
-    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    backgroundColor: 'white'
   }
 }));
 

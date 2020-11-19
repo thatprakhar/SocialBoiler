@@ -101,6 +101,7 @@ export default function Login() {
           localStorage.setItem("auth_token", data.auth_token);
           localStorage.setItem("username", data.username);
           history.push("/home");
+          window.location.reload(false);
         }
       })
       .catch(err => {

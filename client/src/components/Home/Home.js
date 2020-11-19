@@ -19,7 +19,8 @@ const createStyles = makeStyles(theme => ({
     maxHeight: "100vw",
     maxWidth: window.innerWidth,
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
-    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    flex: 5
   },
   main: {
     display: "flex",

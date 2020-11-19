@@ -8,6 +8,7 @@ import {
   Hidden,
   Button,
   CircularProgress,
+  Snackbar
 } from "@material-ui/core";
 import {
   Container,
@@ -34,7 +35,7 @@ const createStyles = makeStyles(theme => ({
     marignLeft: 20,
     borderRadius: 10,
     width: "100vw",
-    maxHeight: window.innerHeight,
+    height: window.innerHeight,
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
@@ -70,7 +71,7 @@ const createStyles = makeStyles(theme => ({
     color: "#fff"
   },
   input: {
-    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    backgroundColor: 'white'
   },
   buttonLoading: {
     fontSize: '12'
@@ -159,14 +160,15 @@ export default function Post(props) {
     if (comment === '') return;
     setSendingComment(true);
     const requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         username: localStorage.getItem("username"),
         auth_token: localStorage.getItem("auth_token"),
         post_id: props.post_data.post_id,
         comment: comment,
-        Bookmarked: saved
+        bookmarked: saved,
+        profile_user: localStorage.getItem('username')
       }
     };
 
@@ -175,11 +177,17 @@ export default function Post(props) {
     .then(data => {
       if (data === 'failed') {
         setErrorMessage('Could not perform the action.');
+      } else {
+        setComment('');
+        setShowCommentBox(false);
       }
+      setSendingComment(false);
       console.log(data)
     })
-    .err(err => {
-      setErrorMessage(err);
+    .catch(err => {
+      console.log(err);
+      setSendingComment(false);
+      setErrorMessage('Could not connect to the server');
     })
   }
 
@@ -187,12 +195,13 @@ export default function Post(props) {
     setLoadingButtons(true)
     // const savedState = !saved;
     const requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         username: localStorage.getItem("username"),
         auth_token: localStorage.getItem("auth_token"),
-        post_id: props.post_data.post_id
+        post_id: props.post_data.post_id,
+        profile_user: localStorage.getItem("username")
       }
     };
     fetch(API_URL + "/bookmark_post_user", requestOptions)
@@ -207,7 +216,7 @@ export default function Post(props) {
     })
     .catch(err => {
       setLoadingButtons(false);
-      setErrorMessage(err);
+      setErrorMessage('Could not connect to server');
     })
 
   }
@@ -384,10 +393,10 @@ export default function Post(props) {
               ></ThumbDownIcon>
             </IconButton>
             <IconButton onClick={() => setShowCommentBox(!showCommentBox)} disabled={loadingButtons}>
-              <CommentIcon color={loadingButtons ? "" : 'primary'}></CommentIcon>
+              <CommentIcon color={loadingButtons ? "inherit" : 'primary'}></CommentIcon>
             </IconButton>
             <IconButton onClick={() => handleSavePost()} disabled={loadingButtons}>
-              <BookmarkIcon color={saved ? "primary" : ''}/>
+              <BookmarkIcon color={saved ? "primary" : 'inherit'}/>
             </IconButton>
           </ButtonGroup>
           {loadingButtons && <CircularProgress color="primary" size={20}/>}
@@ -426,7 +435,7 @@ export default function Post(props) {
       </Row>
       <br />
       <Row>
-        <Col xs={12}>
+        <Col xs={12} lg={3}>
           <Button
             color="primary"
             variant="contained"
@@ -436,7 +445,9 @@ export default function Post(props) {
               Comment
           </Button>
         </Col>
-        {sendingComment && <CircularProgress color="primary" size={20}/>}
+        <Col xs={3}>
+          {sendingComment && <CircularProgress color="primary" size={25}/>}
+        </Col>
       </Row>
       <br />
       </>
@@ -453,17 +464,19 @@ export default function Post(props) {
           <Comments postId={props.post_data.post_id}/>
       </Row>
       <br />
-      {errorMessage !== "" && (
-        <Row>
-          <Alert
-            variant="danger"
-            onClose={() => setErrorMessage("")}
-            dismissible
-          >
-            {errorMessage}
-          </Alert>
-        </Row>
-      )}
+      <Snackbar
+        open={errorMessage !== ''}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage('')}
+      >
+        <Alert
+          onClose={() => setErrorMessage('')}
+          variant="danger"
+          dismissible
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

@@ -6,11 +6,10 @@ import { Link, Switch, FormControlLabel } from "@material-ui/core";
 import "./Profile.css";
 
 const API_URL = "http://127.0.0.1:5000";
-function ProfileHeader() {
+function ProfileHeader(props) {
   const history = useHistory();
   const [topic, setTopic] = useState("");
   const [theme, setTheme] = useState(localStorage.getItem('theme') ? localStorage.getItem('theme') : 'Light');
-
   useEffect(() => {
 
   }, [theme])
@@ -70,7 +69,7 @@ function ProfileHeader() {
             className=" mr-sm-2"
             onChange={e => setTopic(e.target.value)}
           />
-          <Link href={"get_posts_by_topic?topic=" + topic}>
+          <Link href={topic.trim() !== '' ? "get_posts_by_topic?topic=" + topic : ''}>
             <Button type="submit">Search</Button>
           </Link>
         </div>
@@ -85,8 +84,9 @@ function ProfileHeader() {
           } label={theme} 
           onChange={() => changeTheme()}
           />
-          
-          <Nav.Link href="/">Home</Nav.Link>
+          {localStorage.getItem("username") ? 
+            <Nav.Link href="/">Home</Nav.Link> 
+            : null}
           {localStorage.getItem("username") ? (
             <Nav.Link href="/my_posts">My Posts</Nav.Link>
           ) : null}

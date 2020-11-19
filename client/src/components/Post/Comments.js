@@ -39,7 +39,7 @@ export default class Comments extends Component {
 
   render() {
     const { comments, isFetching } = this.state;
-    return isFetching ? <CircularProgress />
+    return isFetching ? <><CircularProgress /> </>
     : <Comment comments={comments} />;
   }
 }

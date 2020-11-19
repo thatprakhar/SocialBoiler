@@ -167,7 +167,7 @@ export default function App(props) {
                 >
                   {post_data.anonymous === "false" ? post_data.username : post_data.username === localStorage.getItem("username") ? post_data.username + "(Anonymous to others)": "Anonymous"} {" - "}
                 </Typography>
-                <div className={styling.description}>{post_data.description.substr(0, 75)}</div>
+                <span className={styling.description}>{post_data.description.substr(0, 75)}</span>
                 {"..."}
                 <Badge variant={localStorage.getItem("theme") ? localStorage.getItem("theme") === 'Light' ? "dark" : "light" : "dark"}>{post_data.topics}</Badge>
               </React.Fragment>
