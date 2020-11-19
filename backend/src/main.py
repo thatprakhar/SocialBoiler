@@ -4,7 +4,7 @@ from db.authentication_utils import (
     create_auth_token,
     reset_auth_token,
     token_validation,
-    get_username,
+    get_username
 )
 from db.posts_utils import (
     insert_post_details,
@@ -26,7 +26,7 @@ from db.profile_page_utils import (
     update_profile_details,
     insert_profile_details,
     delete_user_account,
-    update_profile_image,
+    update_profile_image
 )
 from db.following_utils import (
     add_follower,
@@ -38,13 +38,13 @@ from db.following_utils import (
     unfollow_topic,
     create_topic,
     topic_Is_Followed,
-    user_Is_followed,
+    user_Is_followed
 )
-from db.commenting_utils import {
+from db.commenting_utils import (
     save_comment,
     get_commented_posts_by_username,
-    get_commented_posts_by_id,
-} 
+    get_commented_posts_by_id
+) 
 
 from flask import Flask
 from flask_cors import CORS
@@ -477,50 +477,60 @@ def make_app():
 
         return jsonify(get_post_by_id(post_id))
 
-    @app.route("/bookmark_post_user", methods=["GET"])
+    # bookmark a post and specify which post is bookmarked by the post_id and the user who bookmarks the post by the name of the user
+    @app.route("/bookmark_post_user", methods=["POST"])
     def bookmark_post():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
         post_id = request.headers.get("post_id")
+        profile_user = request.headers.get("profile_user")
+
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
 
-        bookmark_or_debookmark_post(post_id, username)
+        bookmark_or_debookmark_post(post_id, profile_user)
         return jsonify("success")
 
+    # gets all the posts that are saved/bookmarked by a user
     @app.route("/all_bookmarked_posts", methods=["GET"])
     def get_bookmarked_posts():
         username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
+        profile_user = request.headers.get("profile_user")
 
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
         
-        result = get_bookmarked_posts_by_user(username)
+        result = get_bookmarked_posts_by_user(profile_user)
         # returns an empty list or list of dictionaries including posts bookmarked by user
         return jsonify(result)
 
-    @app.route("/comment", methods=["GET"])
-    def save_comment_route():
-        username = request.headers.get("profile_user")
+
+    #this is the route for posting a comment
+    @app.route("/comment", methods=["POST"])
+    def post_comment():
+        username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
         post_id =  request.headers.get("post_id")
         comment = request.headers.get("comment")
         bookmarked = request.headers.get("bookmarked")
+        profile_user = request.headers.get("profile_user")
 
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
-        
-        result = save_comment(username, post_id, comment, bookmarked)
-        # returns an empty list or list of dictionaries including posts bookmarked by user
-        return jsonify(result)
+        #saves the comment in the database which means posting the comment
+        status = save_comment(profile_user, post_id, comment, bookmarked)
+        if status:
+            return jsonify("success")
+        return jsonify("failed")
 
+    # it gets the posts that have comments by a specific user
     @app.route("/get_commented_posts_by_user", methods=["GET"])
     def get_commented_posts_by_user_route():
-        username = request.headers.get("profile_user")
+        username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
         profile_user = request.headers.get("profile_user")
 
@@ -529,12 +539,13 @@ def make_app():
             return jsonify("failed")
 
         # returns an empty list or list of dictionaries including commented posts by user
-        return jsonify(get_commented_posts_by_username(username))
+        return jsonify(get_commented_posts_by_username(profile_user))
 
 
+    # it gets the comments for a specific post with the specified post_id
     @app.route("/get_commented_post_by_id", methods=["GET"])
     def get_commented_posts_by_id_route():
-        username = request.headers.get("profile_user")
+        username = request.headers.get("username")
         auth_token = request.headers.get("auth_token")
         post_id = request.headers.get("post_id")
         status = token_validation(username, auth_token)
