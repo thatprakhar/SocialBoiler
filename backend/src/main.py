@@ -521,11 +521,11 @@ def make_app():
         status = token_validation(username, auth_token)
         if not status:
             return jsonify("failed")
-        #saves the comment in the database which means posting the comment
-        status = save_comment(profile_user, post_id, comment, bookmarked)
-        if status:
-            return jsonify("success")
-        return jsonify("failed")
+
+        #saves the comment in the database
+        save_comment(profile_user, post_id, comment, bookmarked)
+        return jsonify("success")
+    
 
     # it gets the posts that have comments by a specific user
     @app.route("/get_commented_posts_by_user", methods=["GET"])
