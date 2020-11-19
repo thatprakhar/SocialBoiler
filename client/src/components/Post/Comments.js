@@ -18,12 +18,14 @@ export default class Comments extends Component {
         "Content-Type": "application/json",
         username: localStorage.getItem("username"),
         auth_token: localStorage.getItem("auth_token"),
-        post_id: this.props.post_id
+        post_id: this.props.postId
       }
     };
+    console.log(requestOptions.headers.post_id);
     fetch(API_URL + "/get_commented_post_by_id", requestOptions)
     .then(res => res.json())
     .then(data => {
+      console.log(data);
       this.setState({
         isFetching: false,
         comments: data

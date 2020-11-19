@@ -46,7 +46,7 @@ def get_commented_posts_by_id(post_id):
     df = fetch_rows(Comments).to_dict("records")
     result = []
     for record in df:
-        if record['post_id'] == post_id:
+        if record['post_id'] == int(post_id):
             result.append(record)
     
     return result

@@ -436,7 +436,10 @@ export default function Post(props) {
       <br />
       <Row>
         <Col xs={12} lg={3}>
-          <Button
+          {sendingComment ? 
+            <CircularProgress color="primary" size={25}/>
+            : 
+            <Button
             color="primary"
             variant="contained"
             onClick={() => postComment()}
@@ -444,9 +447,7 @@ export default function Post(props) {
             >
               Comment
           </Button>
-        </Col>
-        <Col xs={3}>
-          {sendingComment && <CircularProgress color="primary" size={25}/>}
+            }
         </Col>
       </Row>
       <br />
