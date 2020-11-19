@@ -381,7 +381,8 @@ export default function Post(props) {
 
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
-          <ButtonGroup>
+        {loadingButtons ? <CircularProgress color="primary" size={20}/>: 
+        <ButtonGroup>
             <IconButton onClick={upVotePost} disabled={loadingButtons}>
               <ThumbUpAltIcon
                 color={upVoted ? "primary" : "inherit"}
@@ -399,7 +400,7 @@ export default function Post(props) {
               <BookmarkIcon color={saved ? "primary" : 'inherit'}/>
             </IconButton>
           </ButtonGroup>
-          {loadingButtons && <CircularProgress color="primary" size={20}/>}
+        }
         </Col>
       </Row>
       <br />

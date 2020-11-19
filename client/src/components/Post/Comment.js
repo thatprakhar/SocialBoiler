@@ -10,7 +10,6 @@ import {
   Avatar,
   Typography
 } from "@material-ui/core";
-import Faker from "faker";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,12 +35,12 @@ const Comment = ({ comments }) => {
           <React.Fragment key={comment.id}>
             <ListItem key={comment.id} alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar alt="avatar" src={Faker.image.avatar()} />
+                <Avatar alt={comment.username[0]} />
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <Typography className={classes.fonts}>
-                    {comment.name}
+                    {comment.username}
                   </Typography>
                 }
                 secondary={
@@ -51,7 +50,7 @@ const Comment = ({ comments }) => {
                       variant="body2"
                       className={classes.inline}
                     >
-                      {comment.body}
+                      {comment.comment}
                     </Typography>
                   </>
                 }

@@ -110,7 +110,7 @@ export default function Login() {
         setErrorMessage("Could not connect to server");
       });
   }
-  if (localStorage.getItem("user")) {
+  if (localStorage.getItem("username")) {
     history.push("/home");
   }
 
