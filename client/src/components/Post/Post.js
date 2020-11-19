@@ -428,10 +428,11 @@ export default function Post(props) {
               multiline
               value={comment}
               onInput={e => {
-                e.target.value = e.target.value.slice(0, 100);
+                e.target.value = e.target.value.slice(0, 200);
               }}
               onChange={e => setComment(e.target.value)}
             />
+            <Typography variant="caption">{comment.length} / 200</Typography>
         </Col>
       </Row>
       <br />

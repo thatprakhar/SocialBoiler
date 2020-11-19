@@ -29,7 +29,10 @@ const Comment = ({ comments }) => {
   const classes = useStyles();
   return (
     <List className={classes.root}>
-      {comments.map(comment => {
+      {comments.sort((a, b) => {
+        if (a.id < b.id) return 1;
+        return -1
+      }).map(comment => {
         console.log("Comment", comment);
         return (
           <React.Fragment key={comment.id}>

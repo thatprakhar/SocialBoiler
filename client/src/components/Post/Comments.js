@@ -11,7 +11,7 @@ export default class Comments extends Component {
     isFetching: true,
   };
 
-  componentDidMount() {
+  componentDidUpdate() {
     const requestOptions = {
       method: "GET",
       headers: {
