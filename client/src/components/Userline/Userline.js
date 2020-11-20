@@ -18,6 +18,7 @@ function Userline() {
   const [ownPosts, setOwnPosts] = useState([]);
   const [votedPosts, setVotedPosts] = useState([]);
   const [downVotedPosts, setDownVotedPosts]=useState([]);
+  const [commentedPosts, setCommentedPosts]=useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -118,6 +119,42 @@ function Userline() {
 
   }, [])
 
+
+  //get commented posts of the user
+  useEffect(() => {
+    let parsed = queryString.parse(window.location.search);
+    profile_user = parsed.username;
+    console.log(profile_user);
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        auth_token: localStorage.getItem("auth_token"),
+        username: localStorage.getItem("username"),
+        profile_user: profile_user
+      }
+    };
+
+    fetch(API_URL + "/get_commented_posts_by_user", requestOptions)
+      .then(res => res.json())
+      .then(data => {
+        console.log("get commented post request back is: ", data);
+        if (data !== "failed") {
+          // setOwnPosts(data.sort((a, b) => b.post_id - a.post_id));
+          // setLoading(false);
+          // setError(null);
+        } else {
+          alert(data);
+          // setError(data);
+        }
+      })
+      .catch(err => {
+        console.log("can not get commented posts: " + err);
+        setError("Can not connect to server!");
+      });
+  }, []);
+  
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
       {loading ? (
