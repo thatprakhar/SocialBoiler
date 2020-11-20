@@ -10,13 +10,12 @@ import {
   Snackbar
 } from "@material-ui/core";
 import { Button, Badge, Alert } from "react-bootstrap";
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles(theme => ({
   overlay: {
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
-    height: window.innerHeight,
+    height: '100vw',
     width: window.innerWidth <= 720 ? window.innerWidth : '350px'
   },
   inline: {
@@ -57,6 +56,7 @@ export default function App(props) {
   const [loading, setLoading] = useState(false);
   const [showSuccessFollow, setShowSuccessFollow] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [fetchedFollowState, setFetchedFollowState] = useState(false);
   const [topicFollowed, setTopicFollowed] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -127,6 +127,7 @@ export default function App(props) {
   }
 
   useEffect(() => {
+    setFetchedFollowState(false);
     const requestOptions = {
       method: "GET",
       headers: {
@@ -140,8 +141,12 @@ export default function App(props) {
       .then(res => res.json())
       .then(data => {
         setTopicFollowed(data);
+        setFetchedFollowState(true);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        setFetchedFollowState(true);
+      });
   }, [props.topic]);
 
   function post_view(post_data) {
@@ -179,12 +184,18 @@ export default function App(props) {
   }
 
   function topic_view(topic) {
+    if (loading) {
+      return  <div style={{ textAlign: 'center' }}>
+      <CircularProgress color="inherit" fontSize={24} />
+      </div>
+    }
     if (topicFollowed === false) {
       return (
         <Button
           variant="success"
           style={{ width: "100%" }}
           onClick={followTopic}
+          disabled={!fetchedFollowState}
         >
           Follow <Badge variant="info">{topic}</Badge>
         </Button>
@@ -195,6 +206,7 @@ export default function App(props) {
           variant="danger"
           style={{ width: "100%" }}
           onClick={unfollowTopic}
+          disabled={!fetchedFollowState}
         >
           Unfollow <Badge variant="info">{topic}</Badge>
         </Button>
@@ -236,9 +248,6 @@ export default function App(props) {
           An error occured
         </Alert>
       </Snackbar>
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <List className={styling.root}>
         {props.page_type === "search_posts" ? (
           <li>

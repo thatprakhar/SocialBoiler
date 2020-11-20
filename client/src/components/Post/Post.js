@@ -464,7 +464,7 @@ export default function Post(props) {
       </Row>
       <br />
       <Row>
-          <Comments postId={props.post_data.post_id}/>
+          <Comments postId={props.post_data.post_id} />
       </Row>
       <br />
       <Snackbar

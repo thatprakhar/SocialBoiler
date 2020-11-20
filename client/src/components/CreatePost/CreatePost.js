@@ -281,7 +281,9 @@ export default function Post(props) {
           <br />
           <Row>
           <Col>
-            <Button
+          {loading ? <CircularProgress color="inherit" />
+          :
+          <Button
               color="primary"
               type="submit"
               variant="contained"
@@ -289,10 +291,8 @@ export default function Post(props) {
             >
               Post
             </Button>
+          }
           </Col>
-            <Col>
-              {loading && <CircularProgress color="inherit" />}
-            </Col>
           </Row>
           <br />
           <br />

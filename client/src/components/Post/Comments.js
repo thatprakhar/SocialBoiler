@@ -11,7 +11,10 @@ export default class Comments extends Component {
     isFetching: true,
   };
 
-  componentDidUpdate() {
+  fetchData = (showLoadingBar) => {
+    this.setState({
+      isFetching: showLoadingBar
+    })
     const requestOptions = {
       method: "GET",
       headers: {
@@ -37,6 +40,16 @@ export default class Comments extends Component {
         isFetching: false
       })
     })
+  }
+
+  componentDidMount() {
+    this.fetchData(true);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.postId !== this.props.postId) {
+      this.fetchData(true);
+    }
   }
 
   render() {
