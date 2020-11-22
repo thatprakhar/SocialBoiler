@@ -303,11 +303,11 @@ def delete_topics_data():
     session.close()
 
 
-def fetch_comments_by_user(username):
+def fetch_comments_by_user(username, post_id):
     session = Session()
 
     try:
-        result = session.query(Comments).filter(Comments.username == username)
+        result = session.query(Comments).filter(Comments.username == username).filter(Comments.post_id == post_id)
 
     finally:
         session.close()
