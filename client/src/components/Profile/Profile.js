@@ -6,6 +6,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
+import ProfileHeader from "./ProfileHeader";
 
 const API_URL = "http://127.0.0.1:5000";
 
@@ -283,6 +284,7 @@ function Profile() {
 
   return (
     <div className={localStorage.getItem("theme")}>
+      <ProfileHeader/>
       <Container fluid>
         <Row>
           <Col md={4}>

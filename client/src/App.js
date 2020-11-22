@@ -9,7 +9,8 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  Switch
+  Switch,
+  useHistory
 } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,8 +22,9 @@ import ProfileHeader from "./components/Profile/ProfileHeader";
 function App() {
   return (
     <div className={"App"+" "+localStorage.getItem("theme")}>
-    <ProfileHeader />
+    
       <Router>
+        
         <Switch>
           <Route path="/home">
             <Home page_type="home"></Home>

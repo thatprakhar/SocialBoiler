@@ -2,23 +2,26 @@ import pandas as pd
 import datetime as dt
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 from src.db.crud import fetch_rows, fetch_comments_by_user, update_table, fetch_post
 from src.db.models import Comments, Posts
 
+
 def save_comment(username, post_id, comment):
-    #check for an empty comment
+    # check for an empty comment
     if len(comment) == 0:
         return False
 
-    #duplicate comments are not allowed
+    # duplicate comments are not allowed
     user_df = fetch_comments_by_user(username, post_id)
     comment_copy = comment.lower()
     if not user_df.empty:
-        user_df['comment'] = user_df['comment'].str.lower()
-        if comment_copy in user_df['comment'].values:
+        user_df["comment"] = user_df["comment"].str.lower()
+        if comment_copy in user_df["comment"].values:
             return False
-
 
     data = {
         "username": [username],
@@ -34,32 +37,36 @@ def save_comment(username, post_id, comment):
 
 def get_commented_posts_by_username(username):
     df = fetch_rows(Comments).to_dict("records")
-   
-    for record in df:
-        if record['username'] != username:
-            df.remove(record)
 
-    if len(df) == 0:
+    # Make another arr to store the comments made by the user
+    arr = []
+    for record in df:
+        if record["username"] == username:
+            # print(record["username"])
+            arr.append(record)
+
+    # print(arr)
+    if len(arr) == 0:
         return []
 
     result = []
-    for record in df:
-        post_df = fetch_post(Posts, record['post_id']).to_dict('records')
+    for record in arr:
+        post_df = fetch_post(Posts, record["post_id"]).to_dict("records")
         result += post_df
 
     return result
-    
+
 
 def get_commented_posts_by_id(post_id):
     df = fetch_rows(Comments).to_dict("records")
     result = []
     for record in df:
-        if record['post_id'] == int(post_id):
+        if record["post_id"] == int(post_id):
             result.append(record)
-    
+
     return result
 
 
-#print(get_commented_posts_by_id(1))
-#print(get_commented_posts_by_username("prakhar"))
-#save_comment("prakhar", 38, "ananinki yorumu", False)
+# print(get_commented_posts_by_id(1))
+# print(get_commented_posts_by_username("prakhar"))
+# save_comment("prakhar", 38, "ananinki yorumu", False)

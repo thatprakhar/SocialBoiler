@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./Userline.css";
 import UserlinePost from "./UserlinePost";
 import queryString from "query-string";
+import ProfileHeader from "../Profile/ProfileHeader";
 
 const API_URL = "http://127.0.0.1:5000";
 
@@ -20,6 +21,7 @@ function Userline() {
   const [downVotedPosts, setDownVotedPosts]=useState([]);
   const [commentedPosts, setCommentedPosts]=useState([]);
   const [loading, setLoading] = useState(true);
+  const [commentLoading, setCommentLoading]=useState(true);
   const [error, setError] = useState(null);
 
   //get own posts
@@ -144,9 +146,24 @@ function Userline() {
           // setOwnPosts(data.sort((a, b) => b.post_id - a.post_id));
           // setLoading(false);
           // setError(null);
+
+          let id_list=[];
+          let data_list=[];
+          for(let post of data){
+            if(!id_list.includes(post.post_id)){
+              data_list.push(post);
+              id_list.push(post.post_id)
+            }
+          }
+          console.log("data list is"+data_list);
+
+          setCommentedPosts(data_list.sort((a,b)=>b.post_id-a.post_id));
+          setCommentLoading(false);
+          setError(null);
+
         } else {
-          alert(data);
-          // setError(data);
+          // alert(data);
+          setError(data);
         }
       })
       .catch(err => {
@@ -157,10 +174,11 @@ function Userline() {
   
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
+      <ProfileHeader/>
       {loading ? (
-        <div class="text-center" id="loader">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        <div className="text-center" id="loader">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
           </div>
         </div>
       ) : (
@@ -240,6 +258,47 @@ function Userline() {
                 key={uuidv4()}
               />
             ))}
+           
+          </Container>
+
+
+          <Container>
+            <h1 className="header">
+              <Badge variant="info">commented Posts:</Badge>
+            </h1>
+
+            {commentLoading?(
+              <div>
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+            </div>
+            )     
+            :(
+              <div>
+                {commentedPosts.length === 0 ? <h4>No commented posts yet...</h4> : null}
+
+                {commentedPosts.map(post => (
+                  <UserlinePost
+                    username={post.username}
+                    title={post.title}
+                    description={post.description}
+                    image={post.image}
+                    date_created={post.date_created}
+                    likes={post.likes}
+                    dislikes={post.dislikes}
+                    topics={post.topics}
+                    post_id={post.post_id}
+                    anonymous={post.anonymous}
+                    isUserPosts={false}
+                    key={uuidv4()}
+                  />
+                ))}
+              </div>
+
+            )}
+
+            
            
           </Container>
         </div>

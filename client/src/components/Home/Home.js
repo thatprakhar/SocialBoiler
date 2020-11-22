@@ -12,6 +12,7 @@ import {
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ProfileHeader from "../Profile/ProfileHeader";
 
 const createStyles = makeStyles(theme => ({
   feed: {
@@ -183,6 +184,7 @@ export default function Home(props) {
           )}
         </Route>
       </Router>
+      <ProfileHeader/>
       <div className={styling.main}>
         {(selectedPost !== null || showCreateScreen === true) &&
         window.innerWidth <= 600 ? null : (

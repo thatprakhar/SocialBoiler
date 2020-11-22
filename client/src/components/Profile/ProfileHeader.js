@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Nav, Navbar, Button, FormControl } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+
 import { Link, Switch, FormControlLabel } from "@material-ui/core";
 
 import "./Profile.css";
@@ -54,9 +55,11 @@ function ProfileHeader(props) {
     localStorage.removeItem("following");
     localStorage.removeItem("topic");
 
+   
     history.push("/login");
   };
   return (
+    
     <Navbar bg="dark" expand="lg" variant="dark" sticky="top">
       <Navbar.Brand href="/home">SocialBoiler</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
