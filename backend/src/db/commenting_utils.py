@@ -12,7 +12,7 @@ def save_comment(username, post_id, comment):
         return False
 
     #duplicate comments are not allowed
-    user_df = fetch_comments_by_user(username)
+    user_df = fetch_comments_by_user(username, post_id)
     comment_copy = comment.lower()
     if not user_df.empty:
         user_df['comment'] = user_df['comment'].str.lower()
