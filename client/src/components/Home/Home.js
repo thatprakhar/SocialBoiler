@@ -156,6 +156,8 @@ export default function Home(props) {
 
   if (loading) {
     return (
+      <>
+      <ProfileHeader/>
       <div className={styling.main}>
         <Router>
           <Route path="/login" component={Login}></Route>
@@ -169,6 +171,7 @@ export default function Home(props) {
           </Router>
         <CircularProgress style={{ margin: 'auto', marginTop: '20%' }} color="primary" />
       </div>
+      </>
     )
   }
 

@@ -9,15 +9,13 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  Switch,
-  useHistory
+  Switch
 } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Userline from "./components/Userline/Userline";
 import SavedPosts from './components/SavedPosts/SavedPosts'
 import PostDetails from './components/PostDetails/PostDetails'
-import ProfileHeader from "./components/Profile/ProfileHeader";
 
 function App() {
   return (

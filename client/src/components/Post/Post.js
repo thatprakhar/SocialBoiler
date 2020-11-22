@@ -25,7 +25,7 @@ import SendIcon from "@material-ui/icons/Send";
 import CommentIcon from "@material-ui/icons/Comment";
 import CloseIcon from "@material-ui/icons/Close";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
-import Comments from "./Comments";
+import Comment from "./Comment";
 import InboxOutlinedIcon from '@material-ui/icons/InboxOutlined';
 import { CssTextField } from "../CreatePost/CreatePost";
 
@@ -91,6 +91,8 @@ export default function Post(props) {
   const [dislikes, setDislikes] = useState(0);
   const [comment, setComment] = useState("");
   const [sendingComment, setSendingComment] = useState(false);
+  const [isFetchingComments, setIsFetchingComments] = useState(true);
+  const [comments, setComments] = useState([])
 
   useEffect(() => {
     if (props.post_data !== null) {
@@ -140,8 +142,55 @@ export default function Post(props) {
         }
       })
       .catch(err => console.log(err))
+
+
+      const requestOptionsComments = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          post_id: props.post_data.post_id
+        }
+      };
+      setIsFetchingComments(true)
+      fetch(API_URL + "/get_commented_post_by_id", requestOptionsComments)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          setComments(data)
+          console.log(data)
+          setIsFetchingComments(false)
+        })
+        .catch(err => {
+          console.log(err);
+          setIsFetchingComments(false)
+        })
     }
   }, [props.post_data]);
+
+  useEffect(() => {
+    if (props.post_data) {
+      const requestOptionsComments = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          post_id: props.post_data.post_id
+        }
+      };
+      fetch(API_URL + "/get_commented_post_by_id", requestOptionsComments)
+        .then(res => res.json())
+        .then(data => {
+          setComments(data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }, [sendingComment])
+
   if (props.post_data === null) {
     return <Container className={styling.root}>
     <div style={{ margin: 'auto', width: "50%", marginTop: '20%' }}>
@@ -180,6 +229,7 @@ export default function Post(props) {
       } else {
         setComment('');
         setShowCommentBox(false);
+        setComments([...comments])
       }
       setSendingComment(false);
       console.log(data)
@@ -464,7 +514,13 @@ export default function Post(props) {
       </Row>
       <br />
       <Row>
-          <Comments postId={props.post_data.post_id} />
+        {isFetchingComments ? <><CircularProgress /> </>
+        : 
+          <Comment comments={comments} />
+        }
+          
+          {//key={props.post_data.post_id} postId={props.post_data.post_id}}
+          }
       </Row>
       <br />
       <Snackbar

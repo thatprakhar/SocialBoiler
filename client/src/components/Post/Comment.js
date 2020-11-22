@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
   },
   inline: {
     display: "inline",
-    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    wordWrap: 'break-word'
   }
 }));
 
@@ -29,11 +30,10 @@ const Comment = ({ comments }) => {
   const classes = useStyles();
   return (
     <List className={classes.root}>
-      {comments.sort((a, b) => {
+      {comments && comments.sort((a, b) => {
         if (a.id < b.id) return 1;
         return -1
       }).map(comment => {
-        console.log("Comment", comment);
         return (
           <React.Fragment key={comment.id}>
             <ListItem key={comment.id} alignItems="flex-start">
