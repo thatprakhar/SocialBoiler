@@ -303,7 +303,7 @@ def delete_topics_data():
     session.close()
 
 
-def fetch_comments_by_user():
+def fetch_comments_by_user(username):
     session = Session()
 
     try:

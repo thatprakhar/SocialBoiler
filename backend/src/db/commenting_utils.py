@@ -6,12 +6,19 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from src.db.crud import fetch_rows, fetch_comments_by_user, update_table, fetch_post
 from src.db.models import Comments, Posts
 
-def save_comment(username, post_id, comment, bookmarked):
+def save_comment(username, post_id, comment):
     #check for an empty comment
     if len(comment) == 0:
         return False
 
-    #duplicate comments are allowed
+    #duplicate comments are not allowed
+    user_df = fetch_comments_by_user(username)
+    comment_copy = comment.lower()
+    if not user_df.empty:
+        user_df['comment'] = user_df['comment'].str.lower()
+        if comment_copy in user_df['comment'].values:
+            return False
+
 
     data = {
         "username": [username],
@@ -22,6 +29,7 @@ def save_comment(username, post_id, comment, bookmarked):
 
     new_df = pd.DataFrame(data)
     update_table(new_df, Comments)
+    return True
 
 
 def get_commented_posts_by_username(username):
