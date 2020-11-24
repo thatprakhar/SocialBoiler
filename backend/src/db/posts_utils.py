@@ -220,9 +220,14 @@ def get_all_topics():
 def bookmark_or_debookmark_post(post_id, username):
     # get the post associated with the post id
     df = get_post_by_id(post_id)
-    
+    print(df)
+
+    if df[0]['bookmarked'] is None:
+        df[0]['bookmarked'] = []
+        df[0]['bookmarked'].append(username)
+
     # if the username is already bookmarked, remove the username, (the user wants to remove bookmark)
-    if username in df[0]['bookmarked']:
+    elif username in df[0]['bookmarked']:
         df[0]['bookmarked'].remove(username)
     else:
         df[0]['bookmarked'].append(username)
