@@ -8,6 +8,7 @@ import {
 import queryString from 'query-string';
 import "./PostDetails.css";
 import UserlinePost from "../Userline/UserlinePost";
+import ProfileHeader from '../Profile/ProfileHeader';
 
 const API_URL = "http://127.0.0.1:5000";
 
@@ -80,7 +81,7 @@ useEffect(()=>{
     .then(data => {
       console.log("get post comments back is: ", data);
       if (data !== "failed") {
-        setComments(data)
+        setComments(data.sort((a,b)=>b.id-a.id))
         // setLoading(false);
         setError(null);
         
@@ -100,6 +101,7 @@ useEffect(()=>{
 
   return localStorage.getItem("username") ? (
     <div className={localStorage.getItem("theme")+"__userline"}>
+      <ProfileHeader/>
       {loading ? (
         <div class="text-center" id="loader">
           <div class="spinner-border" role="status">

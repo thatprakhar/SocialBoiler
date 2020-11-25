@@ -16,7 +16,7 @@ let profile_user;
 
 function SavedPosts() {
   const [savedPosts, setSavedPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
 
@@ -40,12 +40,12 @@ useEffect(()=>{
     .then(data => {
       console.log("get saved post request back is: ", data);
       if (data !== "failed") {
-        // setOwnPosts(data.sort((a, b) => b.post_id - a.post_id));
-        // setLoading(false);
-        // setError(null);
+        setSavedPosts(data.sort((a,b)=>b.post_id-a.post_id));
+        setLoading(false);
+        setError(null);
       } else {
-        alert(data);
-        // setError(data);
+        //alert(data);
+        setError(data);
       }
     })
     .catch(err => {
