@@ -245,10 +245,9 @@ def get_bookmarked_posts_by_user(username):
 
     df = df.to_dict("records")
     filtered_dict = []
+    
     for record in df:
-        if username in record['bookmarked']:
+        if record['bookmarked'] is not None and username in record['bookmarked']:
             filtered_dict.append(record)
 
     return filtered_dict
-
-#print(get_bookmarked_posts_by_user("onur"))
