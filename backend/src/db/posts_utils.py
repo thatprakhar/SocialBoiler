@@ -130,6 +130,7 @@ def get_followings_posts(username):
     users_following = users_following.iloc[0]['following']
     result = []
 
+    
     #if the user is following anyone fetch records
     if users_following:
         for user in users_following:
@@ -138,6 +139,7 @@ def get_followings_posts(username):
 
     topics_following = fetch_topics_following(username)
     topics_following = topics_following.iloc[0]['topics_following']
+
     #if the user is following anyone fetch topics
     if topics_following:
         #fetch posts associated with the topics
@@ -145,8 +147,9 @@ def get_followings_posts(username):
             result += fetch_posts_with_topic(topic).to_dict("records")
 
     #convert to dataframe to easily drop duplicates from combined df
-    result = pd.DataFrame(result).drop_duplicates()
+    result = pd.DataFrame(result).drop_duplicates(subset='date_created', keep='first')
     return result.to_dict('records')
+
 
 def get_voted_posts_by_user(username):
     user_votes = fetch_votes_by_user(username)
