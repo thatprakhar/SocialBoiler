@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Login from "../Login/Login";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
-import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
+import { makeStyles, Grid, Hidden, IconButton, Snackbar } from "@material-ui/core";
 import {
   BrowserRouter as Router,
   Route,
@@ -13,6 +13,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ProfileHeader from "../Profile/ProfileHeader";
+import { Alert } from "react-bootstrap"
 
 const createStyles = makeStyles(theme => ({
   feed: {
@@ -55,6 +56,8 @@ export default function Home(props) {
   const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showError, setShowError] = useState(false);
+
 
   const API_URL = "http://127.0.0.1:5000";
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
@@ -103,6 +106,7 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     } else if (props.page_type === "search_posts") {
       setPosts([]);
@@ -128,6 +132,7 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     } else if (props.page_type === "home") {
       setPosts([]);
@@ -150,6 +155,7 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     }
   }, [location.search, props.page_type]);
@@ -180,7 +186,7 @@ export default function Home(props) {
       <Router>
         <Route path="/login" component={Login}></Route>
         <Route exact path="/home">
-          {localStorage.getItem("auth_token") ? (
+          {localStorage.getItem("username") ? (
             <Redirect to="/home" />
           ) : (
             <Redirect to="/login" />
@@ -235,6 +241,19 @@ export default function Home(props) {
           </Hidden>
         )}
       </div>
+      <Snackbar
+        open={showError}
+        autoHideDuration={6000}
+        onClose={() => setShowError(!showError)}
+      >
+        <Alert
+          onClose={() => setShowError(!showError)}
+          variant="danger"
+          dismissible
+        >
+          An error occured
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

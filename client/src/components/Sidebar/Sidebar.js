@@ -16,7 +16,8 @@ const createStyles = makeStyles(theme => ({
   overlay: {
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
     height: '100vw',
-    width: window.innerWidth <= 720 ? window.innerWidth : '350px'
+    width: window.innerWidth <= 720 ? window.innerWidth : '350px',
+    wordWrap: 'break-word'
   },
   inline: {
     display: "inline",
@@ -127,6 +128,7 @@ export default function App(props) {
   }
 
   useEffect(() => {
+    if (props.topic === "") return
     setFetchedFollowState(false);
     const requestOptions = {
       method: "GET",
@@ -255,6 +257,12 @@ export default function App(props) {
           </li>
         ) : null}
         {posts}
+        {props.posts.length > 0 &&  
+        <Badge variant="success">
+          <Typography variant="caption">
+            That's all the posts you've got!
+          </Typography>
+        </Badge>}
       </List>
     </div>
   );
