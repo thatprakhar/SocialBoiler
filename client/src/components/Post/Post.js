@@ -93,6 +93,7 @@ export default function Post(props) {
   const [sendingComment, setSendingComment] = useState(false);
   const [isFetchingComments, setIsFetchingComments] = useState(true);
   const [comments, setComments] = useState([])
+  const [isFetchingSavedStatus, setIsFetchingSavedStatus] = useState(false);
 
   useEffect(() => {
     if (props.post_data !== null) {
@@ -100,6 +101,9 @@ export default function Post(props) {
       setDownVoted(props.post_data.downVoted);
       setLikes(props.post_data.likes);
       setDislikes(props.post_data.dislikes);
+      setComments([]);
+      setSaved(props.post_data.bookmarked.some(user => user === localStorage.getItem("username")));
+
       const requestOptions = {
         method: "GET",
         headers: {
@@ -143,6 +147,24 @@ export default function Post(props) {
       })
       .catch(err => console.log(err))
 
+      setIsFetchingSavedStatus(true);
+      const requestOptionsSaved = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          username: localStorage.getItem("username"),
+          auth_token: localStorage.getItem("auth_token"),
+          post_id: props.post_data.post_id
+        }
+      };
+      fetch(API_URL + "/get_post_by_id", requestOptionsSaved)
+      .then(res => res.json())
+      .then(data => {
+        setIsFetchingSavedStatus(false)
+        setSaved(data[0].bookmarked.some(user => user === localStorage.getItem("username")))
+      })
+      .catch(err => console.log(err))
+
 
       const requestOptionsComments = {
         method: "GET",
@@ -157,13 +179,15 @@ export default function Post(props) {
       fetch(API_URL + "/get_commented_post_by_id", requestOptionsComments)
         .then(res => res.json())
         .then(data => {
-          console.log(data);
+          console.log(data)
           setComments(data)
           console.log(data)
+          setIsFetchingSavedStatus(false)
           setIsFetchingComments(false)
         })
         .catch(err => {
           console.log(err);
+          setIsFetchingSavedStatus(false)
           setIsFetchingComments(false)
         })
     }
@@ -189,6 +213,7 @@ export default function Post(props) {
           console.error(err)
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sendingComment])
 
   if (props.post_data === null) {
@@ -431,7 +456,7 @@ export default function Post(props) {
 
       <Row style={{ marginTop: 20 }}>
         <Col lg={true}>
-        {loadingButtons ? <CircularProgress color="primary" size={20}/>: 
+        {loadingButtons || isFetchingSavedStatus ? <CircularProgress color="primary" size={20}/>: 
         <ButtonGroup>
             <IconButton onClick={upVotePost} disabled={loadingButtons}>
               <ThumbUpAltIcon
