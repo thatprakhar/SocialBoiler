@@ -195,8 +195,12 @@ export default function Home(props) {
       </Router>
       <ProfileHeader/>
       <div className={styling.main}>
-        {(selectedPost !== null || showCreateScreen === true) &&
-        window.innerWidth <= 600 ? null : (
+
+         {
+          // start small screen
+         }
+        <Hidden mdUp>
+        {(selectedPost !== null || showCreateScreen === true) ? null : (
           <Sidebar
             className={styling.sidebar}
             posts={posts}
@@ -209,15 +213,40 @@ export default function Home(props) {
             }
           />
         )}
-        {!showCreateScreen && (
-          <IconButton
-            className={styling.addButton}
-            onClick={e => setShowCreateScreen(!showCreateScreen)}
-          >
-            <AddCircleIcon className={styling.addButtonIcon} color="primary" />
-          </IconButton>
+
+        {showCreateScreen && props.page_type === "home" && (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
         )}
-        <Hidden mdDown>
+
+        {selectedPost !== null && (
+          <Hidden mdUp>
+            <Post post_data={selectedPost} removePost={removePost}></Post>
+          </Hidden>
+        )}
+
+        </Hidden>
+        {
+          // end small screen
+        }
+
+        {
+          // begin large screens
+        }
+
+        <Hidden smDown>
+          <Sidebar
+            className={styling.sidebar}
+            posts={posts}
+            parentHandler={parentHandler}
+            page_type={props.page_type}
+            topic={
+              props.page_type === "search_posts"
+                ? new URLSearchParams(location.search).get("topic")
+                : ""
+            }
+          />
           {showCreateScreen ? (
             <CreatePost
               toggleView={() => setShowCreateScreen(!showCreateScreen)}
@@ -228,18 +257,20 @@ export default function Home(props) {
             </Grid>
           )}
         </Hidden>
-        <Hidden mdUp>
-          {showCreateScreen && props.page_type === "home" && (
-            <CreatePost
-              toggleView={() => setShowCreateScreen(!showCreateScreen)}
-            />
-          )}
-        </Hidden>
-        {selectedPost !== null && (
-          <Hidden mdUp>
-            <Post post_data={selectedPost} removePost={removePost}></Post>
-          </Hidden>
+        {
+          // end large screensc
+        }
+
+
+        {!showCreateScreen && (
+          <IconButton
+            className={styling.addButton}
+            onClick={e => setShowCreateScreen(!showCreateScreen)}
+          >
+            <AddCircleIcon className={styling.addButtonIcon} color="primary" />
+          </IconButton>
         )}
+
       </div>
       <Snackbar
         open={showError}

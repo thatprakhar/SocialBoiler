@@ -257,12 +257,12 @@ export default function App(props) {
           </li>
         ) : null}
         {posts}
-        {props.posts.length > 0 &&  
+        {props.posts.length > 0 && 
+        <h2>
         <Badge variant="success">
-          <Typography variant="caption">
             That's all the posts you've got!
-          </Typography>
-        </Badge>}
+        </Badge>
+        </h2>}
       </List>
     </div>
   );
