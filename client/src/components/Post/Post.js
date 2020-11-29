@@ -102,8 +102,9 @@ export default function Post(props) {
       setLikes(props.post_data.likes);
       setDislikes(props.post_data.dislikes);
       setComments([]);
-      setSaved(props.post_data.bookmarked.some(user => user === localStorage.getItem("username")));
-
+      if (props.post_data.bookmarked && Array.isArray(props.post_data.bookmarked)) {
+        setSaved(props.post_data.bookmarked.some(user => user === localStorage.getItem("username")));
+      }
       const requestOptions = {
         method: "GET",
         headers: {
