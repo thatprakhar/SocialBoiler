@@ -130,7 +130,7 @@ def get_followings_posts(username):
     users_following = users_following.iloc[0]['following']
     result = []
 
-    
+
     #if the user is following anyone fetch records
     if users_following:
         for user in users_following:
@@ -223,7 +223,6 @@ def get_all_topics():
 def bookmark_or_debookmark_post(post_id, username):
     # get the post associated with the post id
     df = get_post_by_id(post_id)
-    print(df)
 
     if df[0]['bookmarked'] is None:
         df[0]['bookmarked'] = []
@@ -234,7 +233,7 @@ def bookmark_or_debookmark_post(post_id, username):
         df[0]['bookmarked'].remove(username)
     else:
         df[0]['bookmarked'].append(username)
-    
+
     update_post_bookmarked(post_id, df[0]['bookmarked'])
 
 
@@ -245,9 +244,22 @@ def get_bookmarked_posts_by_user(username):
 
     df = df.to_dict("records")
     filtered_dict = []
-    
+
     for record in df:
         if record['bookmarked'] is not None and username in record['bookmarked']:
             filtered_dict.append(record)
 
     return filtered_dict
+
+
+def remove_user_from_bookmared(username):
+    df = fetch_rows(Posts)
+    if df is None or df.empty:
+        return
+
+    # if the username is already bookmarked, remove the username, (the user wants to remove bookmark)
+    for _, row in df.iterrows():
+        if row['bookmarked'] is not None:
+            if username in row['bookmarked']:
+                row['bookmarked'].remove(username)
+                update_post_bookmarked(row['post_id'], row['bookmarked'])
