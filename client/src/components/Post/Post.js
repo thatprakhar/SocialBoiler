@@ -161,7 +161,9 @@ export default function Post(props) {
       .then(res => res.json())
       .then(data => {
         setIsFetchingSavedStatus(false)
-        setSaved(data[0].bookmarked.some(user => user === localStorage.getItem("username")))
+        if (data[0].bookmarked && Array.isArray(data[0].bookmarked)) {
+          setSaved(data[0].bookmarked.some(user => user === localStorage.getItem("username")))
+        }
         setLikes(data[0].likes)
         setDislikes(data[0].dislikes)
       })
