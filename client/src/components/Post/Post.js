@@ -162,6 +162,8 @@ export default function Post(props) {
       .then(data => {
         setIsFetchingSavedStatus(false)
         setSaved(data[0].bookmarked.some(user => user === localStorage.getItem("username")))
+        setLikes(data[0].likes)
+        setDislikes(data[0].dislikes)
       })
       .catch(err => console.log(err))
 
@@ -480,10 +482,10 @@ export default function Post(props) {
       </Row>
       <br />
       <Row>
-          <Col xs={1}>
+          <Col xs={3} lg={3}>
             <Badge variant="primary">Likes: {likes}</Badge>
           </Col>
-          <Col xs={1}>
+          <Col xs={3} lg={3}>
             <Badge variant="danger">Dislikes: {dislikes}</Badge>
           </Col>
       </Row>
