@@ -22,7 +22,6 @@ const createStyles = makeStyles(theme => ({
     maxWidth: window.innerWidth,
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
-    flex: 8
   },
   main: {
     display: "flex",
@@ -35,7 +34,8 @@ const createStyles = makeStyles(theme => ({
     // width: 400,
     marginLeft: 100,
     // background: "red",
-    flex: 1
+    overflowY: 'scroll',
+    height: '55px'
   },
   addButton: {
     position: "fixed",

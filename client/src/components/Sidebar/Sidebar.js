@@ -15,8 +15,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const createStyles = makeStyles(theme => ({
   overlay: {
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
-    height: '100%',
     width: '100%',
+    height: window.innerHeight,
     // width: window.innerWidth <= 720 ? window.innerWidth : '350px',
     wordWrap: 'break-word'
   },
