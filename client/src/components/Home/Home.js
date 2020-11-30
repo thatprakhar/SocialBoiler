@@ -22,7 +22,7 @@ const createStyles = makeStyles(theme => ({
     maxWidth: window.innerWidth,
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
-    flex: 5
+    flex: 8
   },
   main: {
     display: "flex",
@@ -31,10 +31,11 @@ const createStyles = makeStyles(theme => ({
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   sidebar: {
-    height: "100vw",
-    width: 400,
+    // height: "100vw",
+    // width: 400,
     marginLeft: 100,
-    background: "red"
+    // background: "red",
+    flex: 1
   },
   addButton: {
     position: "fixed",

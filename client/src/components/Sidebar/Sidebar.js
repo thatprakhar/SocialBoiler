@@ -15,8 +15,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const createStyles = makeStyles(theme => ({
   overlay: {
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
-    height: '100vw',
-    width: window.innerWidth <= 720 ? window.innerWidth : '350px',
+    height: '100%',
+    width: '100%',
+    // width: window.innerWidth <= 720 ? window.innerWidth : '350px',
     wordWrap: 'break-word'
   },
   inline: {
@@ -34,8 +35,7 @@ const createStyles = makeStyles(theme => ({
     position: "relative",
     overflow: "auto",
     width: "100%",
-    maxHeight: window.innerHeight,
-    maxWidth: "50ch"
+    height: '100%'
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -260,7 +260,7 @@ export default function App(props) {
         {props.posts.length > 0 && 
         <h2>
         <Badge variant="success">
-            That's all the posts you've got!
+            That's all the posts you've got! ({props.posts.length} posts)
         </Badge>
         </h2>}
       </List>

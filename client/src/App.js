@@ -22,7 +22,6 @@ function App() {
     <div className={"App"+" "+localStorage.getItem("theme")}>
     
       <Router>
-        
         <Switch>
           <Route path="/home">
             <Home page_type="home"></Home>

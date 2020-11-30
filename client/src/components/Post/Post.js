@@ -28,6 +28,7 @@ import BookmarkIcon from "@material-ui/icons/Bookmark";
 import Comment from "./Comment";
 import InboxOutlinedIcon from '@material-ui/icons/InboxOutlined';
 import { CssTextField } from "../CreatePost/CreatePost";
+import { timeSince } from "./Comment";
 
 const createStyles = makeStyles(theme => ({
   root: {
@@ -443,7 +444,7 @@ export default function Post(props) {
                 </Link>
               </div>
               <Typography variant="caption">
-                Posted on {props.post_data.date_created.slice(0, -7)}
+                Posted {timeSince(new Date(props.post_data.date_created))} ago
               </Typography>
             </div>
           </div>
