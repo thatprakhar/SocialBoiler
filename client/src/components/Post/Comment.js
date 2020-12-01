@@ -71,7 +71,7 @@ const Comment = ({ comments }) => {
               <ListItemText
                 primary={
                   <Typography className={classes.fonts}>
-                    {comment.username} - {timeSince(new Date(comment.post_time))} ago
+                    {comment.username}
                   </Typography>
                 }
                 secondary={
