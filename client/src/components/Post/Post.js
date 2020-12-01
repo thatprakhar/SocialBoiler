@@ -105,6 +105,8 @@ export default function Post(props) {
       setComments([]);
       if (props.post_data.bookmarked && Array.isArray(props.post_data.bookmarked)) {
         setSaved(props.post_data.bookmarked.some(user => user === localStorage.getItem("username")));
+      } else {
+        setSaved(false)
       }
       const requestOptions = {
         method: "GET",
@@ -165,6 +167,8 @@ export default function Post(props) {
         setIsFetchingSavedStatus(false)
         if (data[0].bookmarked && Array.isArray(data[0].bookmarked)) {
           setSaved(data[0].bookmarked.some(user => user === localStorage.getItem("username")))
+        } else {
+          setSaved(false)
         }
         setLikes(data[0].likes)
         setDislikes(data[0].dislikes)
