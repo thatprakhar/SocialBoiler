@@ -16,7 +16,8 @@ from src.db.crud import (
     fetch_posts_with_topic,
     fetch_users_following,
     fetch_topics_following,
-    fetch_votes_by_user
+    fetch_votes_by_user,
+    update_post_bookmarked
 )
 from src.db.models import Posts, Likes, Topics
 
@@ -129,6 +130,7 @@ def get_followings_posts(username):
     users_following = users_following.iloc[0]['following']
     result = []
 
+
     #if the user is following anyone fetch records
     if users_following:
         for user in users_following:
@@ -137,6 +139,7 @@ def get_followings_posts(username):
 
     topics_following = fetch_topics_following(username)
     topics_following = topics_following.iloc[0]['topics_following']
+
     #if the user is following anyone fetch topics
     if topics_following:
         #fetch posts associated with the topics
@@ -144,8 +147,9 @@ def get_followings_posts(username):
             result += fetch_posts_with_topic(topic).to_dict("records")
 
     #convert to dataframe to easily drop duplicates from combined df
-    result = pd.DataFrame(result).drop_duplicates()
+    result = pd.DataFrame(result).drop_duplicates(subset='date_created', keep='first')
     return result.to_dict('records')
+
 
 def get_voted_posts_by_user(username):
     user_votes = fetch_votes_by_user(username)
@@ -205,6 +209,8 @@ def get_downvoted_posts_by_user(username):
 
     return result
 
+def get_post_by_id(post_id):
+    return fetch_post(Posts, post_id).to_dict("records")
 
 def get_all_topics():
     df = fetch_rows(Topics)
@@ -213,3 +219,47 @@ def get_all_topics():
 
     df = df['topic_title']
     return df.to_dict()
+
+def bookmark_or_debookmark_post(post_id, username):
+    # get the post associated with the post id
+    df = get_post_by_id(post_id)
+
+    if df[0]['bookmarked'] is None:
+        df[0]['bookmarked'] = []
+        df[0]['bookmarked'].append(username)
+
+    # if the username is already bookmarked, remove the username, (the user wants to remove bookmark)
+    elif username in df[0]['bookmarked']:
+        df[0]['bookmarked'].remove(username)
+    else:
+        df[0]['bookmarked'].append(username)
+
+    update_post_bookmarked(post_id, df[0]['bookmarked'])
+
+
+def get_bookmarked_posts_by_user(username):
+    df = fetch_rows(Posts)
+    if df is None or df.empty:
+        return []
+
+    df = df.to_dict("records")
+    filtered_dict = []
+
+    for record in df:
+        if record['bookmarked'] is not None and username in record['bookmarked']:
+            filtered_dict.append(record)
+
+    return filtered_dict
+
+
+def remove_user_from_bookmared(username):
+    df = fetch_rows(Posts)
+    if df is None or df.empty:
+        return
+
+    # if the username is already bookmarked, remove the username, (the user wants to remove bookmark)
+    for _, row in df.iterrows():
+        if row['bookmarked'] is not None:
+            if username in row['bookmarked']:
+                row['bookmarked'].remove(username)
+                update_post_bookmarked(row['post_id'], row['bookmarked'])

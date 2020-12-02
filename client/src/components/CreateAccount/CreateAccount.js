@@ -32,7 +32,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "white"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -48,6 +49,11 @@ const useStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff"
+  },
+  overlay: {
+    background: 'white',
+    width: '100%',
+    height: '100%'
   }
 }));
 
@@ -98,6 +104,7 @@ export default function SignUp() {
   }
 
   return (
+    <div className={classes.overlay}>
     <Container component="main" maxWidth="xs">
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
@@ -125,18 +132,6 @@ export default function SignUp() {
                 onChange={e => setUsername(e.target.value)}
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -192,5 +187,6 @@ export default function SignUp() {
         <Copyright />
       </Box>
     </Container>
+    </div>
   );
 }

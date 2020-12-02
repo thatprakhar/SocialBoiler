@@ -4,15 +4,31 @@ import {
   IconButton,
   FormControlLabel,
   Switch,
-  Typography
+  Typography,
+  withStyles
 } from "@material-ui/core";
-import { Container, Row, Alert, Button as ButtonRB } from "react-bootstrap";
+import { Container, Row, Col, Alert, Button as ButtonRB } from "react-bootstrap";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField, Button } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
-
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+export const CssTextField = withStyles({
+  root: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+      },
+      '&:hover fieldset': {
+        borderColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'blue' : 'white' : 'blue',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'blue' : 'white' : 'blue',
+      }
+    }
+  },
+})(TextField);
+
 
 const createStyles = makeStyles(theme => ({
   root: {
@@ -20,7 +36,9 @@ const createStyles = makeStyles(theme => ({
     background: "white",
     borderRadius: 10,
     width: "100vw",
-    maxHeight: window.innerHeight
+    maxHeight: window.innerHeight,
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   closeIcon: {
     fontSize: 40
@@ -43,6 +61,9 @@ const createStyles = makeStyles(theme => ({
   },
   imageInput: {
     display: "none"
+  },
+  input: {
+    backgroundColor: 'white'
   }
 }));
 
@@ -142,9 +163,6 @@ export default function Post(props) {
   }
   return (
     <Container className={styling.root}>
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <IconButton onClick={props.toggleView} className={styling.closeButton}>
         <CloseIcon className={styling.closeIcon} color="secondary" />
       </IconButton>
@@ -154,8 +172,11 @@ export default function Post(props) {
           <br />
           <Row>
             {" "}
-            <TextField
+            <CssTextField
               required
+              InputProps={{
+                className: styling.input
+              }}
               id="outlined-required"
               label="Post Title"
               variant="outlined"
@@ -170,8 +191,11 @@ export default function Post(props) {
           </Row>
           <br />
           <Row>
-            <TextField
+            <CssTextField
               id="outlined"
+              InputProps={{
+                className: styling.input
+              }}
               label="Post Body"
               variant="outlined"
               style={{ width: "100%" }}
@@ -186,8 +210,11 @@ export default function Post(props) {
           </Row>
           <br />
           <Row>
-            <TextField
+            <CssTextField
               required
+              InputProps={{
+                className: styling.input
+              }}
               id="outlined-required"
               label="Post Topic"
               variant="outlined"
@@ -253,7 +280,10 @@ export default function Post(props) {
           </Row>
           <br />
           <Row>
-            <Button
+          <Col>
+          {loading ? <CircularProgress color="inherit" />
+          :
+          <Button
               color="primary"
               type="submit"
               variant="contained"
@@ -261,6 +291,8 @@ export default function Post(props) {
             >
               Post
             </Button>
+          }
+          </Col>
           </Row>
           <br />
           <br />

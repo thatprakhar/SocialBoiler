@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row, Modal, Button, Alert } from "react-bootstrap";
 import ProfileCard from "./ProfileCard";
-import ProfileHeader from "./ProfileHeader";
 import ProfileInfo from "./ProfileInfo";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 
 import "./Profile.css";
+import ProfileHeader from "./ProfileHeader";
 
 const API_URL = "http://127.0.0.1:5000";
 
@@ -283,8 +283,8 @@ function Profile() {
   //check if user is logged in
 
   return (
-    <div className="profile">
-      <ProfileHeader />
+    <div className={localStorage.getItem("theme")}>
+      <ProfileHeader/>
       <Container fluid>
         <Row>
           <Col md={4}>

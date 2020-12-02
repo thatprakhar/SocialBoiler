@@ -20,15 +20,17 @@ function UserlinePost({
   post_id,
   anonymous,
   isUserPosts,
+  isPostDetails,
+  comments
 }) {
   let displayName;
   if(anonymous==="true" && localStorage.getItem("username")!==username && !isUserPosts){
     displayName=<Badge variant="light">Posted by: Anonymous</Badge>;
   }
-  else if(anonymous=="true" && localStorage.getItem("username")!==username && isUserPosts){
+  else if(anonymous==="true" && localStorage.getItem("username")!==username && isUserPosts){
     displayName=null;
   }
-  else if(anonymous=="true" && localStorage.getItem("username")==username){
+  else if(anonymous==="true" && localStorage.getItem("username")===username){
     displayName=<Badge variant="light">Posted by: {username} (Anonymous to others)</Badge>;
   }
   else {
@@ -53,7 +55,7 @@ function UserlinePost({
 
             <p className="post_text">{description}</p>  
 
-            {image != "null" ? (
+            {image !== "null" ? (
               <Image className="post_image" src={image} rounded />
             ) : null}
 
@@ -71,6 +73,30 @@ function UserlinePost({
                 </p>
               </div>
             </div>
+
+            {isPostDetails? (
+              <div className="comment_container">
+                <h5>
+                  <Badge variant="info">Comments:</Badge>
+                </h5>
+                {comments.length?(
+                  <div className="comment_list">
+                    {comments.map(comment=>(
+                      <div className="comment_item">
+                        <p>{comment.comment}</p>
+                        <Badge variant="light">Commented by: {comment.username}</Badge>
+                    </div> 
+                    ))}
+                    
+                </div>
+                ):(
+                  <h6>No comments yet...</h6>
+                )}
+                
+              </div>
+              
+            ):(null)
+            }
           </Jumbotron>
         </a>
       </Col>

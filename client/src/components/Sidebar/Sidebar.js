@@ -10,24 +10,32 @@ import {
   Snackbar
 } from "@material-ui/core";
 import { Button, Badge, Alert } from "react-bootstrap";
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createStyles = makeStyles(theme => ({
+  overlay: {
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
+    width: '100%',
+    height: '100%',
+    // width: window.innerWidth <= 720 ? window.innerWidth : '350px',
+    wordWrap: 'break-word'
+  },
   inline: {
-    display: "inline"
+    display: "inline",
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   post: {
     marginTop: 50,
-    width: "100%"
+    width: "100%",
+    overflowWrap: 'normal',
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
   root: {
     position: "relative",
     overflow: "auto",
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
-    maxHeight: window.innerHeight,
-    maxWidth: "50ch"
+    height: '100%'
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -36,6 +44,11 @@ const createStyles = makeStyles(theme => ({
   notif: {
     zIndex: theme.zIndex.drawer + 1,
     position: "absolute"
+  },
+  description: {
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    wordWrap: 'break-word',
+    width: "100%"
   }
 }));
 
@@ -44,6 +57,7 @@ export default function App(props) {
   const [loading, setLoading] = useState(false);
   const [showSuccessFollow, setShowSuccessFollow] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [fetchedFollowState, setFetchedFollowState] = useState(false);
   const [topicFollowed, setTopicFollowed] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -114,6 +128,8 @@ export default function App(props) {
   }
 
   useEffect(() => {
+    if (props.topic === "") return
+    setFetchedFollowState(false);
     const requestOptions = {
       method: "GET",
       headers: {
@@ -127,15 +143,19 @@ export default function App(props) {
       .then(res => res.json())
       .then(data => {
         setTopicFollowed(data);
+        setFetchedFollowState(true);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+        setFetchedFollowState(true);
+      });
   }, [props.topic]);
 
   function post_view(post_data) {
     return (
       <Button
         style={{ width: "100%" }}
-        variant="light"
+        variant={localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'light' : 'dark': 'light'}
         onClick={() => parentHandle(post_data)}
       >
         <ListItem alignItems="flex-start">
@@ -154,9 +174,9 @@ export default function App(props) {
                 >
                   {post_data.anonymous === "false" ? post_data.username : post_data.username === localStorage.getItem("username") ? post_data.username + "(Anonymous to others)": "Anonymous"} {" - "}
                 </Typography>
-                {post_data.description.substr(0, 50)}
+                <span className={styling.description}>{post_data.description.substr(0, 75)}</span>
                 {"..."}
-                <Badge variant="dark">{post_data.topics}</Badge>
+                <Badge variant={localStorage.getItem("theme") ? localStorage.getItem("theme") === 'Light' ? "dark" : "light" : "dark"}>{post_data.topics}</Badge>
               </React.Fragment>
             }
           />
@@ -166,12 +186,18 @@ export default function App(props) {
   }
 
   function topic_view(topic) {
+    if (loading) {
+      return  <div style={{ textAlign: 'center' }}>
+      <CircularProgress color="inherit" fontSize={24} />
+      </div>
+    }
     if (topicFollowed === false) {
       return (
         <Button
           variant="success"
           style={{ width: "100%" }}
           onClick={followTopic}
+          disabled={!fetchedFollowState}
         >
           Follow <Badge variant="info">{topic}</Badge>
         </Button>
@@ -182,6 +208,7 @@ export default function App(props) {
           variant="danger"
           style={{ width: "100%" }}
           onClick={unfollowTopic}
+          disabled={!fetchedFollowState}
         >
           Unfollow <Badge variant="info">{topic}</Badge>
         </Button>
@@ -196,7 +223,7 @@ export default function App(props) {
     posts = <Badge variant="info"><Typography vairant="caption">Search for topics and people to view posts</Typography></Badge>
   }
   return (
-    <>
+    <div className={styling.overlay}>
       <Snackbar
         open={showSuccessFollow}
         autoHideDuration={6000}
@@ -223,9 +250,6 @@ export default function App(props) {
           An error occured
         </Alert>
       </Snackbar>
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <List className={styling.root}>
         {props.page_type === "search_posts" ? (
           <li>
@@ -233,7 +257,13 @@ export default function App(props) {
           </li>
         ) : null}
         {posts}
+        {props.posts.length > 0 && 
+        <h2>
+        <Badge variant="success">
+            That's all the posts you've got! ({props.posts.length} posts)
+        </Badge>
+        </h2>}
       </List>
-    </>
+    </div>
   );
 }

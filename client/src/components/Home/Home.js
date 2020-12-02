@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Login from "../Login/Login";
-import ProfileHeader from "../Profile/ProfileHeader";
 import Post from "../Post/Post";
 import Sidebar from "../Sidebar/Sidebar";
-import { makeStyles, Grid, Hidden, IconButton } from "@material-ui/core";
+import { makeStyles, Grid, Hidden, IconButton, Snackbar } from "@material-ui/core";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,24 +11,34 @@ import {
 } from "react-router-dom";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreatePost from "../CreatePost/CreatePost";
-import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ProfileHeader from "../Profile/ProfileHeader";
+import { Alert } from "react-bootstrap"
 
 const createStyles = makeStyles(theme => ({
+  bg: {
+    // background: 'red'
+  },
   feed: {
-    marginTop: 40,
-    maxHeight: window.innerHeight
+    marginTop: 0,
+    maxHeight: window.innerHeight - 30,
+    width: '100%',
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
   },
   main: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    maxHeight: window.innerHeight - 30,
+    maxWidth: window.innerWidth
   },
   sidebar: {
-    height: "100vw",
-    border: "1px solid red",
-    width: 400,
-    marginLeft: 100,
-    background: "red"
+    maxHeight: window.innerHeight - 30,
+    backgroundColor: "blue",
+    overflowY: 'scroll',
+    width: '45%'
   },
   addButton: {
     position: "fixed",
@@ -51,6 +60,8 @@ export default function Home(props) {
   const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showError, setShowError] = useState(false);
+
 
   const API_URL = "http://127.0.0.1:5000";
   // var post_view = posts.map(x => <Post key={x.postID} post_data={x}></Post>);
@@ -99,6 +110,7 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     } else if (props.page_type === "search_posts") {
       setPosts([]);
@@ -124,6 +136,7 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     } else if (props.page_type === "home") {
       setPosts([]);
@@ -146,41 +159,113 @@ export default function Home(props) {
         .catch(err => {
           console.log(err);
           setLoading(false);
+          setShowError(true)
         });
     }
   }, [location.search, props.page_type]);
 
+  if (loading) {
+    return (
+      <>
+      <ProfileHeader/>
+      <div className={styling.main}>
+        <Router>
+          <Route path="/login" component={Login}></Route>
+            <Route exact path="/home">
+              {localStorage.getItem("auth_token") ? (
+              <Redirect to="/home" />
+              ) : (
+                <Redirect to="/login" />
+              )}
+              </Route>
+          </Router>
+        <CircularProgress style={{ margin: 'auto', marginTop: '20%' }} color="primary" />
+      </div>
+      </>
+    )
+  }
+
   return (
-    <div>
+    <div className={styling.bg}>
       <Router>
         <Route path="/login" component={Login}></Route>
         <Route exact path="/home">
-          {localStorage.getItem("auth_token") ? (
+          {localStorage.getItem("username") ? (
             <Redirect to="/home" />
           ) : (
             <Redirect to="/login" />
           )}
         </Route>
       </Router>
-      <ProfileHeader />
-      <Backdrop className={styling.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <ProfileHeader/>
       <div className={styling.main}>
-        {(selectedPost !== null || showCreateScreen === true) &&
-        window.innerWidth <= 600 ? null : (
-          <Sidebar
-            className={styling.sidebar}
-            posts={posts}
-            parentHandler={parentHandler}
-            page_type={props.page_type}
-            topic={
-              props.page_type === "search_posts"
-                ? new URLSearchParams(location.search).get("topic")
-                : ""
-            }
-          />
+
+         {
+          // start small screen
+         }
+        <Hidden mdUp>
+        {(selectedPost !== null || showCreateScreen === true) ? null : (
+            <Sidebar
+              posts={posts}
+              parentHandler={parentHandler}
+              page_type={props.page_type}
+              topic={
+                props.page_type === "search_posts"
+                  ? new URLSearchParams(location.search).get("topic")
+                  : ""
+              }
+            />
         )}
+
+        {showCreateScreen && props.page_type === "home" && (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+        )}
+
+        {selectedPost !== null && !showCreateScreen && (
+          <Hidden mdUp>
+            <Post post_data={selectedPost} removePost={removePost}></Post>
+          </Hidden>
+        )}
+
+        </Hidden>
+        {
+          // end small screen
+        }
+
+        {
+          // begin large screens
+        }
+
+        <Hidden smDown>
+        <div className={styling.sidebar}>
+          <Sidebar
+              posts={posts}
+              parentHandler={parentHandler}
+              page_type={props.page_type}
+              topic={
+                props.page_type === "search_posts"
+                  ? new URLSearchParams(location.search).get("topic")
+                  : ""
+              }
+            />
+        </div>
+          {showCreateScreen ? (
+            <CreatePost
+              toggleView={() => setShowCreateScreen(!showCreateScreen)}
+            />
+          ) : (
+            <div className={styling.feed}>
+              <Post post_data={selectedPost}></Post>
+            </div>
+          )}
+        </Hidden>
+        {
+          // end large screensc
+        }
+
+
         {!showCreateScreen && (
           <IconButton
             className={styling.addButton}
@@ -189,30 +274,21 @@ export default function Home(props) {
             <AddCircleIcon className={styling.addButtonIcon} color="primary" />
           </IconButton>
         )}
-        <Hidden mdDown>
-          {showCreateScreen ? (
-            <CreatePost
-              toggleView={() => setShowCreateScreen(!showCreateScreen)}
-            />
-          ) : (
-            <Grid className={styling.feed}>
-              <Post post_data={selectedPost}></Post>
-            </Grid>
-          )}
-        </Hidden>
-        <Hidden mdUp>
-          {showCreateScreen && props.page_type === "home" && (
-            <CreatePost
-              toggleView={() => setShowCreateScreen(!showCreateScreen)}
-            />
-          )}
-        </Hidden>
-        {selectedPost !== null && (
-          <Hidden mdUp>
-            <Post post_data={selectedPost} removePost={removePost}></Post>
-          </Hidden>
-        )}
+
       </div>
+      <Snackbar
+        open={showError}
+        autoHideDuration={6000}
+        onClose={() => setShowError(!showError)}
+      >
+        <Alert
+          onClose={() => setShowError(!showError)}
+          variant="danger"
+          dismissible
+        >
+          An error occured
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

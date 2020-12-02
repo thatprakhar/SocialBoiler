@@ -101,6 +101,7 @@ export default function Login() {
           localStorage.setItem("auth_token", data.auth_token);
           localStorage.setItem("username", data.username);
           history.push("/home");
+          window.location.reload(false);
         }
       })
       .catch(err => {
@@ -109,7 +110,7 @@ export default function Login() {
         setErrorMessage("Could not connect to server");
       });
   }
-  if (localStorage.getItem("user")) {
+  if (localStorage.getItem("username")) {
     history.push("/home");
   }
 

@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from src.db.crud import update_table, fetch_rows, update_authentication_token, update_user_profile, delete_rows, update_user_credentials, update_profile_avatar, delete_account_likes, delete_topics_data, update_post_likes, delete_post_likes_or_comments
 
 from src.db.following_utils import remove_deleted_followings
-from src.db.posts_utils import get_posts, get_downvoted_posts_by_user, get_upvoted_posts_by_user
+from src.db.posts_utils import get_posts, get_downvoted_posts_by_user, get_upvoted_posts_by_user, remove_user_from_bookmared
 from src.db.models import User_Credentials,Profile_Page,Posts, Topics, Likes, Comments
 
 
@@ -115,6 +115,7 @@ def delete_user_account(username):
     remove_deleted_followings(username)
     delete_rows(User_Credentials, username)
     delete_rows(Profile_Page, username)
+    remove_user_from_bookmared(username)
 
     posts_to_deleted = get_posts(username)
     if not posts_to_deleted:
