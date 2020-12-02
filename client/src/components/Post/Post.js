@@ -35,8 +35,8 @@ const createStyles = makeStyles(theme => ({
     marginTop: 20,
     marignLeft: 20,
     borderRadius: 10,
-    width: "100vw",
-    height: window.innerHeight,
+    width: "100%",
+    maxHeight: '100%',
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
   },
@@ -76,7 +76,12 @@ const createStyles = makeStyles(theme => ({
   },
   buttonLoading: {
     fontSize: '12'
-  }
+  },
+  comments: {
+    height: '300px',
+    width: '100%',
+    overflowY: 'scroll'
+}
 }));
 
 export default function Post(props) {
@@ -459,7 +464,7 @@ export default function Post(props) {
         <Col style={{wordWrap: 'break-word'}} sm={12}>
           <Typography variant="body1" >{props.post_data.description}</Typography>
           {props.post_data.image !== "null" && (
-            <Image src={props.post_data.image} fluid />
+            <Image src={props.post_data.image} alt="An image" fluid />
           )}
         </Col>
       </Row>
@@ -543,7 +548,7 @@ export default function Post(props) {
       <Row>
           <Col>
             <Typography variant="h5">
-                Comments 
+                Comments ({comments.length})
             </Typography>
           </Col>
       </Row>
@@ -551,7 +556,9 @@ export default function Post(props) {
       <Row>
         {isFetchingComments ? <><CircularProgress /> </>
         : 
-          <Comment comments={comments} />
+          <div className={styling.comments}>
+            <Comment comments={comments} />
+          </div>
         }
           
           {//key={props.post_data.post_id} postId={props.post_data.post_id}}

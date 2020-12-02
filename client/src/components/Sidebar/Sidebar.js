@@ -16,7 +16,7 @@ const createStyles = makeStyles(theme => ({
   overlay: {
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? '#dbd8e3' : '#4b5d67' : '#dbd8e3',
     width: '100%',
-    height: window.innerHeight,
+    height: '100%',
     // width: window.innerWidth <= 720 ? window.innerWidth : '350px',
     wordWrap: 'break-word'
   },

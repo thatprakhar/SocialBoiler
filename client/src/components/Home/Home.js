@@ -16,10 +16,13 @@ import ProfileHeader from "../Profile/ProfileHeader";
 import { Alert } from "react-bootstrap"
 
 const createStyles = makeStyles(theme => ({
+  bg: {
+    // background: 'red'
+  },
   feed: {
     marginTop: 0,
-    maxHeight: "100vw",
-    maxWidth: window.innerWidth,
+    maxHeight: window.innerHeight - 30,
+    width: '100%',
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
     color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
   },
@@ -27,15 +30,15 @@ const createStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     backgroundColor: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'white' : '#363738' : 'white',
-    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black'
+    color: localStorage.getItem('theme') ? localStorage.getItem('theme') === 'Light' ? 'black' : 'white' : 'black',
+    maxHeight: window.innerHeight - 30,
+    maxWidth: window.innerWidth
   },
   sidebar: {
-    // height: "100vw",
-    // width: 400,
-    marginLeft: 100,
-    // background: "red",
+    maxHeight: window.innerHeight - 30,
+    backgroundColor: "blue",
     overflowY: 'scroll',
-    height: '55px'
+    width: '45%'
   },
   addButton: {
     position: "fixed",
@@ -183,7 +186,7 @@ export default function Home(props) {
   }
 
   return (
-    <div>
+    <div className={styling.bg}>
       <Router>
         <Route path="/login" component={Login}></Route>
         <Route exact path="/home">
@@ -202,17 +205,16 @@ export default function Home(props) {
          }
         <Hidden mdUp>
         {(selectedPost !== null || showCreateScreen === true) ? null : (
-          <Sidebar
-            className={styling.sidebar}
-            posts={posts}
-            parentHandler={parentHandler}
-            page_type={props.page_type}
-            topic={
-              props.page_type === "search_posts"
-                ? new URLSearchParams(location.search).get("topic")
-                : ""
-            }
-          />
+            <Sidebar
+              posts={posts}
+              parentHandler={parentHandler}
+              page_type={props.page_type}
+              topic={
+                props.page_type === "search_posts"
+                  ? new URLSearchParams(location.search).get("topic")
+                  : ""
+              }
+            />
         )}
 
         {showCreateScreen && props.page_type === "home" && (
@@ -221,7 +223,7 @@ export default function Home(props) {
             />
         )}
 
-        {selectedPost !== null && (
+        {selectedPost !== null && !showCreateScreen && (
           <Hidden mdUp>
             <Post post_data={selectedPost} removePost={removePost}></Post>
           </Hidden>
@@ -237,25 +239,26 @@ export default function Home(props) {
         }
 
         <Hidden smDown>
+        <div className={styling.sidebar}>
           <Sidebar
-            className={styling.sidebar}
-            posts={posts}
-            parentHandler={parentHandler}
-            page_type={props.page_type}
-            topic={
-              props.page_type === "search_posts"
-                ? new URLSearchParams(location.search).get("topic")
-                : ""
-            }
-          />
+              posts={posts}
+              parentHandler={parentHandler}
+              page_type={props.page_type}
+              topic={
+                props.page_type === "search_posts"
+                  ? new URLSearchParams(location.search).get("topic")
+                  : ""
+              }
+            />
+        </div>
           {showCreateScreen ? (
             <CreatePost
               toggleView={() => setShowCreateScreen(!showCreateScreen)}
             />
           ) : (
-            <Grid className={styling.feed}>
+            <div className={styling.feed}>
               <Post post_data={selectedPost}></Post>
-            </Grid>
+            </div>
           )}
         </Hidden>
         {
