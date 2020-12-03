@@ -38,10 +38,10 @@ useEffect(()=>{
     fetch(API_URL + "/all_bookmarked_posts", requestOptions)
     .then(res => res.json())
     .then(data => {
+      setLoading(false);
       console.log("get saved post request back is: ", data);
       if (data !== "failed") {
         setSavedPosts(data.sort((a,b)=>b.post_id-a.post_id));
-        setLoading(false);
         setError(null);
       } else {
         //alert(data);
@@ -49,6 +49,7 @@ useEffect(()=>{
       }
     })
     .catch(err => {
+      setLoading(false)
       console.log("can not get saved posts: " + err);
       setError("Can not connect to server!");
     });
